@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>kit addsvc 例子注释(-)</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry Chau" />
+  <meta name="description" content="addsvc示例使用了kit库的很多高级特性。 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式 跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli
+
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="kit addsvc 例子注释(-)" />
+    <meta name="twitter:description" content="addsvc示例使用了kit库的很多高级特性。 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式 跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli
+
+" />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="kit addsvc 例子注释(-)" />
+  <meta property="og:description" content="addsvc示例使用了kit库的很多高级特性。 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式 跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli
+
+" />
+  <meta property="og:url" content="https://mfslog.github.io/post/kit-example-addsvc/" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://mfslog.github.io/post/kit-example-addsvc/" />
+<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.chau@outlook.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">kit addsvc 例子注释(-)</h1>
+      <p class="post-meta">@Jerry Chau · Jul 2, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p><a href="https://github.com/go-kit/kit/tree/master/examples/addsvc">addsvc</a>示例使用了kit库的很多高级特性。
+所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式
+跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli</p>
+
+<p></p>
+
+<h2 id="项目目录结构">项目目录结构</h2>
+
+<p>-addsvc</p>
+
+<pre><code>-cmd
+    -addcli 客户端代码
+    -addsvc 服务端代码
+-pb pb 文件定义目录及*pb.go 文件生成目录
+-pkg
+    -addendpoint endpoint层目录
+    -addservice  服务层目录
+    -addtransport 传输层目录
+-thirft thirft 传输协议层目录
+</code></pre>
+
+<h2 id="服务组装">服务组装</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> (
+		<span style="color:#a6e22e">service</span>        = <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)
+		<span style="color:#a6e22e">endpoints</span>      = <span style="color:#a6e22e">addendpoint</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">service</span>, <span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">duration</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>)
+		<span style="color:#a6e22e">httpHandler</span>    = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewHTTPHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
+		<span style="color:#a6e22e">grpcServer</span>     = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewGRPCServer</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
+		<span style="color:#a6e22e">thriftServer</span>   = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewThriftServer</span>(<span style="color:#a6e22e">endpoints</span>)
+		<span style="color:#a6e22e">jsonrpcHandler</span> = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewJSONRPCHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">logger</span>)
+	)</code></pre></div>
+<ul>
+<li><p>服务的定义 service</p>
+
+<p>服务对象通过addservice.New 创建一个service对象，同时传入服务调用统计的metrics对象和日志对象</p></li>
+
+<li><p>接入点封装 endpoints</p>
+
+<p>节点封装通过addendpoint.New 函数创建一个endpoint对象，传入上面创建的service对象,同时传入duration
+调用耗时统计和tracer(opentracing) 和zipkinTracer(zipkin)对象</p></li>
+
+<li><p>传输层的封装 transport</p>
+
+<p>传输层对象则由具体的传输层函数创建对应的对象。http 和 grpc都可以传入跟踪器。thrift 和 json则传入
+对应的endpoints</p></li>
+</ul>
+
+<h4 id="服务组装过程">服务组装过程</h4>
+
+<p>1.先创建一个服务service</p>
+
+<p>2.使用服务对象service，再包装一个endpoints</p>
+
+<p>3.使用endpoints接入对应的transport</p>
+
+<h2 id="客户端">客户端</h2>
+
+<ol>
+<li>创建对应的跟踪器对象</li>
+<li>根据命令行中对应传输协议参数是否为空，然后拨号，创建对应的endpoint</li>
+<li>使用上面创建的endpoin调用远程服务</li>
+</ol>
+
+<p>在步骤2中，传输层在创建客户端的时候，需要通过transport生成对应的endpoint代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sumEndpoint</span> <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>
+	{
+		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">NewClient</span>(
+			<span style="color:#a6e22e">conn</span>,
+			<span style="color:#e6db74">&#34;pb.Add&#34;</span>,
+			<span style="color:#e6db74">&#34;Sum&#34;</span>,
+			<span style="color:#a6e22e">encodeGRPCSumRequest</span>, <span style="color:#75715e">//编码函数
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">decodeGRPCSumResponse</span>,<span style="color:#75715e">//解码函数
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>{},
+			append(<span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">ClientBefore</span>(<span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">ContextToGRPC</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#a6e22e">logger</span>)))<span style="color:#f92672">...</span>,
+		).<span style="color:#a6e22e">Endpoint</span>()
+		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">TraceClient</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#e6db74">&#34;Sum&#34;</span>)(<span style="color:#a6e22e">sumEndpoint</span>)
+		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">limiter</span>(<span style="color:#a6e22e">sumEndpoint</span>) <span style="color:#75715e">//限流器
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">circuitbreaker</span>.<span style="color:#a6e22e">Gobreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">NewCircuitBreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">Settings</span>{
+			<span style="color:#a6e22e">Name</span>:    <span style="color:#e6db74">&#34;Sum&#34;</span>,
+			<span style="color:#a6e22e">Timeout</span>: <span style="color:#ae81ff">30</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
+		}))(<span style="color:#a6e22e">sumEndpoint</span>)<span style="color:#75715e">//熔断器
+</span><span style="color:#75715e"></span>	}</code></pre></div>
+<p>客户端使用了限流器和熔断器</p>
+
+<h2 id="总结">总结</h2>
+
+<p>初步解析了kit在构建微服务的时候客户端和服务端使用的步骤。以及服务端和客户端使用了哪些特性。</p>
+
+<p>-服务端：服务封装的过程，以及埋入对应的跟踪代码</p>
+
+<p>-客户端：使用了限流器和熔断器，并埋入了对应的跟踪的代码。</p>
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>
