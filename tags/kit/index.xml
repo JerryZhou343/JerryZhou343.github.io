@@ -7,10 +7,23 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>cn-ZH</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Mon, 02 Jul 2018 09:27:03 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 02 Jul 2018 16:15:53 +0800</lastBuildDate>
     
 	<atom:link href="https://mfslog.github.io/tags/kit/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>kit addsvc 例子注释(-)</title>
+      <link>https://mfslog.github.io/post/kit-example-addsvc/</link>
+      <pubDate>Mon, 02 Jul 2018 16:15:53 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/kit-example-addsvc/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/go-kit/kit/tree/master/examples/addsvc&#34;&gt;addsvc&lt;/a&gt;示例使用了kit库的很多高级特性。
+所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式
+跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>go-kit/kit 介绍</title>
