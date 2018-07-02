@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>go-kit/kit 介绍</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry" />
+  <meta name="description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="go-kit/kit 介绍" />
+    <meta name="twitter:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+
+" />
+    <meta name="twitter:image" content="http://mfslog.github.io/media/post-cover/10981023.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="go-kit/kit 介绍" />
+  <meta property="og:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+
+" />
+  <meta property="og:url" content="http://mfslog.github.io/post/kit-introduction/" />
+  <meta property="og:image" content="http://mfslog.github.io/media/post-cover/10981023.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="http://mfslog.github.io/post/kit-introduction/" />
+<link rel="alternative" href="http://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="http://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="http://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="http://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="http://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="http://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="http://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="http://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="http://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 成为爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="http://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="http://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.chau@outlook.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="http://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">go-kit/kit 介绍</h1>
+      <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p>go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。</p>
+
+<p></p>
+
+<h4 id="go-kit-提供以下工具库">go kit 提供以下工具库：</h4>
+
+<ul>
+<li><p><a href="https://github.com/go-kit/kit/tree/master/circuitbreaker">熔断器-circuitbreaker</a></p>
+
+<p>熔断器可以防止服务发生雪崩，提供手动熔断和</p></li>
+
+<li><p><a href="github.com/go-kit/kit/tree/master/ratelimit">限流器-ratelimit</a></p>
+
+<p>限制进出请求的阈值，用在服务端和客户端</p></li>
+
+<li><p><a href="github.com/go-kit/kit/tree/master/sd">服务注册和发现-sd</a></p>
+
+<p>在微服务架构中提供服务注册和发现能力。提供zookeeper,etcd,eureka,dns,consul的接入。并提供负载均衡能力。</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/metrics">仪表盘-metrics</a></p>
+
+<p>度量为服务检测提供了一组统一的接口。它有计数器、计量器和直方图，并为流行的度量包提供适配器，比如expvar、StatsD和Prometheus。</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/tracing">链路跟踪-tracing</a></p>
+
+<p>提供对服务的Dapper样式的请求跟踪。支持zikpin，OpenTrace</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/transport">传输层-transport</a></p>
+
+<p>将特定的序列化算法绑定到端点的辅助方法,目前支持grpc,http,thirft 等</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/endpoint">接入点-endpoint</a></p>
+
+<p>endpoint 链接服务和 传输层。它表示单个RPC方法</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/log">日志-log</a></p>
+
+<p>包日志为服务中的结构化日志记录提供了一个最小的接口。它可以用来编码约定、加强类型安全、提供分层日志记录等等。它既可用于典型的应用程序日志事件，也可用于日志结构数据流。</p></li>
+
+<li><p><a href="https://github.com/go-kit/kit/tree/master/auth">认证-auth</a></p>
+
+<p>认证服务，提供jwt</p></li>
+</ul>
+
+<h4 id="结构设计">结构设计</h4>
+
+<pre><code>go kit 设计分为传输层，接入点和服务。当我们构建一个服务的时候，就需要分别写属于这三个层的代码。go kit 框架结构如下图:
+
+![结构](/media/posts/kitIntruduce/onion.png)
+</code></pre>
+
+<p>从图中我们可以清晰的看到架构的层次：</p>
+
+<ul>
+<li>transport 负责网络传输</li>
+<li>operational metrics 调用统计仪表盘</li>
+<li>balance and limiting 负载均衡和 限流控制</li>
+<li>business analytics 调用链分析</li>
+<li>application logging 应用日志</li>
+<li>Service metrics 服务调用统计</li>
+<li>Business logic 服务逻辑</li>
+</ul>
+
+<p>仪表盘和 调用链都通过插入中间来实现。在transport 和 Business logic 中间都认为是接入点。连接传输层和服务。</p>
+
+<p>参考链接：</p>
+
+<p><a href="http://peter.bourgon.org/go-kit/">Go kit: Go in the modern enterprise</a></p>
+
+<p><a href="https://github.com/go-kit/kit">go-kit github</a></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="http://mfslog.github.io/tags/go-kit"><span class="tag">Go-Kit</span></a></li>
+        
+          <li><a href="http://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="http://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>

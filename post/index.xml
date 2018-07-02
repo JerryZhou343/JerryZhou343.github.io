@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Jerry&#39;s Blog</title>
+    <link>http://mfslog.github.io/post/</link>
+    <description>Recent content in Posts on Jerry&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>cn-ZH</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Mon, 02 Jul 2018 09:27:03 +0800</lastBuildDate>
+    
+	<atom:link href="http://mfslog.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>go-kit/kit 介绍</title>
+      <link>http://mfslog.github.io/post/kit-introduction/</link>
+      <pubDate>Mon, 02 Jul 2018 09:27:03 +0800</pubDate>
+      
+      <guid>http://mfslog.github.io/post/kit-introduction/</guid>
+      <description>&lt;p&gt;go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
