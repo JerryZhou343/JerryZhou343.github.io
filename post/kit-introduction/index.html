@@ -274,12 +274,10 @@
 
 <h4 id="结构设计">结构设计</h4>
 
-<pre><code>go kit 设计分为传输层，接入点和服务。当我们构建一个服务的时候，就需要分别写属于这三个层的代码。go kit 框架结构如下图:
+<p>go kit 设计分为传输层，接入点和服务。当我们构建一个服务的时候，就需要分别写属于这三个层的代码。go kit 框架结构如下图:
+<img src="http://gokit.io/faq/onion.png" alt="" /></p>
 
-![结构](/media/posts/kitIntruduce/onion.png)
-</code></pre>
-
-<p>从图中我们可以清晰的看到架构的层次：</p>
+<h5 id="从图中我们可以清晰的看到架构的层次">从图中我们可以清晰的看到架构的层次：</h5>
 
 <ul>
 <li>transport 负责网络传输</li>
@@ -293,11 +291,18 @@
 
 <p>仪表盘和 调用链都通过插入中间来实现。在transport 和 Business logic 中间都认为是接入点。连接传输层和服务。</p>
 
-<p>参考链接：</p>
+<h4 id="参考链接">参考链接：</h4>
 
 <p><a href="http://peter.bourgon.org/go-kit/">Go kit: Go in the modern enterprise</a></p>
 
-<p><a href="https://github.com/go-kit/kit">go-kit github</a></p></article>
+<p><a href="https://github.com/go-kit/kit">go-kit github</a></p>
+
+<p><a href="http://gokit.io/faq/">go-kit FAQ</a></p>
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
