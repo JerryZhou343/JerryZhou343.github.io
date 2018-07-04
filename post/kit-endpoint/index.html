@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Kit Endpoint 和 Middleware 解释</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry" />
+  <meta name="description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
+
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="Kit Endpoint 和 Middleware 解释" />
+    <meta name="twitter:description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
+
+" />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Kit Endpoint 和 Middleware 解释" />
+  <meta property="og:description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
+
+" />
+  <meta property="og:url" content="https://mfslog.github.io/post/kit-endpoint/" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://mfslog.github.io/post/kit-endpoint/" />
+<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.Chau@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Kit Endpoint 和 Middleware 解释</h1>
+      <p class="post-meta">@Jerry · Jul 3, 2018 · 3 min read</p>
+    </header>
+    <article class="post-content"><p>kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的
+并看看中间件是怎么插进来的。</p>
+
+<p></p>
+
+<h2 id="各层定义">各层定义</h2>
+
+<h4 id="endpoint-接入点">endpoint 接入点</h4>
+
+<p>代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Endpoint</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)</code></pre></div>
+<p>上面可以看出，endpoint 是一个入参为context和空接口，出参为空接口和错误 的函数签名。</p>
+
+<h4 id="middleware-中间件">middleware 中间件</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//endpoint层的中间件定义
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Middleware</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">Endpoint</span>) <span style="color:#a6e22e">Endpoint</span>
+<span style="color:#75715e">//服务层的中间件定义
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Middleware</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span></code></pre></div>
+<p>中间件不同层有不同的定义的,但是规则是入参是该层对象，出参也是该层对象。</p>
+
+<h4 id="service-服务接口">service 服务接口</h4>
+
+<p>服务定义是通过proto文件中定义后生成对应的pb.go 文件。用kit 的addsvc作为示例
+proto服务接口定义如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-proto" data-lang="proto"><span style="color:#66d9ef">service</span> Add {<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#75715e">// Sums two integers.
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">rpc</span> Sum (SumRequest) <span style="color:#66d9ef">returns</span> (SumReply) {}<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#75715e">// Concatenates two strings
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">rpc</span> Concat (ConcatRequest) <span style="color:#66d9ef">returns</span> (ConcatReply) {}<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>}</code></pre></div>
+<p>通过命令：protoc &ndash;go_out=plugins=grpc:. addsvc.proto 命令生成对应的pb.go文件
+我们只要需要实现对应的服务接口，就等于实现了对应的服务</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">AddServer</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#75715e">// Sums two integers.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">SumRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">SumReply</span>, <span style="color:#66d9ef">error</span>)
+    <span style="color:#75715e">// Concatenates two strings
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>)
+}</code></pre></div>
+<p>然后在addsvc的例子中addservice/service.go 文件定义同样功能的接口，定义如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Service</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>)
+    <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)
+}</code></pre></div>
+<p>这里会问，这里的接口定义不一样啊。因为经过层层调用后，最终调用是哪个接口方法不重要。重要的是transport
+实现proto文件中定义的接口就可以了。然后传输层调用endpoint最后调service即可。</p>
+
+<h4 id="transport-传输层">transport 传输层</h4>
+
+<p>在向GRPC 注册服务的时候,GRPC 会检查注册对象是否实现了服务定义的接口，如果实现了，则会注册对应的方法到GRPC中。
+当网络请求对应的服务名称和方法的时候，就会调用对应的方法。所以在kit中，先定义了对应处理handler代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Handler</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#66d9ef">interface</span>{}, <span style="color:#66d9ef">error</span>)
+}</code></pre></div>
+<p>这个接口中方法的签名和上面endpoint函数方法的签名是一样的，因为transport最终要调用endpoint，所以他们需要接收同样的参数
+kit中grpc的服务定义如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Server wraps an endpoint and implements grpc.Handler.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Server</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">e</span>         <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>
+    <span style="color:#a6e22e">dec</span>       <span style="color:#a6e22e">DecodeRequestFunc</span>
+    <span style="color:#a6e22e">enc</span>       <span style="color:#a6e22e">EncodeResponseFunc</span>
+    <span style="color:#a6e22e">before</span>    []<span style="color:#a6e22e">ServerRequestFunc</span>
+    <span style="color:#a6e22e">after</span>     []<span style="color:#a6e22e">ServerResponseFunc</span>
+    <span style="color:#a6e22e">finalizer</span> []<span style="color:#a6e22e">ServerFinalizerFunc</span>
+    <span style="color:#a6e22e">logger</span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Logger</span>
+}</code></pre></div>
+<p>通过上面代码中的注释，可以知道Server接口实现Handler接口，那么Server对象便可以注册到grpc中。我们通过kit定义的Server
+注册到GRPC中后，GRPC通过服务和方法查找后调用的第一个用户函数就是kit的Server实现的ServerGrpc接口，Server如何实现这个
+这接口呢：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//defer调用终结函数
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span>) &gt; <span style="color:#ae81ff">0</span> {
+        <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+            <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span> {
+                <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">err</span>)
+            }
+        }()
+    }
+<span style="color:#75715e">//调用前处理函数
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">before</span> {
+        <span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">md</span>)
+    }
+<span style="color:#75715e">//调用请求消息解码函数
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">request</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">dec</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+<span style="color:#75715e">//调用endpoint处理函数
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">e</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">request</span>)
+<span style="color:#75715e">//调用后处理函数
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">after</span> {
+        <span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdHeader</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdTrailer</span>)
+    }
+<span style="color:#75715e">//编码处理结果
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">grpcResp</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">enc</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">response</span>)
+<span style="color:#75715e">//填元数据信息
+</span><span style="color:#75715e">//返回处理结果
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">grpcResp</span>, <span style="color:#66d9ef">nil</span></code></pre></div>
+<p>从上面的流程我们可以看到传输层transport和endpoint是怎么协作调用的。但是我们定义的服务接口是两个方法啊，
+所以说要定义一个结构体来包含这个两个方法了。代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">grpcServer</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">sum</span>    <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">Handler</span>
+    <span style="color:#a6e22e">concat</span> <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">Handler</span>
+}</code></pre></div>
+<p>这样，我们包装对应的服务接入点(endpoint)到transport中，创建一个包含对应的服务的transport层的结构体，注册对应服务。
+上面就是endpoint 和 transport的调用关系。接下来看看endpoint层中的 middleware 是怎么绑定的呢，endpoint层的middleware
+的定义可以看出二者的关系。可以说middleware包装了endpoint, endpoint层的中间件就是一个调用链,例如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//定义中间件
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">duration</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Histogram</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Middleware</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+
+            <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">begin</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>) {
+                <span style="color:#a6e22e">duration</span>.<span style="color:#a6e22e">With</span>(<span style="color:#e6db74">&#34;success&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprint</span>(<span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>)).<span style="color:#a6e22e">Observe</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">begin</span>).<span style="color:#a6e22e">Seconds</span>())
+            }(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>())
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">next</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">request</span>)
+
+        }
+    }
+}
+<span style="color:#75715e">//包装中间件
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">duration</span>.<span style="color:#a6e22e">With</span>(<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;Sum&#34;</span>))(<span style="color:#a6e22e">sumEndpoint</span>)</code></pre></div>
+<p>那么对于的服务接入点是怎么生成的呢。毕竟grpc注册服务时候指定了传输层的，所以我们在生成endpoint的时候，我们也要指定调用对应的服务</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MakeConcatEndpoint</span>(<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+        <span style="color:#a6e22e">req</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">request</span>.(<span style="color:#a6e22e">ConcatRequest</span>)
+        <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">A</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">B</span>)
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ConcatResponse</span>{<span style="color:#a6e22e">V</span>: <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">Err</span>: <span style="color:#a6e22e">err</span>}, <span style="color:#66d9ef">nil</span>
+    }
+}</code></pre></div>
+<p>通过上述代码可以看出，生成了endpoint，但是endpoint里面呢，是调具体的服务。这个endpoint可以说就是上面endpoint调用链
+中的末端。上面的endpoint中间件，调用中间件的时候，处理自己的逻辑后调用下一个endpoint，最后就调到了具体的服务了。
+注意这里入参是服务，endpoint也实现了对应接口方法，不过那个是在客户端的时候使用的。
+接下来看看service，首先实现服务定义的功能，addsvc实例如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewBasicService</span>() <span style="color:#a6e22e">Service</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">basicService</span>{}
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">basicService</span> <span style="color:#66d9ef">struct</span>{}
+
+<span style="color:#66d9ef">const</span> (
+    <span style="color:#a6e22e">intMax</span> = <span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">31</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+    <span style="color:#a6e22e">intMin</span> = <span style="color:#f92672">-</span>(<span style="color:#a6e22e">intMax</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+    <span style="color:#a6e22e">maxLen</span> = <span style="color:#ae81ff">10</span>
+)
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">basicService</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">b</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrTwoZeroes</span>
+    }
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">b</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &gt; (<span style="color:#a6e22e">intMax</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) <span style="color:#f92672">||</span> (<span style="color:#a6e22e">b</span> &lt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &lt; (<span style="color:#a6e22e">intMin</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) {
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrIntOverflow</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
+}
+
+<span style="color:#75715e">// Concat implements Service.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">basicService</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">a</span>)<span style="color:#f92672">+</span>len(<span style="color:#a6e22e">b</span>) &gt; <span style="color:#a6e22e">maxLen</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">ErrMaxSizeExceeded</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
+<p>服务层也有中间件的，那我们来看看服务的中间件是啥样的呢，代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>) <span style="color:#a6e22e">Middleware</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
+            <span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
+            <span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
+            <span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
+        }
+    }
+}</code></pre></div>
+<p>上面的代码我们可以看到，这里的中间也是一个调用链，不过这里服务对象放在next中。每个中间件做完自己的事情后就调用next，这样
+就达到了调用链的效果。中间件的事情是咋做的呢,服务层的中间件需要实现service功能中对应的接口方法，中间件的事情就是在这个方法
+中完成，完成后就调用next中对应的方法，service中间件需要能被endpoint识别为service，所以需要实现service对应的接口。例如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">loggingMiddleware</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+        <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">logger</span>.<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;Concat&#34;</span>, <span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#a6e22e">a</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#a6e22e">b</span>, <span style="color:#e6db74">&#34;v&#34;</span>, <span style="color:#a6e22e">v</span>, <span style="color:#e6db74">&#34;err&#34;</span>, <span style="color:#a6e22e">err</span>)
+    }()
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+}</code></pre></div>
+<p>上面loggingMiddleware就是实现了Concat方法。</p>
+
+<h2 id="总结">总结</h2>
+
+<p>调用sum服务：</p>
+
+<p>grpc/transport-&gt;endpoint-&gt;service</p>
+
+<p>1.transport实现proto中的接口，各种处理后调用endpoint</p>
+
+<p>2.endpoint调用链最后调用service方法。</p>
+
+<p>3.各个层要绑定正确的下层方法。每个层都要实现服务接口定义的方法。</p>
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+        
+          <li><a href="https://mfslog.github.io/tags/go"><span class="tag">Go</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>

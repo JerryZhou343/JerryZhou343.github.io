@@ -32,6 +32,18 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>Kit Endpoint 和 Middleware 解释</title>
+      <link>https://mfslog.github.io/post/kit-endpoint/</link>
+      <pubDate>Tue, 03 Jul 2018 09:40:21 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/kit-endpoint/</guid>
+      <description>&lt;p&gt;kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的
+并看看中间件是怎么插进来的。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>kit addsvc 例子注释(-)</title>
       <link>https://mfslog.github.io/post/kit-example-addsvc/</link>
       <pubDate>Mon, 02 Jul 2018 16:15:53 +0800</pubDate>

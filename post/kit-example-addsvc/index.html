@@ -15,7 +15,7 @@
 
 
   
-  <meta name="author" content="Jerry Chau" />
+  <meta name="author" content="Jerry" />
   <meta name="description" content="addsvc示例使用了kit库的很多高级特性。 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式 跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli
 
 " />
@@ -226,7 +226,7 @@
   <section class="main post-detail">
     <header class="post-header">
       <h1 class="post-title">kit addsvc 例子注释(-)</h1>
-      <p class="post-meta">@Jerry Chau · Jul 2, 2018 · 1 min read</p>
+      <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
     </header>
     <article class="post-content"><p><a href="https://github.com/go-kit/kit/tree/master/examples/addsvc">addsvc</a>示例使用了kit库的很多高级特性。
 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式
@@ -251,13 +251,13 @@
 
 <h2 id="服务组装">服务组装</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> (
-		<span style="color:#a6e22e">service</span>        = <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)
-		<span style="color:#a6e22e">endpoints</span>      = <span style="color:#a6e22e">addendpoint</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">service</span>, <span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">duration</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>)
-		<span style="color:#a6e22e">httpHandler</span>    = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewHTTPHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
-		<span style="color:#a6e22e">grpcServer</span>     = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewGRPCServer</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
-		<span style="color:#a6e22e">thriftServer</span>   = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewThriftServer</span>(<span style="color:#a6e22e">endpoints</span>)
-		<span style="color:#a6e22e">jsonrpcHandler</span> = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewJSONRPCHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">logger</span>)
-	)</code></pre></div>
+        <span style="color:#a6e22e">service</span>        = <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)
+        <span style="color:#a6e22e">endpoints</span>      = <span style="color:#a6e22e">addendpoint</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">service</span>, <span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">duration</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>)
+        <span style="color:#a6e22e">httpHandler</span>    = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewHTTPHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
+        <span style="color:#a6e22e">grpcServer</span>     = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewGRPCServer</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">tracer</span>, <span style="color:#a6e22e">zipkinTracer</span>, <span style="color:#a6e22e">logger</span>)
+        <span style="color:#a6e22e">thriftServer</span>   = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewThriftServer</span>(<span style="color:#a6e22e">endpoints</span>)
+        <span style="color:#a6e22e">jsonrpcHandler</span> = <span style="color:#a6e22e">addtransport</span>.<span style="color:#a6e22e">NewJSONRPCHandler</span>(<span style="color:#a6e22e">endpoints</span>, <span style="color:#a6e22e">logger</span>)
+    )</code></pre></div>
 <ul>
 <li><p>服务的定义 service</p>
 
@@ -292,23 +292,23 @@
 
 <p>在步骤2中，传输层在创建客户端的时候，需要通过transport生成对应的endpoint代码如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sumEndpoint</span> <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>
-	{
-		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">NewClient</span>(
-			<span style="color:#a6e22e">conn</span>,
-			<span style="color:#e6db74">&#34;pb.Add&#34;</span>,
-			<span style="color:#e6db74">&#34;Sum&#34;</span>,
-			<span style="color:#a6e22e">encodeGRPCSumRequest</span>, <span style="color:#75715e">//编码函数
-</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">decodeGRPCSumResponse</span>,<span style="color:#75715e">//解码函数
-</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>{},
-			append(<span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">ClientBefore</span>(<span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">ContextToGRPC</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#a6e22e">logger</span>)))<span style="color:#f92672">...</span>,
-		).<span style="color:#a6e22e">Endpoint</span>()
-		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">TraceClient</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#e6db74">&#34;Sum&#34;</span>)(<span style="color:#a6e22e">sumEndpoint</span>)
-		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">limiter</span>(<span style="color:#a6e22e">sumEndpoint</span>) <span style="color:#75715e">//限流器
-</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">circuitbreaker</span>.<span style="color:#a6e22e">Gobreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">NewCircuitBreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">Settings</span>{
-			<span style="color:#a6e22e">Name</span>:    <span style="color:#e6db74">&#34;Sum&#34;</span>,
-			<span style="color:#a6e22e">Timeout</span>: <span style="color:#ae81ff">30</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
-		}))(<span style="color:#a6e22e">sumEndpoint</span>)<span style="color:#75715e">//熔断器
-</span><span style="color:#75715e"></span>	}</code></pre></div>
+    {
+        <span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">NewClient</span>(
+            <span style="color:#a6e22e">conn</span>,
+            <span style="color:#e6db74">&#34;pb.Add&#34;</span>,
+            <span style="color:#e6db74">&#34;Sum&#34;</span>,
+            <span style="color:#a6e22e">encodeGRPCSumRequest</span>, <span style="color:#75715e">//编码函数
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">decodeGRPCSumResponse</span>,<span style="color:#75715e">//解码函数
+</span><span style="color:#75715e"></span>            <span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>{},
+            append(<span style="color:#a6e22e">options</span>, <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">ClientBefore</span>(<span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">ContextToGRPC</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#a6e22e">logger</span>)))<span style="color:#f92672">...</span>,
+        ).<span style="color:#a6e22e">Endpoint</span>()
+        <span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">opentracing</span>.<span style="color:#a6e22e">TraceClient</span>(<span style="color:#a6e22e">otTracer</span>, <span style="color:#e6db74">&#34;Sum&#34;</span>)(<span style="color:#a6e22e">sumEndpoint</span>)
+        <span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">limiter</span>(<span style="color:#a6e22e">sumEndpoint</span>) <span style="color:#75715e">//限流器
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">circuitbreaker</span>.<span style="color:#a6e22e">Gobreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">NewCircuitBreaker</span>(<span style="color:#a6e22e">gobreaker</span>.<span style="color:#a6e22e">Settings</span>{
+            <span style="color:#a6e22e">Name</span>:    <span style="color:#e6db74">&#34;Sum&#34;</span>,
+            <span style="color:#a6e22e">Timeout</span>: <span style="color:#ae81ff">30</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
+        }))(<span style="color:#a6e22e">sumEndpoint</span>)<span style="color:#75715e">//熔断器
+</span><span style="color:#75715e"></span>    }</code></pre></div>
 <p>客户端使用了限流器和熔断器</p>
 
 <h2 id="总结">总结</h2>

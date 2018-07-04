@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>cn-ZH</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
-    <lastBuildDate>Mon, 02 Jul 2018 09:27:03 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 03 Jul 2018 09:40:21 +0800</lastBuildDate>
     
 	<atom:link href="https://mfslog.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Go</title>
+      <link>https://mfslog.github.io/tags/go/</link>
+      <pubDate>Tue, 03 Jul 2018 09:40:21 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/tags/go/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Go Kit</title>
@@ -24,7 +33,7 @@
     <item>
       <title>Kit</title>
       <link>https://mfslog.github.io/tags/kit/</link>
-      <pubDate>Mon, 02 Jul 2018 16:15:53 +0800</pubDate>
+      <pubDate>Tue, 03 Jul 2018 09:40:21 +0800</pubDate>
       
       <guid>https://mfslog.github.io/tags/kit/</guid>
       <description></description>
