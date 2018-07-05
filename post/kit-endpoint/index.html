@@ -267,22 +267,31 @@ proto服务接口定义如下：</p>
     <span style="color:#75715e">// Concatenates two strings
 </span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>)
 }</code></pre></div>
-<p>然后在addsvc的例子中addservice/service.go 文件定义同样功能的接口，定义如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Service</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>)
-    <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>)
-}</code></pre></div>
-<p>这里会问，这里的接口定义不一样啊。因为经过层层调用后，最终调用是哪个接口方法不重要。重要的是transport
-实现proto文件中定义的接口就可以了。然后传输层调用endpoint最后调service即可。</p>
+<p>在transport层定义组合transport结构体，并需要实现对应功能的接口</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">grpcServer</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">sum</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>), <span style="color:#66d9ef">nil</span>
+}
 
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">grpcServer</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">concat</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatReply</span>), <span style="color:#66d9ef">nil</span>
+}</code></pre></div>
 <h4 id="transport-传输层">transport 传输层</h4>
 
 <p>在向GRPC 注册服务的时候,GRPC 会检查注册对象是否实现了服务定义的接口，如果实现了，则会注册对应的方法到GRPC中。
-当网络请求对应的服务名称和方法的时候，就会调用对应的方法。所以在kit中，先定义了对应处理handler代码如下：</p>
+当网络请求对应的服务名称和方法的时候，就会调用对应的方法。kit中，当grpc调用对应方法的时候，kit会去调用对应的
+处理handler，调用过程如上面的代码。handler的定义如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Handler</span> <span style="color:#66d9ef">interface</span> {
     <span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#66d9ef">interface</span>{}, <span style="color:#66d9ef">error</span>)
 }</code></pre></div>
-<p>这个接口中方法的签名和上面endpoint函数方法的签名是一样的，因为transport最终要调用endpoint，所以他们需要接收同样的参数
+<p>这个接口中方法的签名和上面endpoint函数方法的签名是一样的，因为transport最终要调用endpoint，所以他们需要接收同样的参数。
 kit中grpc的服务定义如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Server wraps an endpoint and implements grpc.Handler.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Server</span> <span style="color:#66d9ef">struct</span> {
@@ -294,9 +303,8 @@ kit中grpc的服务定义如下：</p>
     <span style="color:#a6e22e">finalizer</span> []<span style="color:#a6e22e">ServerFinalizerFunc</span>
     <span style="color:#a6e22e">logger</span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Logger</span>
 }</code></pre></div>
-<p>通过上面代码中的注释，可以知道Server接口实现Handler接口，那么Server对象便可以注册到grpc中。我们通过kit定义的Server
-注册到GRPC中后，GRPC通过服务和方法查找后调用的第一个用户函数就是kit的Server实现的ServerGrpc接口，Server如何实现这个
-这接口呢：</p>
+<p>通过上面代码中的注释，可以知道Server结构体实现Handler接口,GRPC通过服务和方法查找后调用的第一个用户函数就是transport组合结构中的对应service定义的接口函数，
+然后调用的是kit的Server实现的ServerGrpc接口，Server如何实现这个这接口呢：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//defer调用终结函数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span>) &gt; <span style="color:#ae81ff">0</span> {
         <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
@@ -322,12 +330,6 @@ kit中grpc的服务定义如下：</p>
 <span style="color:#75715e">//填元数据信息
 </span><span style="color:#75715e">//返回处理结果
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">grpcResp</span>, <span style="color:#66d9ef">nil</span></code></pre></div>
-<p>从上面的流程我们可以看到传输层transport和endpoint是怎么协作调用的。但是我们定义的服务接口是两个方法啊，
-所以说要定义一个结构体来包含这个两个方法了。代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">grpcServer</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">sum</span>    <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">Handler</span>
-    <span style="color:#a6e22e">concat</span> <span style="color:#a6e22e">grpctransport</span>.<span style="color:#a6e22e">Handler</span>
-}</code></pre></div>
 <p>这样，我们包装对应的服务接入点(endpoint)到transport中，创建一个包含对应的服务的transport层的结构体，注册对应服务。
 上面就是endpoint 和 transport的调用关系。接下来看看endpoint层中的 middleware 是怎么绑定的呢，endpoint层的middleware
 的定义可以看出二者的关系。可以说middleware包装了endpoint, endpoint层的中间件就是一个调用链,例如：</p>
@@ -356,7 +358,7 @@ kit中grpc的服务定义如下：</p>
 }</code></pre></div>
 <p>通过上述代码可以看出，生成了endpoint，但是endpoint里面呢，是调具体的服务。这个endpoint可以说就是上面endpoint调用链
 中的末端。上面的endpoint中间件，调用中间件的时候，处理自己的逻辑后调用下一个endpoint，最后就调到了具体的服务了。
-注意这里入参是服务，endpoint也实现了对应接口方法，不过那个是在客户端的时候使用的。
+注意这里入参是服务。虽然endpoint也实现了对应接口方法，不过那个是在客户端的时候使用的。
 接下来看看service，首先实现服务定义的功能，addsvc实例如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewBasicService</span>() <span style="color:#a6e22e">Service</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">basicService</span>{}
@@ -418,7 +420,10 @@ kit中grpc的服务定义如下：</p>
 
 <p>2.endpoint调用链最后调用service方法。</p>
 
-<p>3.各个层要绑定正确的下层方法。每个层都要实现服务接口定义的方法。</p>
+<p>3.各个层要绑定正确的下层方法。</p>
+
+<p>4.transport中的handler接口中的ServerGRPC 描述了proto文件中定义的单个方法，所以用transport构造grpc服务时候需要组合transport，
+实现proto接口中的方法，在实现的接口方法中，再去调用transport中对应功能的handler</p>
 
 <p>如果本文对你有帮助，请赞赏一个吧👇
 <figure class="half">
