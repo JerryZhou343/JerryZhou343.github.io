@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Kit Prometheus</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry" />
+  <meta name="description" content="kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="Kit Prometheus" />
+    <meta name="twitter:description" content="kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。
+" />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Kit Prometheus" />
+  <meta property="og:description" content="kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。
+" />
+  <meta property="og:url" content="https://mfslog.github.io/post/kit-prometheus/" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://mfslog.github.io/post/kit-prometheus/" />
+<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.Chau@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Kit Prometheus</h1>
+      <p class="post-meta">@Jerry · Jul 5, 2018 · 2 min read</p>
+    </header>
+    <article class="post-content"><p>kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。</p>
+
+<p>
+Prometheus 会来拉去被监控的服务实例。所以我们需要建立HTTP 服务,代码片段如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">DefaultServeMux</span>.<span style="color:#a6e22e">Handle</span>(<span style="color:#e6db74">&#34;/metrics&#34;</span>, <span style="color:#a6e22e">promhttp</span>.<span style="color:#a6e22e">Handler</span>())
+<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Serve</span>(<span style="color:#a6e22e">debugListener</span>, <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">DefaultServeMux</span>)</code></pre></div>
+<p>自定义我们的监控指标，代码片段如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
+    {
+        <span style="color:#75715e">// Business-level metrics.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">ints</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
+            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;integers_summed&#34;</span>,
+            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of integers summed via the Sum method.&#34;</span>,
+        }, []<span style="color:#66d9ef">string</span>{})
+        <span style="color:#a6e22e">chars</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
+            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;characters_concatenated&#34;</span>,
+            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of characters concatenated via the Concat method.&#34;</span>,
+        }, []<span style="color:#66d9ef">string</span>{})
+    }
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">duration</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Histogram</span>
+    {
+        <span style="color:#75715e">// Endpoint-level metrics.
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">duration</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewSummaryFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">SummaryOpts</span>{
+            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;request_duration_seconds&#34;</span>,
+            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Request duration in seconds.&#34;</span>,
+        }, []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;success&#34;</span>})
+    }</code></pre></div>
+<p>在将上述监控点放到中间件中，如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">service</span>        = <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)
+
+<span style="color:#a6e22e">svc</span> = <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)(<span style="color:#a6e22e">svc</span>)
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>) <span style="color:#a6e22e">Middleware</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
+            <span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
+            <span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
+            <span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
+        }
+    }
+}
+
+<span style="color:#66d9ef">type</span> <span style="color:#a6e22e">instrumentingMiddleware</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">ints</span>  <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
+    <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
+    <span style="color:#a6e22e">next</span>  <span style="color:#a6e22e">Service</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">instrumentingMiddleware</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+    <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Add</span>(float64(<span style="color:#a6e22e">v</span>))
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
+}
+
+<span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">instrumentingMiddleware</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
+    <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+    <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">chars</span>.<span style="color:#a6e22e">Add</span>(float64(len(<span style="color:#a6e22e">v</span>)))
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
+}</code></pre></div>
+<p>那么如何查看我们的监控指标呢，上面代码中定义监控指标的时候,配置了Namespace,Subsystem和name，所以到prometheus中的时候，
+我们需要将三者拼接起来查询，如上面的:example_addsvc_integers_summed。依葫芦画瓢自定义了一个监控指标：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">CallSeqCounter</span>  = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
+        <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;private&#34;</span>,
+        <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;sequence&#34;</span>,
+        <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;call_summed&#34;</span>,
+        <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of get sequence via the getSequence method.&#34;</span>,
+    }, []<span style="color:#66d9ef">string</span>{})</code></pre></div>
+<p>在prometheus 查看情况如图：
+<img src="http://pb85qt5mh.bkt.clouddn.com/kit-prometheus-example.png" alt="" /></p>
+
+<h2 id="tips">tips</h2>
+
+<p>prometheus 可以通过多种方式发现你的服务，上例中用的配置文件(prometheus.yml)的方式，配置片段如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">    - job_name: <span style="color:#e6db74">&#39;test&#39;</span>
+
+    <span style="color:#75715e"># metrics_path defaults to &#39;/metrics&#39;</span>
+    <span style="color:#75715e"># scheme defaults to &#39;http&#39;.</span>
+
+    static_configs:
+    - targets: [<span style="color:#e6db74">&#39;192.168.0.104:8485&#39;</span>]</code></pre></div>
+<p>targets 是我们需要监控的服务实例的监听地址，为代码中开的http服务。</p>
+
+<h2 id="总结">总结：</h2>
+
+<p>简单的讲解了kit中如何使用 prometheus 做监控：</p>
+
+<p>1.定义相应的监控指标</p>
+
+<p>2.绑定HTTP url 和handler</p>
+
+<p>3.监听HTTP 服务</p>
+
+<p>4.查看相应的指标情况</p>
+
+<hr />
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+        
+          <li><a href="https://mfslog.github.io/tags/prometheus"><span class="tag">Prometheus</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>

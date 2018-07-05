@@ -32,6 +32,15 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>Kit Prometheus</title>
+      <link>https://mfslog.github.io/post/kit-prometheus/</link>
+      <pubDate>Thu, 05 Jul 2018 22:29:51 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/kit-prometheus/</guid>
+      <description>&lt;p&gt;kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Kit 从transport到service</title>
       <link>https://mfslog.github.io/post/kit-endpoint/</link>
       <pubDate>Tue, 03 Jul 2018 09:40:21 +0800</pubDate>
