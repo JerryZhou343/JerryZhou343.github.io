@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>Kit Log</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry" />
+  <meta name="description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
+
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="Kit Log" />
+    <meta name="twitter:description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
+
+" />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Kit Log" />
+  <meta property="og:description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
+
+" />
+  <meta property="og:url" content="https://mfslog.github.io/post/kit-log/" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://mfslog.github.io/post/kit-log/" />
+<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.Chau@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Kit Log</h1>
+      <p class="post-meta">@Jerry · Jul 11, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p>kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。</p>
+
+<p></p>
+
+<h2 id="0x1-log包中的对象">0x1 log包中的对象</h2>
+
+<p>kit logger 为一个接口类型，接口定义如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Logger</span> <span style="color:#66d9ef">interface</span> {
+    <span style="color:#a6e22e">Log</span>(<span style="color:#a6e22e">keyvals</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span>
+}</code></pre></div>
+<p>实现这个接口都的类型都可以来记录日志。kit 提供了jsonfmt和logfmt 和空日志nop_logger
+这个三个类型在实现logger接口的时候，根据自身目的的不同 ，格式化日志内容。日志需要输出，
+所以在构造对应用类型的日志的时候，需要传实现io.writer接口的对象。下面为json logger的定义
+和构造</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">jsonLogger</span> <span style="color:#66d9ef">struct</span> {
+    <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>
+}
+
+<span style="color:#75715e">// NewJSONLogger returns a Logger that encodes keyvals to the Writer as a
+</span><span style="color:#75715e">// single JSON object. Each log event produces no more than one call to
+</span><span style="color:#75715e">// w.Write. The passed Writer must be safe for concurrent use by multiple
+</span><span style="color:#75715e">// goroutines if the returned Logger will be used concurrently.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewJSONLogger</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>) <span style="color:#a6e22e">Logger</span> {
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">jsonLogger</span>{<span style="color:#a6e22e">w</span>}
+}</code></pre></div>
+<p>输出的日志的时候，我们需要输出行信息以及时间信息，下面看看如何使用log包</p>
+
+<h2 id="0x02-使用">0x02 使用</h2>
+
+<p>log 包使用时候，我们需要获得实现接口的对象,然后调用接口中的Log方法记录日志信息</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">LogCaller</span> = <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Caller</span>(<span style="color:#ae81ff">6</span>)
+
+<span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">NewJSONLogger</span>(<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">NewSyncWriter</span>(<span style="color:#a6e22e">fd</span>)) <span style="color:#75715e">//注释1
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">With</span>(<span style="color:#a6e22e">logger</span>,
+    <span style="color:#e6db74">&#34;ts&#34;</span>, <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">DefaultTimestamp</span>, <span style="color:#75715e">//注释2
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;caller&#34;</span>, <span style="color:#a6e22e">LogCaller</span>,  <span style="color:#75715e">//注释3
+</span><span style="color:#75715e"></span>)
+<span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">NewFilter</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">AllowAll</span>())<span style="color:#75715e">//注释4
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">logger</span>).<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;aaa&#34;</span>) <span style="color:#f92672">//</span><span style="color:#a6e22e">注释5</span> </code></pre></div>
+<ul>
+<li>注释1：
+这里的fd可以是标准输出，标准错误，文件，或者自定义对象,只要是实现了io.writer接口的对象。经过包装后
+支持同步写对象，其实里面就是加了个锁。将这个同步写对象再给NewJSONLogger构造一个日志json日志结构的对象</li>
+<li>注释2：log.With 函数将日志记录的时间写入到单行日志中</li>
+<li>注释3：log.With 函数将日志记录的行信息写入到单行日志中(这里需要记录的时间可以是静态的，也可以是动态的，详见kit doc)</li>
+<li>注释4：包装日志记录的级别判断</li>
+</ul>
+
+<h2 id="0x03-自定义日志接收对象">0x03 自定义日志接收对象</h2>
+
+<p>由上面可以知道，kit log的日志库提供了最小的调用接口和格式话日志的方法，但是日志的输出kit并没有提供。因为kit的日志定义是这样想的：</p>
+
+<p>Collecting, shipping, and aggregating logs is the responsibility of the platform, not individual services.
+ So, just make sure you’re writing logs to stdout/stderr, and let another component handle the rest.</p>
+
+<p>但是还不知道哪个日志采集工具能从stdout中采集啊（有的话，请务必邮件告诉我）。所以下面参考别人的代码片段写了一个日志输出到文件中的类。支持天分割和文件大小分割:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">logFile</span> <span style="color:#66d9ef">struct</span>{
+    <span style="color:#a6e22e">curFile</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">File</span> <span style="color:#75715e">//当前写的文件
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">fileName</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件名
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">sizeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//大小分割标志
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">timeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//时间分割标志，按天分割
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">filePath</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件路径
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">sizeValue</span> <span style="color:#66d9ef">int64</span> <span style="color:#75715e">//文件分割大小
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">todayDate</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//当前记录时间
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">msgQueue</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//日志消息队列
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">closed</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//文件关闭标志，这个参数，可要可不要，先留着
+</span><span style="color:#75715e"></span>}</code></pre></div>
+<p><a href="https://github.com/mfslog/golibs/blob/master/logfile.go">具体代码</a></p>
+
+<h2 id="参考">参考</h2>
+
+<p><a href="https://godoc.org/github.com/go-kit/kit/log">kit log doc</a></p>
+
+<p><a href="https://gokit.io/faq/#logging-mdash-why-is-package-log-so-different">kit faq</a></p>
+
+<hr />
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>

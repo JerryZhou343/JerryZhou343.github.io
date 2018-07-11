@@ -13,6 +13,11 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/post/kit-log/</loc>
+    <lastmod>2018-07-11T10:55:57+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/post/kit-prometheus/</loc>
     <lastmod>2018-07-05T22:29:51+08:00</lastmod>
   </url>
@@ -57,13 +62,13 @@
   
   <url>
     <loc>https://mfslog.github.io/tags/kit/</loc>
-    <lastmod>2018-07-05T22:29:51+08:00</lastmod>
+    <lastmod>2018-07-11T10:55:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://mfslog.github.io/post/</loc>
-    <lastmod>2018-07-05T22:29:51+08:00</lastmod>
+    <lastmod>2018-07-11T10:55:57+08:00</lastmod>
     <priority>0</priority>
   </url>
   

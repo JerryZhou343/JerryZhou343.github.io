@@ -32,6 +32,17 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>Kit Log</title>
+      <link>https://mfslog.github.io/post/kit-log/</link>
+      <pubDate>Wed, 11 Jul 2018 10:55:57 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/kit-log/</guid>
+      <description>&lt;p&gt;kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Kit Prometheus</title>
       <link>https://mfslog.github.io/post/kit-prometheus/</link>
       <pubDate>Thu, 05 Jul 2018 22:29:51 +0800</pubDate>
