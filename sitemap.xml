@@ -13,6 +13,11 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/post/cfssl/</loc>
+    <lastmod>2018-07-11T12:42:29+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/post/kit-log/</loc>
     <lastmod>2018-07-11T10:55:57+08:00</lastmod>
   </url>
@@ -43,6 +48,12 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/tags/cfssl/</loc>
+    <lastmod>2018-07-11T12:42:29+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/tags/go/</loc>
     <lastmod>2018-07-03T09:40:21+08:00</lastmod>
     <priority>0</priority>
@@ -68,7 +79,7 @@
   
   <url>
     <loc>https://mfslog.github.io/post/</loc>
-    <lastmod>2018-07-11T10:55:57+08:00</lastmod>
+    <lastmod>2018-07-11T12:42:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -79,8 +90,14 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/tags/ssl/</loc>
+    <lastmod>2018-07-11T12:42:29+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/tags/</loc>
-    <lastmod>2018-07-03T09:40:21+08:00</lastmod>
+    <lastmod>2018-07-11T12:42:29+08:00</lastmod>
     <priority>0</priority>
   </url>
   

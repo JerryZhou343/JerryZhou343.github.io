@@ -32,6 +32,18 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>CFSSL 内部认证中心</title>
+      <link>https://mfslog.github.io/post/cfssl/</link>
+      <pubDate>Wed, 11 Jul 2018 12:42:29 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/cfssl/</guid>
+      <description>&lt;p&gt;在分布式系统中，为了内部系统通信的安全，我们需要搭建自己的身份认证中心。CloudFlare 基于
+公钥基础设施（public key infrastructure，缩写为PKI）,建立了自己内部的私有公钥基础设施。
+CloudFlare 开放了其工具集，方便大家搭建自己的公钥基础设施。
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Kit Log</title>
       <link>https://mfslog.github.io/post/kit-log/</link>
       <pubDate>Wed, 11 Jul 2018 10:55:57 +0800</pubDate>

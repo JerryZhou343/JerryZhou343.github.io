@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>CFSSL 内部认证中心</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Jerry" />
+  <meta name="description" content="在分布式系统中，为了内部系统通信的安全，我们需要搭建自己的身份认证中心。CloudFlare 基于 公钥基础设施（public key infrastructure，缩写为PKI）,建立了自己内部的私有公钥基础设施。 CloudFlare 开放了其工具集，方便大家搭建自己的公钥基础设施。 " />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="CFSSL 内部认证中心" />
+    <meta name="twitter:description" content="在分布式系统中，为了内部系统通信的安全，我们需要搭建自己的身份认证中心。CloudFlare 基于 公钥基础设施（public key infrastructure，缩写为PKI）,建立了自己内部的私有公钥基础设施。 CloudFlare 开放了其工具集，方便大家搭建自己的公钥基础设施。 " />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/logo-ca.png" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="CFSSL 内部认证中心" />
+  <meta property="og:description" content="在分布式系统中，为了内部系统通信的安全，我们需要搭建自己的身份认证中心。CloudFlare 基于 公钥基础设施（public key infrastructure，缩写为PKI）,建立了自己内部的私有公钥基础设施。 CloudFlare 开放了其工具集，方便大家搭建自己的公钥基础设施。 " />
+  <meta property="og:url" content="https://mfslog.github.io/post/cfssl/" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/logo-ca.png" />
+
+
+
+
+<meta name="generator" content="Hugo 0.42.2" />
+
+
+<link rel="canonical" href="https://mfslog.github.io/post/cfssl/" />
+<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https://mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https://mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.Chau@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">CFSSL 内部认证中心</h1>
+      <p class="post-meta">@Jerry · Jul 11, 2018 · 1 min read</p>
+    </header>
+    <article class="post-content"><p>在分布式系统中，为了内部系统通信的安全，我们需要搭建自己的身份认证中心。CloudFlare 基于
+公钥基础设施（public key infrastructure，缩写为PKI）,建立了自己内部的私有公钥基础设施。
+CloudFlare 开放了其工具集，方便大家搭建自己的公钥基础设施。
+</p>
+
+<h2 id="0x01-基本概念">0x01 基本概念</h2>
+
+<h4 id="非对称加密">非对称加密</h4>
+
+<ul>
+<li><p>密钥：</p>
+
+<p>密钥是一种参数，它是在明文转换为密文或将密文转换为明文的算法中输入的参数。密钥分为对称密钥与非对称密钥。</p></li>
+
+<li><p>非对称加密概念：</p>
+
+<p>非对称加密有两个不一样的密钥，一个叫私钥，另一个叫公钥，用其中一个加密的数据只能用另一个密钥解开，用自己的都解不了，也就是说用公钥加密的数据只能由私钥解开。</p></li>
+
+<li><p>非对称加密算法：</p>
+
+<p>RSA、Elgamal、背包算法、Rabin、D-H、ECC（椭圆曲线加密算法）。常用的是RSA</p></li>
+</ul>
+
+<h4 id="摘要算法">摘要算法</h4>
+
+<ul>
+<li><p>概念：</p>
+
+<p>数字摘要是将任意长度的消息变成固定长度的短消息，它类似于一个自变量是消息的函数，也就是Hash函数。数字摘要就是采用单向Hash函数将需要加密的明文“摘要”成一串固定长度（128位）的密文
+这一串密文又称为数字指纹，它有固定的长度，而且不同的明文摘要成密文，其结果总是不同的，而同样的明文其摘要必定一致。</p></li>
+
+<li><p>摘要算法：</p>
+
+<ol>
+<li>MD5</li>
+<li>SHA1</li>
+<li>SHA256
+<br /></li>
+</ol></li>
+</ul>
+
+<h4 id="数字签名">数字签名</h4>
+
+<p>数字签名就是&rdquo;非对称加密+摘要算法&rdquo;，其目的不是为了加密，而是用来防止他人篡改数据。对发送的数据生成数字摘要。再用非对称加密中的私钥对摘要加密，发送的时候将原始内容和
+加密的摘要一并发送，对方拿到数据后用公钥解密加密的摘要，然后使用相同的摘要算法对内容生成摘要，然后对比密文中的摘要。从而判断内容是否被篡改过。</p>
+
+<h4 id="ca">CA</h4>
+
+<p>数字证书则是由证书认证机构（CA）对证书申请者真实身份验证之后，用CA的根证书对申请人的一些基本信息以及申请人的公钥进行签名（相当于加盖发证书机 构的公章）后形成的一个数字文件。
+实际上，数字证书就是经过CA认证过的公钥，除了公钥，还有其他的信息，比如Email，国家，城市，域名等。</p>
+
+<h6 id="数字证书包含的内容">数字证书包含的内容：</h6>
+
+<ul>
+<li>证书所有组织的信息</li>
+<li>公钥</li>
+<li>证书颁发组织的信息</li>
+<li>证书颁发组织授予的权限，如证书有效期、适用的主机名、用途等</li>
+
+<li><p>使用证书颁发组织私钥创建的数字签名</p></li>
+
+<li><p>tips:</p>
+
+<ol>
+<li><p>公共的CA 为具体的组织机构，对于申请认证的需要CA机构核实其法律合法性，国内的云服务上都提供CA服务</p></li>
+
+<li><p>CA 自己的公钥 和私钥 组成根证书，根证书可以用来对申请者的公钥及其组织信息签名，从而认证申请者</p></li>
+
+<li><p>申请者获得属于自己的公钥和私钥。私钥用于加密自己的信息， 公钥发送给浏览器之类的客户端进行解密，从而验证身份</p></li>
+
+<li><p>浏览器拿到公钥后对服务器过来的信息解密，从而验证身份(使用根证书验证)。后面传输的数据可以和服务器协商加密算法，进行加密通信</p></li>
+</ol></li>
+</ul>
+
+<blockquote>
+<p>浏览器一定要信任CA 机构才行，不然就会报警告。前段时间就有firefox <a href="https://www.cnbeta.com/articles/tech/647715.htm">不信任沃通的根证书的新闻</a></p>
+</blockquote>
+
+<p>证书类型：</p>
+
+<pre><code>client certificate： 用于服务端认证客户端,例如etcdctl、etcd proxy、fleetctl、docker客户端
+server certificate: 服务端使用，客户端以此验证服务端身份,例如docker服务端、kube-apiserver
+peer certificate: 双向证书，用于etcd集群成员间通信
+</code></pre>
+
+<h2 id="0x02-cfssl使用">0x02 CFSSL使用</h2>
+
+<h4 id="下载地址">下载地址：</h4>
+
+<p><a href="https://github.com/cloudflare/cfssl">开源项目地址</a></p>
+
+<p><a href="https://pkg.cfssl.org/">工具集地址</a></p>
+
+<h4 id="工具说明">工具说明：</h4>
+
+<ul>
+<li>cfssl-certinfo 证书中心服务</li>
+<li>cfssljson 组织信息json格式生成工具</li>
+<li>cfssl 命令行工具</li>
+</ul>
+
+<h4 id="安装">安装：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64
+wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64
+wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64
+chmod +x cfssl_linux-amd64 cfssljson_linux-amd64 cfssl-certinfo_linux-amd64
+mv cfssl_linux-amd64 /usr/local/bin/cfssl
+mv cfssljson_linux-amd64 /usr/local/bin/cfssljson
+mv cfssl-certinfo_linux-amd64 /usr/bin/cfssl-certinfo</code></pre></div>
+<h4 id="step1-创建ca证书">step1.创建CA证书：</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cfssl print-defaults config &gt; ca-config.json
+cfssl print-defaults csr &gt; ca-csr.json
+<span style="color:#75715e">#修改ca-config.json ca-csr.config
+</span><span style="color:#75715e">#ca-config.json 为CA的基础配置信息，不同证书类型的过期时间等
+</span><span style="color:#75715e">#ca-csr.json 为CA的组织信息
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#生成CA证书和私钥
+</span><span style="color:#75715e"></span>
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca 
+
+<span style="color:#75715e">#该命令会生成运行CA所必需的文件ca-key.pem（私钥）和ca.pem（证书），还会生成ca.csr（证书签名请求），用于交叉签名或重新签名。
+</span><span style="color:#75715e"># CSR is very similar in structure to a certificate. The CSR contains:
+</span><span style="color:#75715e">#    Information about the organization that is requesting the certificate
+</span><span style="color:#75715e">#    A public key
+</span><span style="color:#75715e">#    A digital signature by the requestor’s private key
+</span><span style="color:#75715e"></span>#</code></pre></div>
+<p>上面我们可以看到，初始化CA的时候，只需要CA的组织信息即可,下面启动CA的认证服务，这个时候就需要ca-config 来描述CA签发什么样的证书：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#启动CA服务
+</span><span style="color:#75715e"></span>cfssl serve -ca-key ca-key.pem -ca ca.pem -config config-ca.json</code></pre></div>
+<h4 id="step2-签发证书">step2.签发证书：</h4>
+
+<p>gencert和sign。gencert将自动处理整个证书生成过程。该过程需要两个文件，一个告诉CFSSL本地客户端CA的位置以及如何验证请求，另一个为CSR配置信息，用于填充CSR。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cfssl print-defaults csr &gt; server.json
+cfssl gencert -ca<span style="color:#f92672">=</span>ca.pem -ca-key<span style="color:#f92672">=</span>ca-key.pem -config<span style="color:#f92672">=</span>ca-config.json -profile<span style="color:#f92672">=</span>server server.json | cfssljson -bare server
+#生成的server.csr可以再次提交给CA，使用sign命令重新签名：</code></pre></div>
+<h2 id="0x03-参考">0x03 参考</h2>
+
+<p><a href="http://www.infoq.com/cn/news/2015/06/CloudFlare-PKI-TLS?utm_source=news_about_CFSSL&amp;utm_medium=link&amp;utm_campaign=CFSSL">如何构建私有公钥基础设施</a></p>
+
+<p><a href="http://blog.51cto.com/liuzhengwei521/2120535?utm_source=oschina-app">公钥基础设施(PKI)/CFSSL证书生成工具的使用</a></p>
+
+<p><a href="https://blog.cloudflare.com/how-to-build-your-own-public-key-infrastructure/">官方教程</a></p>
+
+<p><a href="http://blog.simlinux.com/archives/1953.html">http://blog.simlinux.com/archives/1953.html</a></p>
+
+<hr />
+
+<p>如果本文对你有帮助，请赞赏一个吧👇
+<figure class="half">
+    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
+</figure></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/ssl"><span class="tag">SSL</span></a></li>
+        
+          <li><a href="https://mfslog.github.io/tags/cfssl"><span class="tag">CFSSL</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2018 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>
