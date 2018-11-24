@@ -17,7 +17,6 @@
   
   <meta name="author" content="Jerry" />
   <meta name="description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
-
 " />
 
   
@@ -26,7 +25,6 @@
     <meta name="twitter:site" content="@gohugoio" />
     <meta name="twitter:title" content="Kit 从transport到service" />
     <meta name="twitter:description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
-
 " />
     <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
   
@@ -35,7 +33,6 @@
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Kit 从transport到service" />
   <meta property="og:description" content="kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
-
 " />
   <meta property="og:url" content="https://mfslog.github.io/post/kit-endpoint/" />
   <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
@@ -43,7 +40,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.42.2" />
+<meta name="generator" content="Hugo 0.51" />
 
 
 <link rel="canonical" href="https://mfslog.github.io/post/kit-endpoint/" />
@@ -231,8 +228,6 @@
     <article class="post-content"><p>kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的
 并看看中间件是怎么插进来的。</p>
 
-<p></p>
-
 <h2 id="各层定义">各层定义</h2>
 
 <h4 id="endpoint-接入点">endpoint 接入点</h4>
@@ -262,26 +257,26 @@ proto服务接口定义如下：</p>
 <p>通过命令：protoc &ndash;go_out=plugins=grpc:. addsvc.proto 命令生成对应的pb.go文件
 我们只要需要实现对应的服务接口，就等于实现了对应的服务</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">AddServer</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#75715e">// Sums two integers.
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">SumRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">SumReply</span>, <span style="color:#66d9ef">error</span>)
-    <span style="color:#75715e">// Concatenates two strings
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>)
+	<span style="color:#75715e">// Sums two integers.
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">SumRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">SumReply</span>, <span style="color:#66d9ef">error</span>)
+	<span style="color:#75715e">// Concatenates two strings
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>)
 }</code></pre></div>
 <p>在transport层定义组合transport结构体，并需要实现对应功能的接口</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">grpcServer</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">sum</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
-    }
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>), <span style="color:#66d9ef">nil</span>
+	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">sum</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">SumReply</span>), <span style="color:#66d9ef">nil</span>
 }
 
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">grpcServer</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">req</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatRequest</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatReply</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">concat</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
-    }
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatReply</span>), <span style="color:#66d9ef">nil</span>
+	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">rep</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">concat</span>.<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">err</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rep</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">pb</span>.<span style="color:#a6e22e">ConcatReply</span>), <span style="color:#66d9ef">nil</span>
 }</code></pre></div>
 <h4 id="transport-传输层">transport 传输层</h4>
 
@@ -289,42 +284,42 @@ proto服务接口定义如下：</p>
 当网络请求对应的服务名称和方法的时候，就会调用对应的方法。kit中，当grpc调用对应方法的时候，kit会去调用对应的
 处理handler，调用过程如上面的代码。handler的定义如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Handler</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#66d9ef">interface</span>{}, <span style="color:#66d9ef">error</span>)
+	<span style="color:#a6e22e">ServeGRPC</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">oldcontext</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#66d9ef">interface</span>{}, <span style="color:#66d9ef">error</span>)
 }</code></pre></div>
 <p>这个接口中方法的签名和上面endpoint函数方法的签名是一样的，因为transport最终要调用endpoint，所以他们需要接收同样的参数。
 kit中grpc的服务定义如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Server wraps an endpoint and implements grpc.Handler.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Server</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">e</span>         <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>
-    <span style="color:#a6e22e">dec</span>       <span style="color:#a6e22e">DecodeRequestFunc</span>
-    <span style="color:#a6e22e">enc</span>       <span style="color:#a6e22e">EncodeResponseFunc</span>
-    <span style="color:#a6e22e">before</span>    []<span style="color:#a6e22e">ServerRequestFunc</span>
-    <span style="color:#a6e22e">after</span>     []<span style="color:#a6e22e">ServerResponseFunc</span>
-    <span style="color:#a6e22e">finalizer</span> []<span style="color:#a6e22e">ServerFinalizerFunc</span>
-    <span style="color:#a6e22e">logger</span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Logger</span>
+	<span style="color:#a6e22e">e</span>         <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>
+	<span style="color:#a6e22e">dec</span>       <span style="color:#a6e22e">DecodeRequestFunc</span>
+	<span style="color:#a6e22e">enc</span>       <span style="color:#a6e22e">EncodeResponseFunc</span>
+	<span style="color:#a6e22e">before</span>    []<span style="color:#a6e22e">ServerRequestFunc</span>
+	<span style="color:#a6e22e">after</span>     []<span style="color:#a6e22e">ServerResponseFunc</span>
+	<span style="color:#a6e22e">finalizer</span> []<span style="color:#a6e22e">ServerFinalizerFunc</span>
+	<span style="color:#a6e22e">logger</span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Logger</span>
 }</code></pre></div>
 <p>通过上面代码中的注释，可以知道Server结构体实现Handler接口,GRPC通过服务和方法查找后调用的第一个用户函数就是transport组合结构中的对应service定义的接口函数，
 然后调用的是kit的Server实现的ServerGrpc接口，Server如何实现这个这接口呢：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//defer调用终结函数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span>) &gt; <span style="color:#ae81ff">0</span> {
-        <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
-            <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span> {
-                <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">err</span>)
-            }
-        }()
-    }
+		<span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+			<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">finalizer</span> {
+				<span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">err</span>)
+			}
+		}()
+	}
 <span style="color:#75715e">//调用前处理函数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">before</span> {
-        <span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">md</span>)
-    }
+		<span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">md</span>)
+	}
 <span style="color:#75715e">//调用请求消息解码函数
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">request</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">dec</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
 <span style="color:#75715e">//调用endpoint处理函数
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">response</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">e</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">request</span>)
 <span style="color:#75715e">//调用后处理函数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">after</span> {
-        <span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdHeader</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdTrailer</span>)
-    }
+		<span style="color:#a6e22e">ctx</span> = <span style="color:#a6e22e">f</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdHeader</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">mdTrailer</span>)
+	}
 <span style="color:#75715e">//编码处理结果
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">grpcResp</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">enc</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">response</span>)
 <span style="color:#75715e">//填元数据信息
@@ -335,78 +330,78 @@ kit中grpc的服务定义如下：</p>
 的定义可以看出二者的关系。可以说middleware包装了endpoint, endpoint层的中间件就是一个调用链,例如：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//定义中间件
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">duration</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Histogram</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Middleware</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
 
-            <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">begin</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>) {
-                <span style="color:#a6e22e">duration</span>.<span style="color:#a6e22e">With</span>(<span style="color:#e6db74">&#34;success&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprint</span>(<span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>)).<span style="color:#a6e22e">Observe</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">begin</span>).<span style="color:#a6e22e">Seconds</span>())
-            }(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>())
-            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">next</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">request</span>)
+			<span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">begin</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Time</span>) {
+				<span style="color:#a6e22e">duration</span>.<span style="color:#a6e22e">With</span>(<span style="color:#e6db74">&#34;success&#34;</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Sprint</span>(<span style="color:#a6e22e">err</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span>)).<span style="color:#a6e22e">Observe</span>(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">begin</span>).<span style="color:#a6e22e">Seconds</span>())
+			}(<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>())
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">next</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">request</span>)
 
-        }
-    }
+		}
+	}
 }
 <span style="color:#75715e">//包装中间件
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">sumEndpoint</span> = <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">duration</span>.<span style="color:#a6e22e">With</span>(<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;Sum&#34;</span>))(<span style="color:#a6e22e">sumEndpoint</span>)</code></pre></div>
 <p>那么对于的服务接入点是怎么生成的呢。毕竟grpc注册服务时候指定了传输层的，所以我们在生成endpoint的时候，我们也要指定调用对应的服务</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">MakeConcatEndpoint</span>(<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">endpoint</span>.<span style="color:#a6e22e">Endpoint</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
-        <span style="color:#a6e22e">req</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">request</span>.(<span style="color:#a6e22e">ConcatRequest</span>)
-        <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">A</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">B</span>)
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ConcatResponse</span>{<span style="color:#a6e22e">V</span>: <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">Err</span>: <span style="color:#a6e22e">err</span>}, <span style="color:#66d9ef">nil</span>
-    }
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">request</span> <span style="color:#66d9ef">interface</span>{}) (<span style="color:#a6e22e">response</span> <span style="color:#66d9ef">interface</span>{}, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
+		<span style="color:#a6e22e">req</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">request</span>.(<span style="color:#a6e22e">ConcatRequest</span>)
+		<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">A</span>, <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">B</span>)
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ConcatResponse</span>{<span style="color:#a6e22e">V</span>: <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">Err</span>: <span style="color:#a6e22e">err</span>}, <span style="color:#66d9ef">nil</span>
+	}
 }</code></pre></div>
 <p>通过上述代码可以看出，生成了endpoint，但是endpoint里面呢，是调具体的服务。这个endpoint可以说就是上面endpoint调用链
 中的末端。上面的endpoint中间件，调用中间件的时候，处理自己的逻辑后调用下一个endpoint，最后就调到了具体的服务了。
 注意这里入参是服务。虽然endpoint也实现了对应接口方法，不过那个是在客户端的时候使用的。
 接下来看看service，首先实现服务定义的功能，addsvc实例如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewBasicService</span>() <span style="color:#a6e22e">Service</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">basicService</span>{}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">basicService</span>{}
 }
 
 <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">basicService</span> <span style="color:#66d9ef">struct</span>{}
 
 <span style="color:#66d9ef">const</span> (
-    <span style="color:#a6e22e">intMax</span> = <span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">31</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
-    <span style="color:#a6e22e">intMin</span> = <span style="color:#f92672">-</span>(<span style="color:#a6e22e">intMax</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
-    <span style="color:#a6e22e">maxLen</span> = <span style="color:#ae81ff">10</span>
+	<span style="color:#a6e22e">intMax</span> = <span style="color:#ae81ff">1</span><span style="color:#f92672">&lt;&lt;</span><span style="color:#ae81ff">31</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+	<span style="color:#a6e22e">intMin</span> = <span style="color:#f92672">-</span>(<span style="color:#a6e22e">intMax</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)
+	<span style="color:#a6e22e">maxLen</span> = <span style="color:#ae81ff">10</span>
 )
 
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">basicService</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">b</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrTwoZeroes</span>
-    }
-    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">b</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &gt; (<span style="color:#a6e22e">intMax</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) <span style="color:#f92672">||</span> (<span style="color:#a6e22e">b</span> &lt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &lt; (<span style="color:#a6e22e">intMin</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) {
-        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrIntOverflow</span>
-    }
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">b</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrTwoZeroes</span>
+	}
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">b</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &gt; (<span style="color:#a6e22e">intMax</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) <span style="color:#f92672">||</span> (<span style="color:#a6e22e">b</span> &lt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">a</span> &lt; (<span style="color:#a6e22e">intMin</span><span style="color:#f92672">-</span><span style="color:#a6e22e">b</span>)) {
+		<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">ErrIntOverflow</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
 }
 
 <span style="color:#75715e">// Concat implements Service.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">s</span> <span style="color:#a6e22e">basicService</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">a</span>)<span style="color:#f92672">+</span>len(<span style="color:#a6e22e">b</span>) &gt; <span style="color:#a6e22e">maxLen</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">ErrMaxSizeExceeded</span>
-    }
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
+	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">a</span>)<span style="color:#f92672">+</span>len(<span style="color:#a6e22e">b</span>) &gt; <span style="color:#a6e22e">maxLen</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#a6e22e">ErrMaxSizeExceeded</span>
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">b</span>, <span style="color:#66d9ef">nil</span>
 }</code></pre></div>
 <p>服务层也有中间件的，那我们来看看服务的中间件是啥样的呢，代码如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>) <span style="color:#a6e22e">Middleware</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
-            <span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
-            <span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
-            <span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
-        }
-    }
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
+			<span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
+			<span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
+			<span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
+		}
+	}
 }</code></pre></div>
 <p>上面的代码我们可以看到，这里的中间也是一个调用链，不过这里服务对象放在next中。每个中间件做完自己的事情后就调用next，这样
 就达到了调用链的效果。中间件的事情是咋做的呢,服务层的中间件需要实现service功能中对应的接口方法，中间件的事情就是在这个方法
 中完成，完成后就调用next中对应的方法，service中间件需要能被endpoint识别为service，所以需要实现service对应的接口。例如：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">loggingMiddleware</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#a6e22e">v</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) {
-    <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
-        <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">logger</span>.<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;Concat&#34;</span>, <span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#a6e22e">a</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#a6e22e">b</span>, <span style="color:#e6db74">&#34;v&#34;</span>, <span style="color:#a6e22e">v</span>, <span style="color:#e6db74">&#34;err&#34;</span>, <span style="color:#a6e22e">err</span>)
-    }()
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+	<span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+		<span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">logger</span>.<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;Concat&#34;</span>, <span style="color:#e6db74">&#34;a&#34;</span>, <span style="color:#a6e22e">a</span>, <span style="color:#e6db74">&#34;b&#34;</span>, <span style="color:#a6e22e">b</span>, <span style="color:#e6db74">&#34;v&#34;</span>, <span style="color:#a6e22e">v</span>, <span style="color:#e6db74">&#34;err&#34;</span>, <span style="color:#a6e22e">err</span>)
+	}()
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
 }</code></pre></div>
 <p>上面loggingMiddleware就是实现了Concat方法。</p>
 
@@ -442,7 +437,7 @@ kit中grpc的服务定义如下：</p>
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>144</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     

@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>go-kit/kit 介绍</title>
+  <title>[think]基于事件的游戏结算系统</title>
 
   
   
@@ -16,26 +16,26 @@
 
   
   <meta name="author" content="Jerry" />
-  <meta name="description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+  <meta name="description" content="竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol
 " />
 
   
   
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@gohugoio" />
-    <meta name="twitter:title" content="go-kit/kit 介绍" />
-    <meta name="twitter:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+    <meta name="twitter:title" content="[think]基于事件的游戏结算系统" />
+    <meta name="twitter:description" content="竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol
 " />
-    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+    <meta name="twitter:image" content="https://mfslog.github.io/img/avatar.jpg" />
   
 
   
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="go-kit/kit 介绍" />
-  <meta property="og:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
+  <meta property="og:title" content="[think]基于事件的游戏结算系统" />
+  <meta property="og:description" content="竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol
 " />
-  <meta property="og:url" content="https://mfslog.github.io/post/kit-introduction/" />
-  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  <meta property="og:url" content="https://mfslog.github.io/post/think-game-result/" />
+  <meta property="og:image" content="https://mfslog.github.io/img/avatar.jpg" />
 
 
 
@@ -43,7 +43,7 @@
 <meta name="generator" content="Hugo 0.51" />
 
 
-<link rel="canonical" href="https://mfslog.github.io/post/kit-introduction/" />
+<link rel="canonical" href="https://mfslog.github.io/post/think-game-result/" />
 <link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
 
 
@@ -222,96 +222,71 @@
 
   <section class="main post-detail">
     <header class="post-header">
-      <h1 class="post-title">go-kit/kit 介绍</h1>
-      <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
+      <h1 class="post-title">[think]基于事件的游戏结算系统</h1>
+      <p class="post-meta">@Jerry · Nov 5, 2018 · 1 min read</p>
     </header>
-    <article class="post-content"><p>go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。</p>
+    <article class="post-content"><p>竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol</p>
 
-<h4 id="go-kit-提供以下工具库">go kit 提供以下工具库：</h4>
+<h1 id="0x01-天梯分如何计算">0x01 天梯分如何计算</h1>
 
-<ul>
-<li><p><a href="https://github.com/go-kit/kit/tree/master/circuitbreaker">熔断器-circuitbreaker</a></p>
+<p>天梯分主要体现的是玩家在该游戏中的表现的得分。那如何评价玩家在游戏中的表现呢。玩家在游戏中会有各种操作，例如：插眼，反补，或者是击杀对方英雄。这些行
+表现都应该是玩家的一个得分点，每个得分点在整体游戏中可能有不同点权重。所以我们需要搜集玩家在游戏中的所有行为，并对行为评价和打分。最后游戏结束点时候
+再会中求平均分。</p>
 
-<p>熔断器可以防止服务发生雪崩，提供手动熔断和</p></li>
-
-<li><p><a href="github.com/go-kit/kit/tree/master/ratelimit">限流器-ratelimit</a></p>
-
-<p>限制进出请求的阈值，用在服务端和客户端</p></li>
-
-<li><p><a href="github.com/go-kit/kit/tree/master/sd">服务注册和发现-sd</a></p>
-
-<p>在微服务架构中提供服务注册和发现能力。提供zookeeper,etcd,eureka,dns,consul的接入。并提供负载均衡能力。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/metrics">仪表盘-metrics</a></p>
-
-<p>度量为服务检测提供了一组统一的接口。它有计数器、计量器和直方图，并为流行的度量包提供适配器，比如expvar、StatsD和Prometheus。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/tracing">链路跟踪-tracing</a></p>
-
-<p>提供对服务的Dapper样式的请求跟踪。支持zikpin，OpenTrace</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/transport">传输层-transport</a></p>
-
-<p>将特定的序列化算法绑定到端点的辅助方法,目前支持grpc,http,thirft 等</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/endpoint">接入点-endpoint</a></p>
-
-<p>endpoint 链接服务和 传输层。它表示单个RPC方法</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/log">日志-log</a></p>
-
-<p>包日志为服务中的结构化日志记录提供了一个最小的接口。它可以用来编码约定、加强类型安全、提供分层日志记录等等。它既可用于典型的应用程序日志事件，也可用于日志结构数据流。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/auth">认证-auth</a></p>
-
-<p>认证服务，提供jwt</p></li>
-</ul>
-
-<h4 id="结构设计">结构设计</h4>
-
-<p>go kit 设计分为传输层，接入点和服务。当我们构建一个服务的时候，就需要分别写属于这三个层的代码。go kit 框架结构如下图:
-<img src="http://gokit.io/faq/onion.png" alt="" /></p>
-
-<h5 id="从图中我们可以清晰的看到架构的层次">从图中我们可以清晰的看到架构的层次：</h5>
+<h1 id="0x02-系统设计">0x02 系统设计</h1>
 
 <ul>
-<li>transport 负责网络传输</li>
-<li>operational metrics 调用统计仪表盘</li>
-<li>balance and limiting 负载均衡和 限流控制</li>
-<li>business analytics 调用链分析</li>
-<li>application logging 应用日志</li>
-<li>Service metrics 服务调用统计</li>
-<li>Business logic 服务逻辑</li>
+<li>game
+纯粹的游戏逻辑服务，控制玩家在一局游戏中的所有行为，并上游戏日志服上报玩家的行为日志</li>
+<li>log
+游戏日志服，记录游戏中的关键日志，例如：某玩家操控的英雄插眼行为。</li>
+
+<li><p>settle
+玩家行为结算服，游戏结束后，结算服务去日志服查询日志。并根据计算公式生成玩家在该游戏中的得分。</p>
+
+<h1 id="0x03-交互时序图">0x03 交互时序图</h1></li>
 </ul>
 
-<p>仪表盘和 调用链都通过插入中间来实现。在transport 和 Business logic 中间都认为是接入点。连接传输层和服务。</p>
+<p><img src="https://mfslog.github.io/post/img/think-game-result/game.png" alt="" /></p>
 
-<h4 id="参考链接">参考链接：</h4>
+<h1 id="0x04-结算引擎">0x04 结算引擎</h1>
 
-<p><a href="http://peter.bourgon.org/go-kit/">Go kit: Go in the modern enterprise</a></p>
+<p>结合上图，游戏服 和 结算服 之间流通的是事件。游戏服上报游戏ID，事件ID，玩家，等元数据到日志服。结算服拿到一些列日志后，通过事件引擎加载该游戏的结算逻辑表达式，然后得出玩家的表现得分。这里设计为事件引擎的目的是为了适应结算逻辑的修改。因为在调整玩家分布区间是一个长期的过程。那么变化的是结算逻辑
+  的修改，所以做成引擎的方式。</p>
 
-<p><a href="https://github.com/go-kit/kit">go-kit github</a></p>
+<h1 id="0x05-优缺点">0x05 优缺点</h1>
 
-<p><a href="http://gokit.io/faq/">go-kit FAQ</a></p>
+<h2 id="优点">优点</h2>
 
-<h2 id="applied-go-kit-https-peter-bourgon-org-applied-go-kit-1"><a href="https://peter.bourgon.org/applied-go-kit/#1">applied-go-kit</a></h2>
+<ul>
+<li>让每个服务职责单一，一个服务做一件事，做好一件事即可。</li>
+<li>适应更多的变化，这是微服务带来的优点，修改单个服务，不会影响其他服务。天梯分计算规则改变的时候不会影响其他服务。
+<br /></li>
+</ul>
 
-<p>如果本文对你有帮助，请赞赏一个吧👇
-<figure class="half">
-    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
-</figure></p></article>
+<h2 id="缺点">缺点</h2>
+
+<ul>
+<li>服务变多不好维护</li>
+<li>增加DSL 增加学习成本
+<br /></li>
+</ul>
+
+<h1 id="0x06-参考">0x06 参考</h1>
+
+<p><a href="https://medv.io/how-to-write-an-expression-engine/">How to write an expression engine?</a></p>
+
+<p><a href="https://www.infoq.cn/article/design-and-implementation-of-the-integral-rule-engine">基于 Event Sourcing 和 DSL 的积分规则引擎设计实现案例</a></p></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
         
-          <li><a href="https://mfslog.github.io/tags/go-kit"><span class="tag">Go-Kit</span></a></li>
-        
-          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
+          <li><a href="https://mfslog.github.io/tags/think"><span class="tag">Think</span></a></li>
         
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>145</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
       </p>
     </footer>
     

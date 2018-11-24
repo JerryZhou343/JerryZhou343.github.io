@@ -19,9 +19,7 @@
       
       <guid>https://mfslog.github.io/post/kit-endpoint/</guid>
       <description>&lt;p&gt;kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的
-并看看中间件是怎么插进来的。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+并看看中间件是怎么插进来的。&lt;/p&gt;</description>
     </item>
     
   </channel>

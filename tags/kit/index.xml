@@ -18,9 +18,7 @@
       <pubDate>Wed, 11 Jul 2018 10:55:57 +0800</pubDate>
       
       <guid>https://mfslog.github.io/post/kit-log/</guid>
-      <description>&lt;p&gt;kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -39,9 +37,7 @@
       
       <guid>https://mfslog.github.io/post/kit-endpoint/</guid>
       <description>&lt;p&gt;kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的
-并看看中间件是怎么插进来的。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+并看看中间件是怎么插进来的。&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -52,9 +48,7 @@
       <guid>https://mfslog.github.io/post/kit-example-addsvc/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/go-kit/kit/tree/master/examples/addsvc&#34;&gt;addsvc&lt;/a&gt;示例使用了kit库的很多高级特性。
 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式
-跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -63,9 +57,7 @@
       <pubDate>Mon, 02 Jul 2018 09:27:03 +0800</pubDate>
       
       <guid>https://mfslog.github.io/post/kit-introduction/</guid>
-      <description>&lt;p&gt;go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -17,7 +17,6 @@
   
   <meta name="author" content="Jerry" />
   <meta name="description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
-
 " />
 
   
@@ -26,7 +25,6 @@
     <meta name="twitter:site" content="@gohugoio" />
     <meta name="twitter:title" content="Kit Log" />
     <meta name="twitter:description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
-
 " />
     <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
   
@@ -35,7 +33,6 @@
   <meta property="og:type" content="article" />
   <meta property="og:title" content="Kit Log" />
   <meta property="og:description" content="kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
-
 " />
   <meta property="og:url" content="https://mfslog.github.io/post/kit-log/" />
   <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
@@ -43,7 +40,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.42.2" />
+<meta name="generator" content="Hugo 0.51" />
 
 
 <link rel="canonical" href="https://mfslog.github.io/post/kit-log/" />
@@ -230,20 +227,18 @@
     </header>
     <article class="post-content"><p>kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。</p>
 
-<p></p>
-
 <h2 id="0x1-log包中的对象">0x1 log包中的对象</h2>
 
 <p>kit logger 为一个接口类型，接口定义如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Logger</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">Log</span>(<span style="color:#a6e22e">keyvals</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span>
+	<span style="color:#a6e22e">Log</span>(<span style="color:#a6e22e">keyvals</span> <span style="color:#f92672">...</span><span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">error</span>
 }</code></pre></div>
 <p>实现这个接口都的类型都可以来记录日志。kit 提供了jsonfmt和logfmt 和空日志nop_logger
 这个三个类型在实现logger接口的时候，根据自身目的的不同 ，格式化日志内容。日志需要输出，
 所以在构造对应用类型的日志的时候，需要传实现io.writer接口的对象。下面为json logger的定义
 和构造</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">jsonLogger</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>
+	<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>
 }
 
 <span style="color:#75715e">// NewJSONLogger returns a Logger that encodes keyvals to the Writer as a
@@ -251,7 +246,7 @@
 </span><span style="color:#75715e">// w.Write. The passed Writer must be safe for concurrent use by multiple
 </span><span style="color:#75715e">// goroutines if the returned Logger will be used concurrently.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewJSONLogger</span>(<span style="color:#a6e22e">w</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>) <span style="color:#a6e22e">Logger</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">jsonLogger</span>{<span style="color:#a6e22e">w</span>}
+	<span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">jsonLogger</span>{<span style="color:#a6e22e">w</span>}
 }</code></pre></div>
 <p>输出的日志的时候，我们需要输出行信息以及时间信息，下面看看如何使用log包</p>
 
@@ -262,11 +257,11 @@
 
 <span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">NewJSONLogger</span>(<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">NewSyncWriter</span>(<span style="color:#a6e22e">fd</span>)) <span style="color:#75715e">//注释1
 </span><span style="color:#75715e"></span><span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">With</span>(<span style="color:#a6e22e">logger</span>,
-    <span style="color:#e6db74">&#34;ts&#34;</span>, <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">DefaultTimestamp</span>, <span style="color:#75715e">//注释2
-</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;caller&#34;</span>, <span style="color:#a6e22e">LogCaller</span>,  <span style="color:#75715e">//注释3
+	<span style="color:#e6db74">&#34;ts&#34;</span>, <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">DefaultTimestamp</span>, <span style="color:#75715e">//注释2
+</span><span style="color:#75715e"></span>	<span style="color:#e6db74">&#34;caller&#34;</span>, <span style="color:#a6e22e">LogCaller</span>,  <span style="color:#75715e">//注释3
 </span><span style="color:#75715e"></span>)
 <span style="color:#a6e22e">logger</span> = <span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">NewFilter</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">AllowAll</span>())<span style="color:#75715e">//注释4
-</span><span style="color:#75715e"></span><span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">logger</span>).<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;aaa&#34;</span>) <span style="color:#f92672">//</span><span style="color:#a6e22e">注释5</span> </code></pre></div>
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">level</span>.<span style="color:#a6e22e">Info</span>(<span style="color:#a6e22e">logger</span>).<span style="color:#a6e22e">Log</span>(<span style="color:#e6db74">&#34;aaa&#34;</span>) <span style="color:#f92672">//</span><span style="color:#a6e22e">注释5</span>	</code></pre></div>
 <ul>
 <li>注释1：
 这里的fd可以是标准输出，标准错误，文件，或者自定义对象,只要是实现了io.writer接口的对象。经过包装后
@@ -285,15 +280,15 @@
 
 <p>但是还不知道哪个日志采集工具能从stdout中采集啊（有的话，请务必邮件告诉我）。所以下面参考别人的代码片段写了一个日志输出到文件中的类。支持天分割和文件大小分割:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">logFile</span> <span style="color:#66d9ef">struct</span>{
-    <span style="color:#a6e22e">curFile</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">File</span> <span style="color:#75715e">//当前写的文件
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">fileName</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件名
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">sizeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//大小分割标志
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">timeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//时间分割标志，按天分割
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">filePath</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件路径
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">sizeValue</span> <span style="color:#66d9ef">int64</span> <span style="color:#75715e">//文件分割大小
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">todayDate</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//当前记录时间
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">msgQueue</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//日志消息队列
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">closed</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//文件关闭标志，这个参数，可要可不要，先留着
+	<span style="color:#a6e22e">curFile</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">File</span> <span style="color:#75715e">//当前写的文件
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">fileName</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件名
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">sizeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//大小分割标志
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">timeFlag</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//时间分割标志，按天分割
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">filePath</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//文件路径
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">sizeValue</span> <span style="color:#66d9ef">int64</span> <span style="color:#75715e">//文件分割大小
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">todayDate</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//当前记录时间
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">msgQueue</span> <span style="color:#66d9ef">chan</span> <span style="color:#66d9ef">string</span> <span style="color:#75715e">//日志消息队列
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">closed</span> <span style="color:#66d9ef">bool</span> <span style="color:#75715e">//文件关闭标志，这个参数，可要可不要，先留着
 </span><span style="color:#75715e"></span>}</code></pre></div>
 <p><a href="https://github.com/mfslog/golibs/blob/master/logfile.go">具体代码</a></p>
 
@@ -318,7 +313,7 @@
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>136</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     

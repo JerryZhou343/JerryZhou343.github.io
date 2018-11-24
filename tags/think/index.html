@@ -5,7 +5,11 @@
   <meta charset="utf-8" />
 
   
-  <title>go-kit/kit 介绍</title>
+  <title>
+  Tag → think
+  
+   | Jerry&#39;s blog
+</title>
 
   
   
@@ -16,26 +20,21 @@
 
   
   <meta name="author" content="Jerry" />
-  <meta name="description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
-" />
+  <meta name="description" content="这里是 Jerry 的个人博客，记录探索的过程" />
 
   
-  
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@gohugoio" />
-    <meta name="twitter:title" content="go-kit/kit 介绍" />
-    <meta name="twitter:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
-" />
-    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
-  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@gohugoio" />
+  <meta name="twitter:title" content="Jerry&#39;s blog" />
+  <meta name="twitter:description" content="这里是 Jerry 的个人博客，记录探索的过程" />
+  <meta name="twitter:image" content="https://mfslog.github.io/img/avatar.jpg" />
 
   
-  <meta property="og:type" content="article" />
-  <meta property="og:title" content="go-kit/kit 介绍" />
-  <meta property="og:description" content="go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
-" />
-  <meta property="og:url" content="https://mfslog.github.io/post/kit-introduction/" />
-  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/10981023.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jerry&#39;s blog" />
+  <meta property="og:description" content="这里是 Jerry 的个人博客，记录探索的过程" />
+  <meta property="og:url" content="https://mfslog.github.io/tags/think/" />
+  <meta property="og:image" content="https://mfslog.github.io/img/avatar.jpg" />
 
 
 
@@ -43,7 +42,7 @@
 <meta name="generator" content="Hugo 0.51" />
 
 
-<link rel="canonical" href="https://mfslog.github.io/post/kit-introduction/" />
+<link rel="canonical" href="https://mfslog.github.io/tags/think/" />
 <link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
 
 
@@ -107,8 +106,6 @@
     <div class="suspension">
       <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
       
-        
-      
     </div>
     
     
@@ -131,8 +128,6 @@
         <li class="menu-item
             
             
-            
-              is-active
             ">
             <a href="https://mfslog.github.io/">首页</a>
           </li>
@@ -220,102 +215,28 @@
   </nav>
 </header>
 
-  <section class="main post-detail">
-    <header class="post-header">
-      <h1 class="post-title">go-kit/kit 介绍</h1>
-      <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
+  <section class="main post-list">
+    <header class="list-header offscreen">
+      <h2 class="list-label">Posts List</h2>
     </header>
-    <article class="post-content"><p>go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。</p>
-
-<h4 id="go-kit-提供以下工具库">go kit 提供以下工具库：</h4>
-
-<ul>
-<li><p><a href="https://github.com/go-kit/kit/tree/master/circuitbreaker">熔断器-circuitbreaker</a></p>
-
-<p>熔断器可以防止服务发生雪崩，提供手动熔断和</p></li>
-
-<li><p><a href="github.com/go-kit/kit/tree/master/ratelimit">限流器-ratelimit</a></p>
-
-<p>限制进出请求的阈值，用在服务端和客户端</p></li>
-
-<li><p><a href="github.com/go-kit/kit/tree/master/sd">服务注册和发现-sd</a></p>
-
-<p>在微服务架构中提供服务注册和发现能力。提供zookeeper,etcd,eureka,dns,consul的接入。并提供负载均衡能力。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/metrics">仪表盘-metrics</a></p>
-
-<p>度量为服务检测提供了一组统一的接口。它有计数器、计量器和直方图，并为流行的度量包提供适配器，比如expvar、StatsD和Prometheus。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/tracing">链路跟踪-tracing</a></p>
-
-<p>提供对服务的Dapper样式的请求跟踪。支持zikpin，OpenTrace</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/transport">传输层-transport</a></p>
-
-<p>将特定的序列化算法绑定到端点的辅助方法,目前支持grpc,http,thirft 等</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/endpoint">接入点-endpoint</a></p>
-
-<p>endpoint 链接服务和 传输层。它表示单个RPC方法</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/log">日志-log</a></p>
-
-<p>包日志为服务中的结构化日志记录提供了一个最小的接口。它可以用来编码约定、加强类型安全、提供分层日志记录等等。它既可用于典型的应用程序日志事件，也可用于日志结构数据流。</p></li>
-
-<li><p><a href="https://github.com/go-kit/kit/tree/master/auth">认证-auth</a></p>
-
-<p>认证服务，提供jwt</p></li>
-</ul>
-
-<h4 id="结构设计">结构设计</h4>
-
-<p>go kit 设计分为传输层，接入点和服务。当我们构建一个服务的时候，就需要分别写属于这三个层的代码。go kit 框架结构如下图:
-<img src="http://gokit.io/faq/onion.png" alt="" /></p>
-
-<h5 id="从图中我们可以清晰的看到架构的层次">从图中我们可以清晰的看到架构的层次：</h5>
-
-<ul>
-<li>transport 负责网络传输</li>
-<li>operational metrics 调用统计仪表盘</li>
-<li>balance and limiting 负载均衡和 限流控制</li>
-<li>business analytics 调用链分析</li>
-<li>application logging 应用日志</li>
-<li>Service metrics 服务调用统计</li>
-<li>Business logic 服务逻辑</li>
-</ul>
-
-<p>仪表盘和 调用链都通过插入中间来实现。在transport 和 Business logic 中间都认为是接入点。连接传输层和服务。</p>
-
-<h4 id="参考链接">参考链接：</h4>
-
-<p><a href="http://peter.bourgon.org/go-kit/">Go kit: Go in the modern enterprise</a></p>
-
-<p><a href="https://github.com/go-kit/kit">go-kit github</a></p>
-
-<p><a href="http://gokit.io/faq/">go-kit FAQ</a></p>
-
-<h2 id="applied-go-kit-https-peter-bourgon-org-applied-go-kit-1"><a href="https://peter.bourgon.org/applied-go-kit/#1">applied-go-kit</a></h2>
-
-<p>如果本文对你有帮助，请赞赏一个吧👇
-<figure class="half">
-    <img src="http://pb85qt5mh.bkt.clouddn.com/allpay20180702145927.jpg">
-</figure></p></article>
-    <footer class="post-footer">
-      
-      <ul class="post-tags">
-        
-          <li><a href="https://mfslog.github.io/tags/go-kit"><span class="tag">Go-Kit</span></a></li>
-        
-          <li><a href="https://mfslog.github.io/tags/kit"><span class="tag">Kit</span></a></li>
-        
-      </ul>
-      
-      <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>145</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
-      </p>
-    </footer>
+    
     
       
+        <article class="post-entry">
+  <header class="post-header">
+    <h3 class="post-title"><a href="https://mfslog.github.io/post/think-game-result/" class="post-link">[think]基于事件的游戏结算系统</a></h3>
+    <p class="post-meta">@Jerry · Nov 5, 2018 · 1 min read</p>
+  </header>
+  
+  <p class="post-summary">竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol
+</p>
+  <footer class="post-footer">
+    <a class="read-more" href="https://mfslog.github.io/post/think-game-result/">Read More →</a>
+  </footer>
+</article>
+
+      
+    
     
   </section>
   <footer class="site-footer">

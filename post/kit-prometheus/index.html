@@ -40,7 +40,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.42.2" />
+<meta name="generator" content="Hugo 0.51" />
 
 
 <link rel="canonical" href="https://mfslog.github.io/post/kit-prometheus/" />
@@ -227,84 +227,83 @@
     </header>
     <article class="post-content"><p>kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。</p>
 
-<p>
-Prometheus 会来拉去被监控的服务实例。所以我们需要建立HTTP 服务,代码片段如下：</p>
+<p>Prometheus 会来拉去被监控的服务实例。所以我们需要建立HTTP 服务,代码片段如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">DefaultServeMux</span>.<span style="color:#a6e22e">Handle</span>(<span style="color:#e6db74">&#34;/metrics&#34;</span>, <span style="color:#a6e22e">promhttp</span>.<span style="color:#a6e22e">Handler</span>())
 <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Serve</span>(<span style="color:#a6e22e">debugListener</span>, <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">DefaultServeMux</span>)</code></pre></div>
 <p>自定义我们的监控指标，代码片段如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
-    {
-        <span style="color:#75715e">// Business-level metrics.
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">ints</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
-            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
-            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
-            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;integers_summed&#34;</span>,
-            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of integers summed via the Sum method.&#34;</span>,
-        }, []<span style="color:#66d9ef">string</span>{})
-        <span style="color:#a6e22e">chars</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
-            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
-            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
-            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;characters_concatenated&#34;</span>,
-            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of characters concatenated via the Concat method.&#34;</span>,
-        }, []<span style="color:#66d9ef">string</span>{})
-    }
-    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">duration</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Histogram</span>
-    {
-        <span style="color:#75715e">// Endpoint-level metrics.
-</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">duration</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewSummaryFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">SummaryOpts</span>{
-            <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
-            <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
-            <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;request_duration_seconds&#34;</span>,
-            <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Request duration in seconds.&#34;</span>,
-        }, []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;success&#34;</span>})
-    }</code></pre></div>
+	{
+		<span style="color:#75715e">// Business-level metrics.
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">ints</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
+			<span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+			<span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+			<span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;integers_summed&#34;</span>,
+			<span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of integers summed via the Sum method.&#34;</span>,
+		}, []<span style="color:#66d9ef">string</span>{})
+		<span style="color:#a6e22e">chars</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
+			<span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+			<span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+			<span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;characters_concatenated&#34;</span>,
+			<span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of characters concatenated via the Concat method.&#34;</span>,
+		}, []<span style="color:#66d9ef">string</span>{})
+	}
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">duration</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Histogram</span>
+	{
+		<span style="color:#75715e">// Endpoint-level metrics.
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">duration</span> = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewSummaryFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">SummaryOpts</span>{
+			<span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;example&#34;</span>,
+			<span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;addsvc&#34;</span>,
+			<span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;request_duration_seconds&#34;</span>,
+			<span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Request duration in seconds.&#34;</span>,
+		}, []<span style="color:#66d9ef">string</span>{<span style="color:#e6db74">&#34;method&#34;</span>, <span style="color:#e6db74">&#34;success&#34;</span>})
+	}</code></pre></div>
 <p>在将上述监控点放到中间件中，如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">service</span>        = <span style="color:#a6e22e">addservice</span>.<span style="color:#a6e22e">New</span>(<span style="color:#a6e22e">logger</span>, <span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)
 
 <span style="color:#a6e22e">svc</span> = <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span>)(<span style="color:#a6e22e">svc</span>)
 
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">InstrumentingMiddleware</span>(<span style="color:#a6e22e">ints</span>, <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>) <span style="color:#a6e22e">Middleware</span> {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
-        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
-            <span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
-            <span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
-            <span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
-        }
-    }
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">next</span> <span style="color:#a6e22e">Service</span>) <span style="color:#a6e22e">Service</span> {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">instrumentingMiddleware</span>{
+			<span style="color:#a6e22e">ints</span>:  <span style="color:#a6e22e">ints</span>,
+			<span style="color:#a6e22e">chars</span>: <span style="color:#a6e22e">chars</span>,
+			<span style="color:#a6e22e">next</span>:  <span style="color:#a6e22e">next</span>,
+		}
+	}
 }
 
 <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">instrumentingMiddleware</span> <span style="color:#66d9ef">struct</span> {
-    <span style="color:#a6e22e">ints</span>  <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
-    <span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
-    <span style="color:#a6e22e">next</span>  <span style="color:#a6e22e">Service</span>
+	<span style="color:#a6e22e">ints</span>  <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
+	<span style="color:#a6e22e">chars</span> <span style="color:#a6e22e">metrics</span>.<span style="color:#a6e22e">Counter</span>
+	<span style="color:#a6e22e">next</span>  <span style="color:#a6e22e">Service</span>
 }
 
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">instrumentingMiddleware</span>) <span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">int</span>) (<span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
-    <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Add</span>(float64(<span style="color:#a6e22e">v</span>))
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
+	<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Sum</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+	<span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">ints</span>.<span style="color:#a6e22e">Add</span>(float64(<span style="color:#a6e22e">v</span>))
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
 }
 
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">mw</span> <span style="color:#a6e22e">instrumentingMiddleware</span>) <span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">string</span>, <span style="color:#66d9ef">error</span>) {
-    <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
-    <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">chars</span>.<span style="color:#a6e22e">Add</span>(float64(len(<span style="color:#a6e22e">v</span>)))
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
+	<span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">next</span>.<span style="color:#a6e22e">Concat</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>)
+	<span style="color:#a6e22e">mw</span>.<span style="color:#a6e22e">chars</span>.<span style="color:#a6e22e">Add</span>(float64(len(<span style="color:#a6e22e">v</span>)))
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">v</span>, <span style="color:#a6e22e">err</span>
 }</code></pre></div>
 <p>那么如何查看我们的监控指标呢，上面代码中定义监控指标的时候,配置了Namespace,Subsystem和name，所以到prometheus中的时候，
 我们需要将三者拼接起来查询，如上面的:example_addsvc_integers_summed。依葫芦画瓢自定义了一个监控指标：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">CallSeqCounter</span>  = <span style="color:#a6e22e">prometheus</span>.<span style="color:#a6e22e">NewCounterFrom</span>(<span style="color:#a6e22e">stdprometheus</span>.<span style="color:#a6e22e">CounterOpts</span>{
-        <span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;private&#34;</span>,
-        <span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;sequence&#34;</span>,
-        <span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;call_summed&#34;</span>,
-        <span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of get sequence via the getSequence method.&#34;</span>,
-    }, []<span style="color:#66d9ef">string</span>{})</code></pre></div>
+		<span style="color:#a6e22e">Namespace</span>: <span style="color:#e6db74">&#34;private&#34;</span>,
+		<span style="color:#a6e22e">Subsystem</span>: <span style="color:#e6db74">&#34;sequence&#34;</span>,
+		<span style="color:#a6e22e">Name</span>:      <span style="color:#e6db74">&#34;call_summed&#34;</span>,
+		<span style="color:#a6e22e">Help</span>:      <span style="color:#e6db74">&#34;Total count of get sequence via the getSequence method.&#34;</span>,
+	}, []<span style="color:#66d9ef">string</span>{})</code></pre></div>
 <p>在prometheus 查看情况如图：
 <img src="http://pb85qt5mh.bkt.clouddn.com/kit-prometheus-example.png" alt="" /></p>
 
 <h2 id="tips">tips</h2>
 
 <p>prometheus 可以通过多种方式发现你的服务，上例中用的配置文件(prometheus.yml)的方式，配置片段如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">    - job_name: <span style="color:#e6db74">&#39;test&#39;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">	- job_name: <span style="color:#e6db74">&#39;test&#39;</span>
 
     <span style="color:#75715e"># metrics_path defaults to &#39;/metrics&#39;</span>
     <span style="color:#75715e"># scheme defaults to &#39;http&#39;.</span>
@@ -342,7 +341,7 @@ Prometheus 会来拉去被监控的服务实例。所以我们需要建立HTTP �
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>141</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
