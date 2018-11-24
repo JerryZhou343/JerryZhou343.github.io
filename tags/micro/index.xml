@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Micro on Jerry&#39;s Blog</title>
+    <link>http://mfslog.github.io/tags/micro/</link>
+    <description>Recent content in Micro on Jerry&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>cn-ZH</language>
+    <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
+    <lastBuildDate>Sat, 24 Nov 2018 14:50:43 +0800</lastBuildDate>
+    
+	<atom:link href="http://mfslog.github.io/tags/micro/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Micro Greeter</title>
+      <link>http://mfslog.github.io/post/micro-greeter/</link>
+      <pubDate>Sat, 24 Nov 2018 14:50:43 +0800</pubDate>
+      
+      <guid>http://mfslog.github.io/post/micro-greeter/</guid>
+      <description>&lt;pre&gt;&lt;code&gt;go micro 插件式的微服务框架，
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
