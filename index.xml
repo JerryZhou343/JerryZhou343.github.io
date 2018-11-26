@@ -32,6 +32,15 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>Protocolbuffers Go</title>
+      <link>https://mfslog.github.io/post/protocolbuffers-go/</link>
+      <pubDate>Mon, 26 Nov 2018 21:54:30 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/protocolbuffers-go/</guid>
+      <description>&lt;p&gt;在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>[think]基于事件的游戏结算系统</title>
       <link>https://mfslog.github.io/post/think-game-result/</link>
       <pubDate>Mon, 05 Nov 2018 22:29:51 +0800</pubDate>

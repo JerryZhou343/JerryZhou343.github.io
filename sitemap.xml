@@ -13,6 +13,11 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/post/protocolbuffers-go/</loc>
+    <lastmod>2018-11-26T21:54:30+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/post/think-game-result/</loc>
     <lastmod>2018-11-05T22:29:51+08:00</lastmod>
   </url>
@@ -49,7 +54,7 @@
   
   <url>
     <loc>https://mfslog.github.io/tags/go/</loc>
-    <lastmod>2018-07-03T09:40:21+08:00</lastmod>
+    <lastmod>2018-11-26T21:54:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -73,7 +78,7 @@
   
   <url>
     <loc>https://mfslog.github.io/post/</loc>
-    <lastmod>2018-11-05T22:29:51+08:00</lastmod>
+    <lastmod>2018-11-26T21:54:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -84,8 +89,14 @@
   </url>
   
   <url>
+    <loc>https://mfslog.github.io/tags/protoc/</loc>
+    <lastmod>2018-11-26T21:54:30+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://mfslog.github.io/tags/</loc>
-    <lastmod>2018-07-03T09:40:21+08:00</lastmod>
+    <lastmod>2018-11-26T21:54:30+08:00</lastmod>
     <priority>0</priority>
   </url>
   

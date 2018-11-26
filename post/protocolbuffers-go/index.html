@@ -5,10 +5,7 @@
   <meta charset="utf-8" />
 
   
-  <title>
-  Posts
-   | Jerry&#39;s blog
-</title>
+  <title>Protocolbuffers Go</title>
 
   
   
@@ -19,23 +16,26 @@
 
   
   <meta name="author" content="Jerry" />
-  <meta name="description" content="" />
+  <meta name="description" content="在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
+" />
 
   
   
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@gohugoio" />
-    <meta name="twitter:title" content="Posts" />
-    <meta name="twitter:description" content="" />
-    <meta name="twitter:image" content="https://mfslog.github.io/img/avatar.jpg" />
+    <meta name="twitter:title" content="Protocolbuffers Go" />
+    <meta name="twitter:description" content="在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
+" />
+    <meta name="twitter:image" content="https://mfslog.github.io/img/cover.jpg" />
   
 
   
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Posts" />
-  <meta property="og:description" content="" />
-  <meta property="og:url" content="https://mfslog.github.io/post/" />
-  <meta property="og:image" content="https://mfslog.github.io/img/avatar.jpg" />
+  <meta property="og:title" content="Protocolbuffers Go" />
+  <meta property="og:description" content="在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
+" />
+  <meta property="og:url" content="https://mfslog.github.io/post/protocolbuffers-go/" />
+  <meta property="og:image" content="https://mfslog.github.io/img/cover.jpg" />
 
 
 
@@ -43,7 +43,7 @@
 <meta name="generator" content="Hugo 0.51" />
 
 
-<link rel="canonical" href="https://mfslog.github.io/post/" />
+<link rel="canonical" href="https://mfslog.github.io/post/protocolbuffers-go/" />
 <link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
 
 
@@ -106,6 +106,8 @@
     
     <div class="suspension">
       <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
       
     </div>
     
@@ -218,124 +220,71 @@
   </nav>
 </header>
 
-  <section class="main post-list">
-    <header class="list-header offscreen">
-      <h2 class="list-label">Posts List</h2>
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">Protocolbuffers Go</h1>
+      <p class="post-meta">@Jerry · Nov 26, 2018 · 1 min read</p>
     </header>
+    <article class="post-content"><p>在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记</p>
+
+<h1 id="0x01协议文件的管理">0x01协议文件的管理</h1>
+
+<ul>
+<li><p>单个项目自己管理
+公司可能会出于安全性考虑，不会将消息定义文件暴露出来。而是由项目团队自己管理消息协议文件。如有有其他项目依赖该消息文件。那么由被依赖方生成对应的代码文件给依赖方使用。
+优点：
+    有一定的安全性
+缺点：
+    对外发布的是代码，团队间的协作耦合性太大。</p></li>
+
+<li><p>集中式管理
+协议文件放到一个代码仓库，所有人都可以拿到协议文件，依赖方根据自己的需要去协议文件库自己去取协议文件到本地自己生成。
+优点：
+    idl直接暴露，协议文件可能外流
+优点：
+    发布的是协议文件，由依赖方自己生成。团队间工作耦合比较小。</p></li>
+</ul>
+
+<h1 id="0x02协议文件的依赖">0x02协议文件的依赖</h1>
+
+<pre><code>在protocolbuffers中，会存在import其他目录协议文件的情况。在生成go语言代码的时候，生成go代码依赖可能就会不对。例如你在写协议以来的时候
+写的是一个相对路径，但是在go中却要导入的是GOPATH下的路径。那这个时候生成的go代码就是不对。
+
+具体情景：
+</code></pre>
+
+<p>protoc/path/
+    &ndash;path1
+        -msg.proto
+    -hello.proto</p>
+
+<p>文件内容片段如下：
+hello.proto:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protocol" data-lang="protocol">    ....
+    import &#34;path1/msg.proto&#34;;
+    ....</code></pre></div>
+<p>这个时候生成的hello.pb.go中，import msg中都协议的时候就会是导入的path1，一个相对路径。这样导入路径不对了。这个时候就需要在用到m参数。进行替换。
+例如：protoc -I. -I./path1 &ndash;gofast_out=&ldquo;Mpath1/msg.proto=owner.local/project/protoc/path/path1&rdquo;:. ./hello.proto 这样才能正确生成。</p>
+
+<h1 id="0x03参考">0x03参考</h1>
+
+<p><a href="https://github.com/golang/protobuf/issues/63">protoc-gen-go: import_path flag doesn&rsquo;t do anything #63</a></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https://mfslog.github.io/tags/go"><span class="tag">Go</span></a></li>
+        
+          <li><a href="https://mfslog.github.io/tags/protoc"><span class="tag">Protoc</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.
+      </p>
+    </footer>
     
-    
       
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/protocolbuffers-go/" class="post-link">Protocolbuffers Go</a></h3>
-    <p class="post-meta">@Jerry · Nov 26, 2018 · 1 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/img/cover.jpg" alt="Protocolbuffers Go">
-  
-  <p class="post-summary">在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/protocolbuffers-go/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/think-game-result/" class="post-link">[think]基于事件的游戏结算系统</a></h3>
-    <p class="post-meta">@Jerry · Nov 5, 2018 · 1 min read</p>
-  </header>
-  
-  <p class="post-summary">竞技类游戏在游戏结束的时候都会进行天梯分的计算。例如：dota,lol
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/think-game-result/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/kit-log/" class="post-link">Kit Log</a></h3>
-    <p class="post-meta">@Jerry · Jul 11, 2018 · 1 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/media/post-cover/10981023.png" alt="Kit Log">
-  
-  <p class="post-summary">kit 工具库提供了一个日志包。kit 认为日志库应该是最小接口和结构化的记录。
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/kit-log/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/kit-prometheus/" class="post-link">Kit Prometheus</a></h3>
-    <p class="post-meta">@Jerry · Jul 5, 2018 · 2 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/media/post-cover/10981023.png" alt="Kit Prometheus">
-  
-  <p class="post-summary">kit 工具包中包含了仪表客户端。通过实例addsvc 例子来看看是如何结合 Prometheus 使用的。
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/kit-prometheus/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/kit-endpoint/" class="post-link">Kit 从transport到service</a></h3>
-    <p class="post-meta">@Jerry · Jul 3, 2018 · 3 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/media/post-cover/10981023.png" alt="Kit 从transport到service">
-  
-  <p class="post-summary">kit 工具库中，如果要构建一个服务，则需要准备transport，endpoint，service本文就来说一说三层具体是怎么串起来的 并看看中间件是怎么插进来的。
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/kit-endpoint/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/kit-example-addsvc/" class="post-link">kit addsvc 例子注释(-)</a></h3>
-    <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/media/post-cover/10981023.png" alt="kit addsvc 例子注释(-)">
-  
-  <p class="post-summary">addsvc示例使用了kit库的很多高级特性。 所以学习kit这个lib的时候，addsvc这个例子是需要好好研读的。addsvc 例子包含服务，传输层中间件，分布式 跟踪，富错误定义。服务端代码：cmd/addsvc, 客户端地址cmd/addcli
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/kit-example-addsvc/">Read More →</a>
-  </footer>
-</article>
-
-      
-        <article class="post-entry">
-  <header class="post-header">
-    <h3 class="post-title"><a href="https://mfslog.github.io/post/kit-introduction/" class="post-link">go-kit/kit 介绍</a></h3>
-    <p class="post-meta">@Jerry · Jul 2, 2018 · 1 min read</p>
-  </header>
-  
-    <img class="post-cover" src="https://mfslog.github.io/media/post-cover/10981023.png" alt="go-kit/kit 介绍">
-  
-  <p class="post-summary">go kit是一种开源的微服务工具箱，可以用在现代企业应用程序栈中促进和规范化基于Go服务的创建。
-</p>
-  <footer class="post-footer">
-    <a class="read-more" href="https://mfslog.github.io/post/kit-introduction/">Read More →</a>
-  </footer>
-</article>
-
-      
-    
     
   </section>
   <footer class="site-footer">
