@@ -26,7 +26,7 @@
     <meta name="twitter:title" content="Protocolbuffers Go" />
     <meta name="twitter:description" content="在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
 " />
-    <meta name="twitter:image" content="https://mfslog.github.io/img/cover.jpg" />
+    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/4314092.png" />
   
 
   
@@ -35,7 +35,7 @@
   <meta property="og:description" content="在使用protocolbuffers的时候，遇到一些坑，在这里记录下，以免忘记
 " />
   <meta property="og:url" content="https://mfslog.github.io/post/protocolbuffers-go/" />
-  <meta property="og:image" content="https://mfslog.github.io/img/cover.jpg" />
+  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/4314092.png" />
 
 
 
@@ -263,12 +263,17 @@ hello.proto:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-protocol" data-lang="protocol">    ....
     import &#34;path1/msg.proto&#34;;
     ....</code></pre></div>
-<p>这个时候生成的hello.pb.go中，import msg中都协议的时候就会是导入的path1，一个相对路径。这样导入路径不对了。这个时候就需要在用到m参数。进行替换。
+<p>这个时候生成的hello.pb.go中，import msg中都协议的时候就会是导入的path1，一个相对路径。这样导入路径不对了。这个时候就需要在用到M参数。进行替换。
 例如：protoc -I. -I./path1 &ndash;gofast_out=&ldquo;Mpath1/msg.proto=owner.local/project/protoc/path/path1&rdquo;:. ./hello.proto 这样才能正确生成。</p>
+
+<p>具体实例可以参考：
+<a href="https://github.com/mfslog/goPractice/tree/master/ProtocolBuffers">实例</a></p>
 
 <h1 id="0x03参考">0x03参考</h1>
 
-<p><a href="https://github.com/golang/protobuf/issues/63">protoc-gen-go: import_path flag doesn&rsquo;t do anything #63</a></p></article>
+<p><a href="https://github.com/golang/protobuf/issues/63">protoc-gen-go: import_path flag doesn&rsquo;t do anything #63</a></p>
+
+<p><a href="https://github.com/gogo/protobuf/issues/257">How to generate right Import paths #257</a></p></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
