@@ -32,6 +32,15 @@ GitHub.</description>
     </item>
     
     <item>
+      <title>Go 继承和多态</title>
+      <link>https://mfslog.github.io/post/go-oop/</link>
+      <pubDate>Sat, 12 Jan 2019 18:50:33 +0800</pubDate>
+      
+      <guid>https://mfslog.github.io/post/go-oop/</guid>
+      <description>&lt;p&gt;go 语言并不是纯粹的面向对象语言，那么如何实现oop呢？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Go 对象构造</title>
       <link>https://mfslog.github.io/post/go-ctor/</link>
       <pubDate>Sat, 12 Jan 2019 11:36:12 +0800</pubDate>
