@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="cn-ZH">
+<head>
+
+  <meta charset="utf-8" />
+
+  
+  <title>rpc 调用链中error的传递</title>
+
+  
+  
+
+
+
+
+
+  
+  <meta name="author" content="Author Name" />
+  <meta name="description" content="学习和探讨在微服务中如何传递error
+" />
+
+  
+  
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gohugoio" />
+    <meta name="twitter:title" content="rpc 调用链中error的传递" />
+    <meta name="twitter:description" content="学习和探讨在微服务中如何传递error
+" />
+    <meta name="twitter:image" content="https:mfslog.github.io" />
+  
+
+  
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="rpc 调用链中error的传递" />
+  <meta property="og:description" content="学习和探讨在微服务中如何传递error
+" />
+  <meta property="og:url" content="https:mfslog.github.io/post/errors/" />
+  <meta property="og:image" content="https:mfslog.github.io" />
+
+
+
+
+<meta name="generator" content="Hugo 0.53" />
+
+
+<link rel="canonical" href="https:mfslog.github.io/post/errors/" />
+<link rel="alternative" href="https:mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="format-detection" content="telephone=no,email=no,adress=no" />
+<meta http-equiv="Cache-Control" content="no-transform" />
+
+
+<meta name="robots" content="index,follow" />
+<meta name="referrer" content="origin-when-cross-origin" />
+<meta name="google-site-verification" content="_moDmnnBNVLBN1rzNxyGUGdPHE20YgbmrtzLIbxaWFc" />
+<meta name="msvalidate.01" content="22596E34341DD1D17D6022C44647E587" />
+
+
+
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Jerry&#39;s Blog" />
+<meta name="msapplication-tooltip" content="Jerry&#39;s Blog" />
+<meta name='msapplication-navbutton-color' content="#5fbf5e" />
+<meta name="msapplication-TileColor" content="#5fbf5e" />
+<meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
+<link rel="icon" href="https:mfslog.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https:mfslog.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https:mfslog.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https:mfslog.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https:mfslog.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https:mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
+
+<link rel="stylesheet" href="https:mfslog.github.io/css/bundle.ff02473a9a.css" />
+
+
+  
+  <!--[if lt IE 9]>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/video.js/6.2.8/ie8/videojs-ie8.min.js"></script>
+  <![endif]-->
+
+<!--[if lte IE 11]>
+    <script src="//cdn.bootcss.com/classlist/1.1.20170427/classList.min.js"></script>
+  <![endif]-->
+
+
+<script src="//cdn.bootcss.com/object-fit-images/3.2.3/ofi.min.js"></script>
+
+
+<script src="//cdn.bootcss.com/smooth-scroll/12.1.4/js/smooth-scroll.polyfills.min.js"></script>
+
+
+</head>
+  <body>
+    
+    <div class="suspension">
+      <a title="Go to top" class="to-top is-hide"><span class="icon icon-up"></span></a>
+      
+        
+      
+    </div>
+    
+    
+  <header class="site-header">
+  <img class="avatar" src="https:mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  
+  <h2 class="title">Jerry&#39;s Blog</h2>
+  
+  <p class="subtitle">~ 爱的战士 ~</p>
+  <button class="menu-toggle" type="button">
+    <span class="icon icon-menu"></span>
+  </button>
+  <nav class="site-menu collapsed">
+    <h2 class="offscreen">Main Menu</h2>
+    <ul class="menu-list">
+      
+      
+      
+      
+        <li class="menu-item
+            
+            
+            
+              is-active
+            ">
+            <a href="https:mfslog.github.io/">首页</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https:mfslog.github.io/tags/">标签</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https:mfslog.github.io/links/">友链</a>
+          </li>
+      
+        <li class="menu-item
+            
+            
+            ">
+            <a href="https:mfslog.github.io/about/">关于</a>
+          </li>
+      
+    </ul>
+  </nav>
+  <nav class="social-menu collapsed">
+    <h2 class="offscreen">Social Networks</h2>
+    <ul class="social-list">
+
+      
+      <li class="social-item">
+        <a href="mailto:Jerry.Chau@qq.com" title="Email"><span class="icon icon-email"></span></a>
+      </li>
+
+      
+      <li class="social-item">
+        <a href="//github.com/mfslog" title="GitHub"><span class="icon icon-github"></span></a>
+      </li>
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <li class="social-item">
+        <a href="https:mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+      </li>
+
+    </ul>
+  </nav>
+</header>
+
+  <section class="main post-detail">
+    <header class="post-header">
+      <h1 class="post-title">rpc 调用链中error的传递</h1>
+      <p class="post-meta">@Author Name · Nov 26, 2019 · 1 min read</p>
+    </header>
+    <article class="post-content"><p>学习和探讨在微服务中如何传递error</p>
+
+<h1 id="error-认知">error  认知</h1>
+
+<p>通过阅读<a href="https://www.ituring.com.cn/article/508191#">如何优雅的在Golang中进行错误处理</a>文章我们可以知道对error我们是需要分类认知的。</p>
+
+<h5 id="error的阻断性">error的阻断性</h5>
+
+<ol>
+<li>可恢复error：代码逻辑可以继续执行</li>
+<li>不可恢复error：代码逻辑无法继续执行，有crash发生</li>
+</ol>
+
+<h5 id="边界分类">边界分类</h5>
+
+<ol>
+<li>用户边界：用户感知error，属于业务逻辑上需要提示给用户的错误</li>
+<li>非用户边界：用户无法感知，例如宕机，服务调用链阻断的情况。</li>
+</ol>
+
+<h1 id="处理方式">处理方式</h1>
+
+<h2 id="一把梭">一把梭</h2>
+
+<p>所有错误都放到rpc的response消息头中，例如在使用grpc的时候，如果handler中发生错误，我们可以将错误放到status中，然后通过handler函数的error返回值，传递到框架中然后由grpc框架传递回调用方。调用方收到错误后，调用方不知道错误的具体属于哪一类错误，只知道出错了。如果需要对错误进行分类处理，调用方需要解error信息，然后判断code，再决定消息是否传递，或者返回其它类型的错误。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#a6e22e">rsp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span>{
+		<span style="color:#66d9ef">return</span> 
+	}</code></pre></div>
+<h2 id="对错误进行分级处理">对错误进行分级处理</h2>
+
+<p>如果需要将调用错误和业务错误分开传递；例如：数据库不可用这样的系统错误和昵称不合法这样的业务错误分开处理。那么我们在定义接口的时候，需要在response消息中有一个字段在存储code。例如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-proto" data-lang="proto"><span style="color:#75715e">//使用Google的rpc类型定义
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">message</span> <span style="color:#a6e22e">Response</span> {<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>	google.rpc.Status status <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>}<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">//使用基本类型定义
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">message</span> <span style="color:#a6e22e">Response</span> {<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>	<span style="color:#66d9ef">int32</span>  code <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>}</code></pre></div>
+<p>当发生一些阻断性错误的时候，将错误放到handler函数的error返回中，如果发生业务错误，需要用户感知提示用户修正的时候，handler函数的error返回nil，在response中填入对应的错误。在用户端的时候需要两次判断：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#a6e22e">rsp</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">client</span>.<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">req</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span>{
+		<span style="color:#66d9ef">return</span> 
+	}
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">rsp</span>.<span style="color:#a6e22e">Code</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">OK</span> {
+		<span style="color:#66d9ef">return</span> 
+	}</code></pre></div>
+<h1 id="error-code-处理参考">error code 处理参考</h1>
+
+<h4 id="bilibili">bilibili</h4>
+
+<p>哔哩哔哩 的接入层是基于HTTP的restfull，后端服务层则是rpc调用。通过阅读B站被迫开源的主站代码和主动开源的kratos 框架代码，可以知道，B站在后端服务层采用的是一把梭的方式，错误直接塞到handler的error返回值中。在接入层中，通过对后端服务回来的错误解码，再进行错误分类处理。为此B站写了protobuf的插件工具，对xxxErrCode 的枚举类型自动生成status 变量，并改造了gin，增加对rpc错误的解码和分类返回处理。</p>
+
+<h4 id="google">Google</h4>
+
+<p>通过阅读Google的apis仓库协议的定义，可以知道猜测Google是采用的错误分类处理；例如下面的定义：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-proto" data-lang="proto"><span style="color:#75715e">// Response message for an ad group ad labels mutate.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">message</span> <span style="color:#a6e22e">MutateAdGroupAdLabelsResponse</span> {<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#75715e">// Errors that pertain to operation failures in the partial failure mode.
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// Returned only when partial_failure = true and all errors occur inside the
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// operations. If any errors occur outside the operations (e.g. auth errors),
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// we return an RPC level error.
+</span><span style="color:#75715e"></span>  google.rpc.Status partial_failure_error <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>  <span style="color:#75715e">// All results for the mutate.
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">repeated</span> MutateAdGroupAdLabelResult results <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>}</code></pre></div>
+<p>将错误分为rpc级别错误和业务错误；如果有业务错误需要判断的时候，就提供response中提供错误字段，其他情况下就使用rpc response消息头传递rpc级别错误。</p>
+
+<h1 id="小结">小结</h1>
+
+<p>个人比较喜欢B的套件，方便快捷。只能看到Google公开的出来的API 是错误分类，不知道其后端服务是如何处理的，也许也全都往handler的error中丢也不一定。error的处理方式多样，不定，但是一定要对error的分类有认知，这样在处理错误的时候，才知道什么时候需要code，啥时候只需要error。</p>
+
+<h1 id="参考">参考</h1>
+
+<p><a href="http://www.sohu.com/a/342949702_657921">Bilibili 毛剑：Go 业务基础库之 Error</a></p>
+
+<p><a href="https://www.ituring.com.cn/article/508191#">如何优雅的在Golang中进行错误处理</a></p>
+
+<p><a href="https://doc.rust-lang.org/book/ch09-00-error-handling.html">error handling</a></p>
+
+<p><a href="https://github.com/bilibili/kratos">Kratos</a></p>
+
+<p><a href="https://github.com/grpc/grpc-go/blob/master/status/status.go">grpc</a></p>
+
+<p><a href="https://github.com/apache/incubator-brpc/blob/master/docs/cn/error_code.md">brpc</a></p>
+
+<p><a href="https://github.com/micro/go-micro/blob/master/errors/errors.go">go-micro</a></p></article>
+    <footer class="post-footer">
+      
+      <ul class="post-tags">
+        
+          <li><a href="https:mfslog.github.io/tags/go"><span class="tag">Go</span></a></li>
+        
+          <li><a href="https:mfslog.github.io/tags/errors"><span class="tag">Errors</span></a></li>
+        
+      </ul>
+      
+      <p class="post-copyright">
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>121</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+      </p>
+    </footer>
+    
+      
+    
+  </section>
+  <footer class="site-footer">
+  <p>© 2017-2020 Jerry&#39;s Blog</p>
+  <p>Powered by <a href="https://gohugo.io/" target="_blank">Hugo</a> with theme <a href="https://github.com/laozhu/hugo-nuo" target="_blank">Nuo</a>.</p>
+  
+</footer>
+
+
+
+<script async src="//cdn.bootcss.com/video.js/6.2.8/alt/video.novtt.min.js"></script>
+<script async src="//cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$','$'], ['\\(','\\)']],
+      displayMath: [['$$','$$'], ['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+      TeX: { equationNumbers: { autoNumber: "AMS" },
+      extensions: ["AMSmath.js", "AMSsymbols.js"] }
+    }
+  });
+</script>
+<script type="text/x-mathjax-config">
+  // Fix <code> tags after MathJax finishes running. This is a
+  // hack to overcome a shortcoming of Markdown. Discussion at
+  // https://github.com/mojombo/jekyll/issues/199
+  MathJax.Hub.Queue(() => {
+    MathJax.Hub.getAllJax().map(v => v.SourceElement().parentNode.className += ' has-jax');
+  });
+</script>
+
+<script src="https:mfslog.github.io/js/bundle.d1288006cf.js"></script>
+
+
+
+
+  </body>
+</html>
