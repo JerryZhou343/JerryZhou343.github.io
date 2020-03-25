@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Errors on Jerry&#39;s Blog</title>
-    <link>https://mfslog.github.io/tags/errors/</link>
+    <link>http://mfslog.github.io/tags/errors/</link>
     <description>Recent content in Errors on Jerry&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>cn-ZH</language>
     <copyright>© This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.</copyright>
     <lastBuildDate>Tue, 26 Nov 2019 00:31:18 +0800</lastBuildDate>
     
-	<atom:link href="https://mfslog.github.io/tags/errors/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://mfslog.github.io/tags/errors/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>rpc 调用链中error的传递</title>
-      <link>https://mfslog.github.io/post/errors/</link>
+      <link>http://mfslog.github.io/post/errors/</link>
       <pubDate>Tue, 26 Nov 2019 00:31:18 +0800</pubDate>
       
-      <guid>https://mfslog.github.io/post/errors/</guid>
+      <guid>http://mfslog.github.io/post/errors/</guid>
       <description>&lt;p&gt;学习和探讨在微服务中如何传递error&lt;/p&gt;</description>
     </item>
     
