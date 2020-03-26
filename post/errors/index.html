@@ -79,7 +79,7 @@
 	<div class="article-content">
     
     <p>学习和探讨在微服务中如何传递error</p>
-<h1 id="error--认知">error  认知</h1>
+<h1 id="0x1-error--认知">0x1 error  认知</h1>
 <p>通过阅读<a href="https://www.ituring.com.cn/article/508191#">如何优雅的在Golang中进行错误处理</a>文章我们可以知道对error我们是需要分类认知的。</p>
 <h5 id="error的阻断性">error的阻断性</h5>
 <ol>
@@ -91,7 +91,7 @@
 <li>用户边界：用户感知error，属于业务逻辑上需要提示给用户的错误</li>
 <li>非用户边界：用户无法感知，例如宕机，服务调用链阻断的情况。</li>
 </ol>
-<h1 id="处理方式">处理方式</h1>
+<h1 id="0x2-处理方式">0x2 处理方式</h1>
 <h2 id="一把梭">一把梭</h2>
 <p>所有错误都放到rpc的response消息头中，例如在使用grpc的时候，如果handler中发生错误，我们可以将错误放到status中，然后通过handler函数的error返回值，传递到框架中然后由grpc框架传递回调用方。调用方收到错误后，调用方不知道错误的具体属于哪一类错误，只知道出错了。如果需要对错误进行分类处理，调用方需要解error信息，然后判断code，再决定消息是否传递，或者返回其它类型的错误。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go">	<span class="nx">rsp</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">client</span><span class="p">.</span><span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span>
@@ -116,7 +116,7 @@
 	<span class="k">if</span> <span class="nx">rsp</span><span class="p">.</span><span class="nx">Code</span> <span class="o">!=</span> <span class="nx">OK</span> <span class="p">{</span>
 		<span class="k">return</span> 
 	<span class="p">}</span>
-</code></pre></div><h1 id="error-code-处理参考">error code 处理参考</h1>
+</code></pre></div><h1 id="0x3-error-code-处理参考">0x3 error code 处理参考</h1>
 <h4 id="bilibili">bilibili</h4>
 <p>哔哩哔哩 的接入层是基于HTTP的restfull，后端服务层则是rpc调用。通过阅读B站被迫开源的主站代码和主动开源的kratos 框架代码，可以知道，B站在后端服务层采用的是一把梭的方式，错误直接塞到handler的error返回值中。在接入层中，通过对后端服务回来的错误解码，再进行错误分类处理。为此B站写了protobuf的插件工具，对xxxErrCode 的枚举类型自动生成status 变量，并改造了gin，增加对rpc错误的解码和分类返回处理。</p>
 <h4 id="google">Google</h4>
@@ -133,9 +133,9 @@
 </span><span class="c1"></span>  <span class="k">repeated</span> <span class="n">MutateAdGroupAdLabelResult</span> <span class="n">results</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
 </span><span class="err"></span><span class="p">}</span><span class="err">
 </span></code></pre></div><p>将错误分为rpc级别错误和业务错误；如果有业务错误需要判断的时候，就提供response中提供错误字段，其他情况下就使用rpc response消息头传递rpc级别错误。</p>
-<h1 id="小结">小结</h1>
+<h1 id="0x4-小结">0x4 小结</h1>
 <p>个人比较喜欢B的套件，方便快捷。只能看到Google公开的出来的API 是错误分类，不知道其后端服务是如何处理的，也许也全都往handler的error中丢也不一定。error的处理方式多样，不定，但是一定要对error的分类有认知，这样在处理错误的时候，才知道什么时候需要code，啥时候只需要error。</p>
-<h1 id="参考">参考</h1>
+<h1 id="0x5-参考">0x5 参考</h1>
 <p><a href="http://www.sohu.com/a/342949702_657921">Bilibili 毛剑：Go 业务基础库之 Error</a></p>
 <p><a href="https://www.ituring.com.cn/article/508191#">如何优雅的在Golang中进行错误处理</a></p>
 <p><a href="https://doc.rust-lang.org/book/ch09-00-error-handling.html">error handling</a></p>
@@ -188,6 +188,8 @@
 	<p class="asidetitle">标签</p>
 		<ul class="clearfix">
       
+			<li><a href="https://jerryzhou343.github.iotags/ddd" title="ddd">ddd<sup>1</sup></a></li>
+      
 			<li><a href="https://jerryzhou343.github.iotags/errors" title="errors">errors<sup>1</sup></a></li>
       
 			<li><a href="https://jerryzhou343.github.iotags/go" title="go">go<sup>3</sup></a></li>
@@ -195,6 +197,8 @@
 			<li><a href="https://jerryzhou343.github.iotags/oop" title="oop">oop<sup>1</sup></a></li>
       
 			<li><a href="https://jerryzhou343.github.iotags/%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f" title="设计模式">设计模式<sup>1</sup></a></li>
+      
+			<li><a href="https://jerryzhou343.github.iotags/%e9%a2%86%e5%9f%9f%e9%a9%b1%e5%8a%a8" title="领域驱动">领域驱动<sup>1</sup></a></li>
       
 		</ul>
 </div>
@@ -208,7 +212,7 @@
       
       
       <li class="archive-list-item">
-        <a class="archive-list-link" href="https://jerryzhou343.github.iopost/#2019-11">2019年11月</a><span class="archive-list-count">1</span>
+        <a class="archive-list-link" href="https://jerryzhou343.github.iopost/#2019-11">2019年11月</a><span class="archive-list-count">2</span>
       </li>
       
       
@@ -232,6 +236,8 @@
   <p class="asidetitle">标签云</p>
   <div class="tagcloudlist clearfix">
     
+    <a href="https://jerryzhou343.github.iotags/ddd" style="font-size: 12px;">ddd</a>
+    
     <a href="https://jerryzhou343.github.iotags/errors" style="font-size: 12px;">errors</a>
     
     <a href="https://jerryzhou343.github.iotags/go" style="font-size: 12px;">go</a>
@@ -239,6 +245,8 @@
     <a href="https://jerryzhou343.github.iotags/oop" style="font-size: 12px;">oop</a>
     
     <a href="https://jerryzhou343.github.iotags/%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f" style="font-size: 12px;">设计模式</a>
+    
+    <a href="https://jerryzhou343.github.iotags/%e9%a2%86%e5%9f%9f%e9%a9%b1%e5%8a%a8" style="font-size: 12px;">领域驱动</a>
     
   </div>
 </div>
