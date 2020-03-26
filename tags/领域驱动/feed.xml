@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>领域驱动 on Jerry&#39;s Blog</title>
-    <link>https://jerryzhou343.github.io/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/</link>
+    <link>http://jerryzhou343.github.io/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/</link>
     <description>Recent content in 领域驱动 on Jerry&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
     <lastBuildDate>Tue, 26 Nov 2019 00:41:38 +0800</lastBuildDate>
     
-	<atom:link href="https://jerryzhou343.github.io/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/feed.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://jerryzhou343.github.io/tags/%E9%A2%86%E5%9F%9F%E9%A9%B1%E5%8A%A8/feed.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>DDD 资料收集</title>
-      <link>https://jerryzhou343.github.io/post/ddd_hub/</link>
+      <link>http://jerryzhou343.github.io/post/ddd_hub/</link>
       <pubDate>Tue, 26 Nov 2019 00:41:38 +0800</pubDate>
       
-      <guid>https://jerryzhou343.github.io/post/ddd_hub/</guid>
+      <guid>http://jerryzhou343.github.io/post/ddd_hub/</guid>
       <description>&lt;p&gt;DDD 学习资料收集&lt;/p&gt;</description>
     </item>
     
