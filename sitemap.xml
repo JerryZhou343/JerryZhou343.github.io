@@ -1,82 +1,74 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://mfslog.github.io/links/</loc>
+    <loc>https://JerryZhou343.github.io/links/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/about/</loc>
+    <loc>https://JerryZhou343.github.io/about/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/post/errors/</loc>
+    <loc>https://JerryZhou343.github.io/tags/errors/</loc>
     <lastmod>2019-11-26T00:31:18+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/post/design-parttern/</loc>
+    <loc>https://JerryZhou343.github.io/tags/go/</loc>
+    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/post/</loc>
+    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/post/errors/</loc>
+    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/tags/</loc>
+    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2019-10-19T16:28:51+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/post/go-oop/</loc>
+    <loc>https://JerryZhou343.github.io/post/design-parttern/</loc>
+    <lastmod>2019-10-19T16:28:51+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/post/go-oop/</loc>
     <lastmod>2019-01-12T18:50:33+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/post/go-ctor/</loc>
+    <loc>https://JerryZhou343.github.io/tags/oop/</loc>
+    <lastmod>2019-01-12T18:50:33+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://JerryZhou343.github.io/post/go-ctor/</loc>
     <lastmod>2019-01-12T11:36:12+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/categories/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/tags/errors/</loc>
-    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/tags/go/</loc>
-    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/</loc>
+    <loc>https://JerryZhou343.github.io/</loc>
     <lastmod>2014-04-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://mfslog.github.io/tags/oop/</loc>
-    <lastmod>2019-01-12T18:50:33+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/post/</loc>
-    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/tags/</loc>
-    <lastmod>2019-11-26T00:31:18+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://mfslog.github.io/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
-    <lastmod>2019-10-19T16:28:51+08:00</lastmod>
-    <priority>0</priority>
+    <loc>https://JerryZhou343.github.io/categories/</loc>
   </url>
   
 </urlset>

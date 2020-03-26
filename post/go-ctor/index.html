@@ -26,7 +26,7 @@
     <meta name="twitter:title" content="Go 对象构造" />
     <meta name="twitter:description" content="在使用go编程的时候，如果采用面向对象的方法，那么我们需要构造对象。而go语言并不是纯粹的面向对象语言，所以不像C&#43;&#43;类似 的语言有默认构造函数，带参的构造函数，复制构造函数等。接下来，就来介绍下go 语言中如何构造对象
 " />
-    <meta name="twitter:image" content="https://mfslog.github.io/media/post-cover/4314092.png" />
+    <meta name="twitter:image" content="https://JerryZhou343.github.io/media/post-cover/4314092.png" />
   
 
   
@@ -34,17 +34,17 @@
   <meta property="og:title" content="Go 对象构造" />
   <meta property="og:description" content="在使用go编程的时候，如果采用面向对象的方法，那么我们需要构造对象。而go语言并不是纯粹的面向对象语言，所以不像C&#43;&#43;类似 的语言有默认构造函数，带参的构造函数，复制构造函数等。接下来，就来介绍下go 语言中如何构造对象
 " />
-  <meta property="og:url" content="https://mfslog.github.io/post/go-ctor/" />
-  <meta property="og:image" content="https://mfslog.github.io/media/post-cover/4314092.png" />
+  <meta property="og:url" content="https://JerryZhou343.github.io/post/go-ctor/" />
+  <meta property="og:image" content="https://JerryZhou343.github.io/media/post-cover/4314092.png" />
 
 
 
 
-<meta name="generator" content="Hugo 0.53" />
+<meta name="generator" content="Hugo 0.69.0-DEV" />
 
 
-<link rel="canonical" href="https://mfslog.github.io/post/go-ctor/" />
-<link rel="alternative" href="https://mfslog.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
+<link rel="canonical" href="https://JerryZhou343.github.io/post/go-ctor/" />
+<link rel="alternative" href="https://JerryZhou343.github.io/index.xml" title="Jerry&#39;s Blog" type="application/atom+xml" />
 
 
 <meta name="renderer" content="webkit" />
@@ -69,18 +69,18 @@
 <meta name='msapplication-navbutton-color' content="#5fbf5e" />
 <meta name="msapplication-TileColor" content="#5fbf5e" />
 <meta name="msapplication-TileImage" content="/img/tile-image-windows.png" />
-<link rel="icon" href="https://mfslog.github.io/img/favicon.ico" />
-<link rel="icon" type="image/png" sizes="16x16" href="https://mfslog.github.io/img/favicon-16x16.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="https://mfslog.github.io/img/favicon-32x32.png" />
-<link rel="icon" sizes="192x192" href="https://mfslog.github.io/img/touch-icon-android.png" />
-<link rel="apple-touch-icon" href="https://mfslog.github.io/img/touch-icon-apple.png" />
-<link rel="mask-icon" href="https://mfslog.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
+<link rel="icon" href="https://JerryZhou343.github.io/img/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="https://JerryZhou343.github.io/img/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="https://JerryZhou343.github.io/img/favicon-32x32.png" />
+<link rel="icon" sizes="192x192" href="https://JerryZhou343.github.io/img/touch-icon-android.png" />
+<link rel="apple-touch-icon" href="https://JerryZhou343.github.io/img/touch-icon-apple.png" />
+<link rel="mask-icon" href="https://JerryZhou343.github.io/img/safari-pinned-tab.svg" color="#5fbf5e" />
 
 
 
 <link rel="stylesheet" href="//cdn.bootcss.com/video.js/6.2.8/alt/video-js-cdn.min.css" />
 
-<link rel="stylesheet" href="https://mfslog.github.io/css/bundle.ff02473a9a.css" />
+<link rel="stylesheet" href="https://JerryZhou343.github.io/css/bundle.ff02473a9a.css" />
 
 
   
@@ -113,7 +113,7 @@
     
     
   <header class="site-header">
-  <img class="avatar" src="https://mfslog.github.io/img/avatar.jpg" alt="Avatar">
+  <img class="avatar" src="https://JerryZhou343.github.io/img/avatar.jpg" alt="Avatar">
   
   <h2 class="title">Jerry&#39;s Blog</h2>
   
@@ -134,28 +134,28 @@
             
               is-active
             ">
-            <a href="https://mfslog.github.io/">首页</a>
+            <a href="https://JerryZhou343.github.io/">首页</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="https://mfslog.github.io/tags/">标签</a>
+            <a href="https://JerryZhou343.github.io/tags/">标签</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="https://mfslog.github.io/links/">友链</a>
+            <a href="https://JerryZhou343.github.io/links/">友链</a>
           </li>
       
         <li class="menu-item
             
             
             ">
-            <a href="https://mfslog.github.io/about/">关于</a>
+            <a href="https://JerryZhou343.github.io/about/">关于</a>
           </li>
       
     </ul>
@@ -213,7 +213,7 @@
       
 
       <li class="social-item">
-        <a href="https://mfslog.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
+        <a href="https://JerryZhou343.github.io/index.xml"><span class="icon icon-rss" title="RSS"></span></a>
       </li>
 
     </ul>
@@ -227,31 +227,25 @@
     </header>
     <article class="post-content"><p>在使用go编程的时候，如果采用面向对象的方法，那么我们需要构造对象。而go语言并不是纯粹的面向对象语言，所以不像C++类似
 的语言有默认构造函数，带参的构造函数，复制构造函数等。接下来，就来介绍下go 语言中如何构造对象</p>
-
 <h1 id="0x01-对象和方法">0x01 对象和方法</h1>
-
 <p>在面向对象编程中，对象的定义是具有属性和方法的集合体。所以在go中，用struct来定义的对象的属性。例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">struct</span>{
-    <span style="color:#a6e22e">age</span> <span style="color:#66d9ef">int</span>
- }</code></pre></div>
-<p>对象一般都是有自己的方法的，在这个例子中，人可以有很多的行为。go中通过接收器将方法和类型对象绑定。例如：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">    
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">struct</span>{
+   <span style="color:#a6e22e">age</span> <span style="color:#66d9ef">int</span>
+}
+</code></pre></div><p>对象一般都是有自己的方法的，在这个例子中，人可以有很多的行为。go中通过接收器将方法和类型对象绑定。例如：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">   
 <span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">p</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Person</span>)<span style="color:#a6e22e">Sleep</span>(){
-        
-}</code></pre></div>
-<p>通过上面的代码，我们就获得了一个通过面向对象方法定义的Person对象。</p>
-
+       
+}
+</code></pre></div><p>通过上面的代码，我们就获得了一个通过面向对象方法定义的Person对象。</p>
 <h1 id="0x02-new-方法构造">0x02 new 方法构造</h1>
-
 <p>new 为语言内置方法，创建一个传入其中类型的对象:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">jessica</span> <span style="color:#f92672">:=</span> new(<span style="color:#a6e22e">Person</span>)</code></pre></div>
-<h1 id="0x03-直接定义">0x03 直接定义</h1>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">jessica</span> <span style="color:#f92672">:=</span> new(<span style="color:#a6e22e">Person</span>)
+</code></pre></div><h1 id="0x03-直接定义">0x03 直接定义</h1>
 <p>在代码中需要使用对象的地方直接声明</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">jessica</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">Person</span>{}
-<span style="color:#a6e22e">tom</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Person</span>{}</code></pre></div>
-<h1 id="0x04-定义构造函数">0x04 定义构造函数</h1>
-
+<span style="color:#a6e22e">tom</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">Person</span>{}
+</code></pre></div><h1 id="0x04-定义构造函数">0x04 定义构造函数</h1>
 <p>在C++中，我们构造函数和对象是一体的，如果我们不写构造函数，那么语言系统会使用默认的构造函数，在go中，上述两种方式使用了默认参数构造，不过
 都是空类型，int的是0，在go中，我们通常在一个包中定义一个对象类型，并开放一个构造函数，构造对象返回:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">person</span>
@@ -262,16 +256,17 @@
 <span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewPerson</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">person</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">person</span>{
     }
-}</code></pre></div>
-<p>上面定义的方法可以看出，其是不传参的默认构造和使用系统提供的new函数没有差别。那如果我们需要构造的时候强制传入参数呢：</p>
+}
+</code></pre></div><p>上面定义的方法可以看出，其是不传参的默认构造和使用系统提供的new函数没有差别。那如果我们需要构造的时候强制传入参数呢：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewPerson</span>(<span style="color:#a6e22e">age</span> <span style="color:#66d9ef">int</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">person</span> {
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">person</span>{
         <span style="color:#a6e22e">age</span>:<span style="color:#a6e22e">age</span>,
     }
-}</code></pre></div>
-<p>上面的方法就是带参构造的情况。 那如果我们想要另一种情况，参数是可选的，如果不传，那就用默认构造，如果传了的话，就用传入的参数，那应该怎么写呢,
+}
+</code></pre></div><p>上面的方法就是带参构造的情况。 那如果我们想要另一种情况，参数是可选的，如果不传，那就用默认构造，如果传了的话，就用传入的参数，那应该怎么写呢,
 这个时候就需要通过go的闭包特性来是实现了。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">package</span> <span style="color:#a6e22e">person</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">
+<span style="color:#f92672">package</span> <span style="color:#a6e22e">person</span>
 
 <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">person</span> <span style="color:#66d9ef">struct</span>{
     <span style="color:#a6e22e">opt</span> <span style="color:#a6e22e">Options</span>
@@ -306,31 +301,33 @@
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">person</span>{
         <span style="color:#a6e22e">opt</span>:<span style="color:#a6e22e">options</span>,
     }
-}</code></pre></div>
-<p>通过上面的代码我们可以看到，如果没有传入自定义的年龄，那对象构造出来的就是用默认年龄构造的对象。对象的构造就很灵活。</p>
+}
 
+</code></pre></div><p>通过上面的代码我们可以看到，如果没有传入自定义的年龄，那对象构造出来的就是用默认年龄构造的对象。对象的构造就很灵活。</p>
 <h1 id="0x05-总结">0x05 总结</h1>
-
 <p>上面我们介绍了GO 中对象的构造的几种方式。大家可以通过自己的需要来决定采用哪种方式。不同的方式，代码量是不一样的，所以慎选。options看着很
 优美的，但是代码量还是很大的.</p>
-
 <ol>
-<li><p>如果对象很简单，或者是允许对象中的某个属性为空，那么直接用内建的new方法或者直接声明。如前面提到的 0x02, 0x03 方式</p></li>
-
-<li><p>如果参数较少，但是必须都要填参数，那么采用带参数的构造函数 如前面提到的 0x04 方式</p></li>
-
-<li><p>如果在构造对象的时候参数或者属性可选，那么就可以采用 0x04 方式构造对象</p></li>
+<li>
+<p>如果对象很简单，或者是允许对象中的某个属性为空，那么直接用内建的new方法或者直接声明。如前面提到的 0x02, 0x03 方式</p>
+</li>
+<li>
+<p>如果参数较少，但是必须都要填参数，那么采用带参数的构造函数 如前面提到的 0x04 方式</p>
+</li>
+<li>
+<p>如果在构造对象的时候参数或者属性可选，那么就可以采用 0x04 方式构造对象</p>
+</li>
 </ol></article>
     <footer class="post-footer">
       
       <ul class="post-tags">
         
-          <li><a href="https://mfslog.github.io/tags/go"><span class="tag">Go</span></a></li>
+          <li><a href="https://JerryZhou343.github.io/tags/go"><span class="tag">Go</span></a></li>
         
       </ul>
       
       <p class="post-copyright">
-        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>438</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
+        © This post is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License，please give source if you wish to quote or reproduce.This post was published <strong>439</strong> days ago, content in the post may be inaccurate, even wrong now, please take risk yourself.
       </p>
     </footer>
     
@@ -369,7 +366,7 @@
   });
 </script>
 
-<script src="https://mfslog.github.io/js/bundle.d1288006cf.js"></script>
+<script src="https://JerryZhou343.github.io/js/bundle.d1288006cf.js"></script>
 
 
 
