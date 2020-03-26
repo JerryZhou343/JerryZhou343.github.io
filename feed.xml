@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jerry&#39;s Blog</title>
+    <link>https://jerryzhou343.github.io/feed.xml</link>
+    <description>Recent content on Jerry&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://jerryzhou343.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>友链</title>
+      <link>https://jerryzhou343.github.io/links/</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/links/</guid>
+      <description>recall704</description>
+    </item>
+    
+    <item>
+      <title>关于</title>
+      <link>https://jerryzhou343.github.io/about/</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/about/</guid>
+      <description>email: Jerry.Chau#qq.com GitHub</description>
+    </item>
+    
+    <item>
+      <title>rpc 调用链中error的传递</title>
+      <link>https://jerryzhou343.github.io/post/errors/</link>
+      <pubDate>Tue, 26 Nov 2019 00:31:18 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/errors/</guid>
+      <description>&lt;p&gt;学习和探讨在微服务中如何传递error&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>设计模式</title>
+      <link>https://jerryzhou343.github.io/post/design-parttern/</link>
+      <pubDate>Sat, 19 Oct 2019 16:28:51 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/design-parttern/</guid>
+      <description>&lt;pre&gt;&lt;code&gt;阅读设计模式，ctr+c , ctr+v 做了一张思维导图
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go 继承和多态</title>
+      <link>https://jerryzhou343.github.io/post/go-oop/</link>
+      <pubDate>Sat, 12 Jan 2019 18:50:33 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/go-oop/</guid>
+      <description>&lt;p&gt;go 语言并不是纯粹的面向对象语言，那么如何实现oop呢？&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Go 对象构造</title>
+      <link>https://jerryzhou343.github.io/post/go-ctor/</link>
+      <pubDate>Sat, 12 Jan 2019 11:36:12 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/go-ctor/</guid>
+      <description>&lt;p&gt;在使用go编程的时候，如果采用面向对象的方法，那么我们需要构造对象。而go语言并不是纯粹的面向对象语言，所以不像C++类似
+的语言有默认构造函数，带参的构造函数，复制构造函数等。接下来，就来介绍下go 语言中如何构造对象&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
