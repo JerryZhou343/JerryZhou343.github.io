@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DDD on Jerry&#39;s Blog</title>
+    <link>https://jerryzhou343.github.io/tags/ddd/</link>
+    <description>Recent content in DDD on Jerry&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Tue, 26 Nov 2019 00:41:38 +0800</lastBuildDate>
+    
+	<atom:link href="https://jerryzhou343.github.io/tags/ddd/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>DDD 资料收集</title>
+      <link>https://jerryzhou343.github.io/post/ddd_hub/</link>
+      <pubDate>Tue, 26 Nov 2019 00:41:38 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/ddd_hub/</guid>
+      <description>&lt;p&gt;DDD 学习资料收集&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
