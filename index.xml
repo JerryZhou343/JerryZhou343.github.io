@@ -18,7 +18,16 @@
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
       <guid>https://jerryzhou343.github.io/links/</guid>
-      <description>recall704</description>
+      <description>技术站点 博客园 ThoughtWorks洞见 IBM Developer Freebuf infoq 友链 recall704</description>
+    </item>
+    
+    <item>
+      <title>Git workflow</title>
+      <link>https://jerryzhou343.github.io/post/gitflow/</link>
+      <pubDate>Fri, 27 Mar 2020 21:54:58 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/gitflow/</guid>
+      <description>&lt;p&gt;Git的分支就如同河流一般，从一个发源地开始，向下游流去，时而汇聚，时而分叉，分支形成的模型可以是树状的，可以是网状的。由于Git的分支特性灵活强大，许多人在刚开始使用的时候比较迷茫，什么时候该建分支，什么时候该删分支，什么时候需要分叉，什么时候需要汇聚。&lt;/p&gt;</description>
     </item>
     
     <item>
