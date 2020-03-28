@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 27 Mar 2020 21:54:58 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 28 Mar 2020 15:36:12 +0800</lastBuildDate>
     
 	<atom:link href="https://jerryzhou343.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Protocol hub</title>
+      <link>https://jerryzhou343.github.io/post/protocolhub/</link>
+      <pubDate>Sat, 28 Mar 2020 15:36:12 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/protocolhub/</guid>
+      <description>&lt;p&gt;随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Git workflow</title>

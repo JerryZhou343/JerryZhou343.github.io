@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="Protocol hub">
+<meta itemprop="description" content="随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？">
+<meta itemprop="datePublished" content="2020-03-28T15:36:12&#43;08:00" />
+<meta itemprop="dateModified" content="2020-03-28T15:36:12&#43;08:00" />
+<meta itemprop="wordCount" content="1691">
+
+
+
+<meta itemprop="keywords" content="" /><meta property="og:title" content="Protocol hub" />
+<meta property="og:description" content="随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jerryzhou343.github.io/post/protocolhub/" />
+<meta property="article:published_time" content="2020-03-28T15:36:12+08:00" />
+<meta property="article:modified_time" content="2020-03-28T15:36:12+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Protocol hub"/>
+<meta name="twitter:description" content="随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>Protocol hub</title>
+	<link rel="stylesheet" href="https://jerryzhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp faster">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://jerryzhou343.github.io">Jerry&#39;s Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://jerryzhou343.github.io/post/">Posts</a>
+				<a href="https://jerryzhou343.github.io/about/">About</a>
+				<a href="https://jerryzhou343.github.io/links/">links</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://github.com/jerryzhou343" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://jerryzhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://jerryzhou343.github.io/about/">About</a></li>
+			<li><a href="https://jerryzhou343.github.io/links/">links</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner thin animated fadeIn faster">
+		<h1>Protocol hub</h1>
+		<div class="content">
+			<p>随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？</p>
+<h1 id="0x01-存放位置划分">0x01 存放位置划分<a href="#0x01-存放位置划分" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h3 id="每个服务仓库自己管理">每个服务仓库自己管理<a href="#每个服务仓库自己管理" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>在阅读哔哩哔哩被迫开源的主站代码可以看出，B站采用的单仓库管理模型，所以服务接口定义的protocol文件不需要集中放到一个资源中心（仓库/目录),每个服务的目录在api文件夹放入接口描述文件proto，然后生成的目标语言文件也放在该目录，当其他服务依赖该服务的时候，直接import即可。大概模型如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="p">|</span>--repo
+   <span class="p">|</span>--main
+     	<span class="p">|</span>--srv-a
+      <span class="p">|</span>  	<span class="p">|</span>--api
+      <span class="p">|</span>   <span class="p">|</span>	 <span class="p">|</span>--srv-a.proto
+      <span class="p">|</span>   <span class="p">|</span>  <span class="p">|</span>--srv-a.go
+      <span class="p">|</span>   <span class="p">|</span>--internal
+      <span class="p">|</span>--srv-b
+         <span class="p">|</span>--api
+         <span class="p">|</span>  <span class="p">|</span>--srv-b.proto
+         <span class="p">|</span>  <span class="p">|</span>--srv-b.go
+         <span class="p">|</span>--internal
+</code></pre></div><h3 id="集中管理protocol-hub">集中管理，protocol hub<a href="#集中管理protocol-hub" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>即是将所有的协议文件放到个集中的位置（hub)，服务根据各种命名空间规则，分属到不同的文件目录下。划分一般有如下维度：服务层次（接入层服务，领域层服务，基础设施层服务)，产品线，中台业务归属划分等。网络上公开的可以参考<a href="https://github.com/googleapis/googleapis">Googleapis仓库</a>的管理,协议集中管理，依赖服务根据自身情况import使用。Googleapis提供协议的同时也提供根据proto 生成的目标语言仓库可以选择依赖。例如<a href="https://github.com/googleapis/go-genproto">go语言genproto仓库</a>,<a href="https://github.com/googleapis/google-api-java-client-services"> java语言仓库</a> 当然我们也可以proto去编译生成自己的仓库中，目录结构下文会提到。</p>
+<h1 id="0x02-提供原始proto文件还是目标语言文件">0x02 提供原始proto文件还是目标语言文件<a href="#0x02-提供原始proto文件还是目标语言文件" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h3 id="只提供原始proto文件">只提供原始proto文件<a href="#只提供原始proto文件" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>服务方提供接口定义的原始proto文件，依赖方根据自身的需要编译成目标语言的桩代码，这时一般需要一个仓库集中管理proto文件。</p>
+<h3 id="只提供目标语言的桩代码">只提供目标语言的桩代码<a href="#只提供目标语言的桩代码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>服务方预先编译技术栈中使用的目标语言桩代码，并放到公共的仓库中，依赖的服务import目标语言的仓库即可，这个时候需要一个公共的桩代码仓库来归档管理桩代码。</p>
+<h3 id="原始文件和目标语言桩代码都提供">原始文件和目标语言桩代码都提供<a href="#原始文件和目标语言桩代码都提供" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>像Googleapis 一样，接口的定义文件proto 和目标语言生成的桩代码都提供，依赖的服务方根据自己的需要选择自己生成桩代码还是依赖已经生成的桩代码都行。</p>
+<h1 id="0x03-proto目录风格">0x03 proto目录风格<a href="#0x03-proto目录风格" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>上文说了proto放置位置的管理，接下来讨论下目录风格。proto定义了接口，涉及到版本，命令定义，资源定义，错误码定义；</p>
+<p>服务版本：api的版本，例如v1,v2</p>
+<p>命令定义：request 和response的定义</p>
+<p>资源定义：DTO对象，例如 message User{}</p>
+<p>错误码定义： 业务的状态码的定义</p>
+<p>e.g:</p>
+<div class="highlight"><pre class="chroma"><code class="language-proto" data-lang="proto"><span class="n">syntax</span> <span class="o">=</span> <span class="s">&#34;proto3&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err">
+</span><span class="err"></span><span class="c1">//包定义
+</span><span class="c1"></span><span class="kn">package</span> <span class="nn">google</span><span class="o">.</span><span class="n">ads.googleads.v1.services</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="c1">//rpc服务定义
+</span><span class="c1"></span><span class="kd">service</span> <span class="n">AdGroupAdService</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>  <span class="k">option</span> <span class="p">(</span><span class="n">google.api.default_host</span><span class="p">)</span> <span class="o">=</span> <span class="s">&#34;googleads.googleapis.com&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>	<span class="c1">//rpc 接口定义
+</span><span class="c1"></span>  <span class="k">rpc</span> <span class="n">GetAdGroupAd</span><span class="p">(</span><span class="n">GetAdGroupAdRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">AdGroupAd</span><span class="p">)</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>    <span class="k">option</span> <span class="p">(</span><span class="n">google.api.http</span><span class="p">)</span> <span class="o">=</span> <span class="p">{</span><span class="err">
+</span><span class="err"></span>      <span class="n">get</span><span class="o">:</span> <span class="s">&#34;/v1/{resource_name=customers/*/adGroupAds/*}&#34;</span><span class="err">
+</span><span class="err"></span>    <span class="p">};</span><span class="err">
+</span><span class="err"></span>    <span class="k">option</span> <span class="p">(</span><span class="n">google.api.method_signature</span><span class="p">)</span> <span class="o">=</span> <span class="s">&#34;resource_name&#34;</span><span class="p">;</span><span class="err">
+</span><span class="err"></span>  <span class="p">}</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span><span class="err"></span><span class="c1">//请求接口参数定义
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">GetAdGroupAdRequest</span><span class="p">{}</span><span class="err">
+</span><span class="err"></span><span class="c1">//资源定义
+</span><span class="c1"></span><span class="kd">message</span> <span class="nc">AdGroupAd</span><span class="p">{}</span><span class="err">
+</span><span class="err"></span><span class="c1">//ErrCode 定义
+</span><span class="c1"></span><span class="kd">enum</span> <span class="n">ErrAdGropAdService</span><span class="p">{</span><span class="err">
+</span><span class="err"></span>	<span class="n">ok</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="err">
+</span><span class="err"></span><span class="p">}</span><span class="err">
+</span></code></pre></div><p>上面的示例是拷贝的Googleapis中的proto定义做示例说明，包定义中声明了接口的<strong>版本</strong>rpc接口定义和请求参数归为<strong>指令</strong>  AdGroupAd归为<strong>资源</strong> ErrAdGroupAdService 归为<strong>错误码（错误，业务码）</strong>。下面描述下对proto中几种不同类型的元素如何管理。</p>
+<h3 id="扁平风格">扁平风格<a href="#扁平风格" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>这样风格下，所有的元素都塞到一个proto文件中，在文件名上加入版本号，用作区分不同版本，便于依赖不同版本的proto文件。</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="p">|</span>--repo
+  <span class="p">|</span>--mainsite
+     <span class="p">|</span>--srv-a.v1.proto
+     <span class="p">|</span>--srv-b.v2.proto
+</code></pre></div><p>文件内元素可以按照段落一样归类管理，但是疏于管理的话，比较容易乱放。目录内文件太多，版本多的情况下反而显得目录内文件杂乱，服务的归属业务线也会不清晰。</p>
+<h3 id="google风格">Google风格<a href="#google风格" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p><img src="/post/img/protocolhub/google_1.jpg" alt="">
+<img src="/post/img/protocolhub/google_2.jpg" alt="">
+<img src="/post/img/protocolhub/google_3.jpg" alt=""></p>
+<p>google 的目录风格比较细致，层次也较多。服务从上层的业务线，到下层的具体服务目录，然后到版本目录后，在对各个类型的资源单独放一个目录。这样的目录比较适合巨大的服务。</p>
+<h3 id="uber风格">Uber风格<a href="#uber风格" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell">.
+└── uber
+    ├── finance
+    │   ├── ccap
+    │   │   └── v1
+    │   │       └── ccap.proto // package uber.finance.ccap.v1
+    │   └── payment
+    │       ├── v1
+    │       │   └── payment.proto // package uber.finance.payment.v1
+    │       └── v1beta1
+    │           └── payment.proto // package uber.finance.payment.v1beta1
+    └── trip
+        ├── v1
+        │   ├── trip_api.proto // package uber.trip.v1
+        │   └── trip.proto // package uber.trip.v1
+        └── v2
+            ├── trip_api.proto // package uber.trip.v2
+            └── trip.proto // package uber.trip.v2
+</code></pre></div><p>proto按照不同的业务线进行了划分，到具体具体服务目录之后再按照版本划分，版本目录是下再按照资源的不同写入不同的文件。</p>
+<h1 id="0x04-如何选择">0x04 如何选择<a href="#0x04-如何选择" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>个人的建议是将协议原始文件proto统一放到一个仓库中，依赖方根据自己需要要生成对应的桩代码，目录风格可以选择Uber的风格。不管哪种风格，只要脚手架工具支持到位都可以用着很爽。</p>
+<h1 id="0x05-参考">0x05 参考<a href="#0x05-参考" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p><a href="https://github.com/googleapis/googleapis">googleapis</a></p>
+<p><a href="https://github.com/uber/prototool/tree/dev/style#file-structure">uber</a></p>
+		</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2020 <a href="https://jerryzhou343.github.io">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://jerryzhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://jerryzhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
