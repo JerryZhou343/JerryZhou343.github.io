@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Sat, 28 Mar 2020 15:36:12 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Mar 2020 17:18:10 +0800</lastBuildDate>
     
 	<atom:link href="https://jerryzhou343.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>golang 依赖注入框架wire 和 di 体验对比</title>
+      <link>https://jerryzhou343.github.io/post/di/</link>
+      <pubDate>Sun, 29 Mar 2020 17:18:10 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/di/</guid>
+      <description>&lt;p&gt;在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Protocol hub</title>
