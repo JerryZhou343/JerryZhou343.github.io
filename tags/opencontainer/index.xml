@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>opencontainer on Jerry&#39;s Blog</title>
+    <link>https://JerryZhou343.github.io/tags/opencontainer/</link>
+    <description>Recent content in opencontainer on Jerry&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+    <lastBuildDate>Wed, 08 Jul 2020 00:06:12 +0800</lastBuildDate>
+    
+	<atom:link href="https://JerryZhou343.github.io/tags/opencontainer/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Runc 源码导读</title>
+      <link>https://JerryZhou343.github.io/post/runc_guide/</link>
+      <pubDate>Wed, 08 Jul 2020 00:06:12 +0800</pubDate>
+      
+      <guid>https://JerryZhou343.github.io/post/runc_guide/</guid>
+      <description>&lt;p&gt;runc 是OCI 的实现，是云原生系统的最底下的积木&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
