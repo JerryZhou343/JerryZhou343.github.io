@@ -11,7 +11,7 @@
 <meta itemprop="description" content="runc 是OCI 的实现，是云原生系统的最底下的积木">
 <meta itemprop="datePublished" content="2020-07-08T00:06:12&#43;08:00" />
 <meta itemprop="dateModified" content="2020-07-08T00:06:12&#43;08:00" />
-<meta itemprop="wordCount" content="816">
+<meta itemprop="wordCount" content="936">
 
 
 
@@ -150,6 +150,13 @@ runc restore <span class="c1"># init  true，action为CT_ACT_RESTORE [该指令�
 </code></pre></div><h2 id="类图">类图<a href="#类图" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <p><img src="/post/img/runc/runc_class.svg" alt="runc_classs"></p>
 <h1 id="容器创建活动图">容器创建活动图<a href="#容器创建活动图" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>各个进程的关系：</p>
+<ol>
+<li>containerd 垫片进程拉起 runc  create</li>
+<li>runc  create 拉起 runc init parent   (runc/libcontainer/process_linux.go: initProcess.start())</li>
+<li>runc init parent 通过clone 函数创建 runc init child 进程 (runc/libcontainer/nsenter/nsexec.c: clone_parent())</li>
+<li>runc init child 进程通过clone 函数创建 runc init grand child 进程(runc/libcontainer/nsenter/nsexec.c:clone_parent())</li>
+</ol>
 <p><img src="/post/img/runc/runc_activity.svg" alt="runc_activity"></p>
 <h1 id="时序图">时序图<a href="#时序图" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>runc 进程通信时序图</p>

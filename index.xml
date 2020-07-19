@@ -22,6 +22,15 @@
     </item>
     
     <item>
+      <title>containerd 源码导读-基础篇</title>
+      <link>https://JerryZhou343.github.io/post/containerd_guide_base/</link>
+      <pubDate>Thu, 16 Jul 2020 23:25:27 +0800</pubDate>
+      
+      <guid>https://JerryZhou343.github.io/post/containerd_guide_base/</guid>
+      <description>&lt;p&gt;Containerd 源码基础结构分享关键的服务基础类&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Runc 源码导读</title>
       <link>https://JerryZhou343.github.io/post/runc_guide/</link>
       <pubDate>Wed, 08 Jul 2020 00:06:12 +0800</pubDate>
@@ -92,15 +101,6 @@
       <guid>https://JerryZhou343.github.io/post/design-parttern/</guid>
       <description>&lt;pre&gt;&lt;code&gt;阅读设计模式，ctr+c , ctr+v 做了一张思维导图
 &lt;/code&gt;&lt;/pre&gt;</description>
-    </item>
-    
-    <item>
-      <title>Go 继承和多态</title>
-      <link>https://JerryZhou343.github.io/post/go-oop/</link>
-      <pubDate>Sat, 12 Jan 2019 18:50:33 +0800</pubDate>
-      
-      <guid>https://JerryZhou343.github.io/post/go-oop/</guid>
-      <description>&lt;p&gt;go 语言并不是纯粹的面向对象语言，那么如何实现oop呢？&lt;/p&gt;</description>
     </item>
     
   </channel>
