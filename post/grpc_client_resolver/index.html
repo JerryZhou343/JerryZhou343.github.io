@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="GRPC-go 客户端组件介绍-resolver">
+<meta itemprop="description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。">
+<meta itemprop="datePublished" content="2021-01-12T11:36:12&#43;08:00" />
+<meta itemprop="dateModified" content="2021-01-12T11:36:12&#43;08:00" />
+<meta itemprop="wordCount" content="1122">
+
+
+
+<meta itemprop="keywords" content="go," /><meta property="og:title" content="GRPC-go 客户端组件介绍-resolver" />
+<meta property="og:description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jerryzhou343.github.io/post/grpc_client_resolver/" />
+<meta property="article:published_time" content="2021-01-12T11:36:12+08:00" />
+<meta property="article:modified_time" content="2021-01-12T11:36:12+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GRPC-go 客户端组件介绍-resolver"/>
+<meta name="twitter:description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>GRPC-go 客户端组件介绍-resolver</title>
+	<link rel="stylesheet" href="https://jerryzhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp faster">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://jerryzhou343.github.io/">Jerry&#39;s Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://jerryzhou343.github.io/post/">Posts</a>
+				<a href="https://jerryzhou343.github.io/about/">About</a>
+				<a href="https://jerryzhou343.github.io/links/">links</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://github.com/jerryzhou343" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://jerryzhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://jerryzhou343.github.io/about/">About</a></li>
+			<li><a href="https://jerryzhou343.github.io/links/">links</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner thin animated fadeIn faster">
+		<h1>GRPC-go 客户端组件介绍-resolver</h1>
+		<div class="content">
+			<p>GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。</p>
+<h1 id="0x01-resolver">0x01 resolver<a href="#0x01-resolver" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>服务发现组件和客户端的UML 类图如下：</p>
+<p><img src="/post/img/grpc/resolver_class.svg" alt="">
+在GRPC-go resolver组件代码中（$projectPath/resolver/resolver.go) 关键代码如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Address</span> <span class="kd">struct</span><span class="p">{</span>
+	<span class="nx">Addr</span> <span class="kt">string</span>
+	<span class="nx">ServerName</span> <span class="kt">string</span>
+	<span class="nx">Attributes</span> <span class="o">*</span><span class="nx">attributes</span><span class="p">.</span><span class="nx">Attributes</span>
+	<span class="nx">Metadata</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="c1">//resolver对象的输出，ClientConn对象的输入
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">State</span> <span class="kd">struct</span><span class="p">{</span>
+	<span class="nx">Addresses</span> <span class="p">[]</span><span class="nx">Address</span>
+<span class="p">}</span>
+<span class="c1">//ClientConn 对象定义
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ClientConn</span> <span class="kd">interface</span><span class="p">{</span>
+<span class="c1">//客户端地址更新接口
+</span><span class="c1"></span>	<span class="nf">UpdateState</span><span class="p">(</span><span class="nx">State</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>从上述代码可以看到，client通过UpdateState 方法更新地址信息；</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Resolver</span> <span class="kd">interface</span><span class="p">{</span>
+	<span class="nf">ResolveNow</span><span class="p">(</span><span class="nx">ResolveNowOptions</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Builder</span> <span class="kd">interface</span><span class="p">{</span>
+	<span class="nf">Build</span><span class="p">(</span><span class="nx">target</span> <span class="nx">Target</span><span class="p">,</span> <span class="nx">cc</span> <span class="nx">ClientConn</span><span class="p">,</span> <span class="nx">opts</span> <span class="nx">BuildOptions</span><span class="p">)(</span><span class="nx">Resolver</span><span class="p">,</span><span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>通过上述代码，当前可知，在构建resolver对象的时候将ClientConn对象注入到了 resolver对象中。这样，resolver在解析到地址的时候，通过client的UpdateState方法将State 输入到client中。
+通过（$projectPath/internal/resolver/dns_resolver.go）dns resolver代码进行验证：</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span><span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">dnsBuilder</span><span class="p">)</span><span class="nf">Build</span><span class="p">(</span><span class="nx">targe</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">Targe</span><span class="p">,</span><span class="nx">cc</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">ClientConn</span><span class="p">,</span><span class="nx">opts</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">BuildOptions</span><span class="p">)(</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Resolver</span><span class="p">,</span> <span class="kt">error</span><span class="p">){</span>
+<span class="c1">//...
+</span><span class="c1">//dnsResolver在构造的时候包含resolver.ClientConn对象
+</span><span class="c1"></span><span class="nx">d</span> <span class="o">:=&amp;</span><span class="nx">dnsResolver</span><span class="p">{</span>
+	<span class="nx">host</span><span class="p">:</span><span class="nx">host</span><span class="p">,</span>
+	<span class="nx">port</span><span class="p">:</span><span class="nx">port</span><span class="p">,</span>
+	<span class="nx">ctx</span><span class="p">:</span><span class="nx">ctx</span><span class="p">,</span>
+	<span class="nx">cancel</span><span class="p">:</span><span class="nx">cancel</span><span class="p">,</span>
+	<span class="nx">cc</span><span class="p">:</span><span class="nx">cc</span><span class="p">,</span>
+	<span class="nx">rn</span><span class="p">:</span><span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kd">struct</span><span class="p">{},</span><span class="mi">1</span><span class="p">),</span>
+	<span class="nx">disableServiceConfig</span><span class="p">:</span><span class="nx">opts</span><span class="p">.</span><span class="nx">DisableServiceConfig</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1">//...
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kd">func</span><span class="p">(</span><span class="nx">d</span> <span class="o">*</span><span class="nx">dnsResolver</span><span class="p">)</span><span class="nf">watcher</span><span class="p">(){</span>
+	<span class="k">defer</span> <span class="nx">d</span><span class="p">.</span><span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+	<span class="k">for</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">d</span><span class="p">.</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+			<span class="k">return</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">d</span><span class="p">.</span><span class="nx">rn</span><span class="p">:</span>
+		<span class="p">}</span>
+
+		<span class="nx">state</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">d</span><span class="p">.</span><span class="nf">lookup</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">d</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">ReportError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="c1">//调用con 对象，更新地址列表
+</span><span class="c1"></span>			<span class="nx">d</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">UpdateState</span><span class="p">(</span><span class="o">*</span><span class="nx">state</span><span class="p">)</span>
+		<span class="p">}</span>
+
+		<span class="c1">// Sleep to prevent excessive re-resolutions. Incoming resolution requests
+</span><span class="c1"></span>		<span class="c1">// will be queued in d.rn.
+</span><span class="c1"></span>		<span class="nx">t</span> <span class="o">:=</span> <span class="nx">time</span><span class="p">.</span><span class="nf">NewTimer</span><span class="p">(</span><span class="nx">minDNSResRate</span><span class="p">)</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">t</span><span class="p">.</span><span class="nx">C</span><span class="p">:</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">d</span><span class="p">.</span><span class="nx">ctx</span><span class="p">.</span><span class="nf">Done</span><span class="p">():</span>
+			<span class="nx">t</span><span class="p">.</span><span class="nf">Stop</span><span class="p">()</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+<span class="p">}</span>
+</code></pre></div><p>从上面的代码可以看到，resolver对象正是通过client的UpdateState方法将地址信息输入到client对象中。
+client 侧是如何实现Resolver.ClientConn方法的呢？通过阅读$projectPath/resolver_conn_wrapper.go  我们可以看到client侧的实现</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//client resolver 胶水层代码，聚合处理client的服务发现功能。粘接ClientConn 和resolver.Resolver 对象。
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ccResolverWrapper</span> <span class="kd">struct</span><span class="p">{</span>
+	<span class="nx">cc</span> <span class="o">*</span><span class="nx">ClientConn</span>
+	<span class="nx">resolverMu</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+	<span class="nx">resolver</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">Resolver</span>
+	<span class="nx">Done</span> <span class="o">*</span><span class="nx">grpcsync</span><span class="p">.</span><span class="nx">Event</span>
+	<span class="nx">curState</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">State</span>
+	<span class="nx">pollingMu</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+	<span class="nx">polling</span> <span class="kd">chan</span> <span class="kd">struct</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="c1">//构造ccResolverWrapper 胶水层时，将ClientConn 和解析器构造器一起注入。
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">newCCResolverWrapper</span><span class="p">(</span><span class="nx">cc</span> <span class="o">*</span><span class="nx">ClientConn</span><span class="p">,</span> <span class="nx">rb</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">Builder</span><span class="p">)(</span><span class="nx">ccResolverWrapper</span><span class="p">,</span><span class="kt">error</span><span class="p">)</span>
+
+<span class="c1">//该方法触发服务发现,立即进行地址解析。
+</span><span class="c1"></span><span class="kd">func</span><span class="p">(</span><span class="nx">ccr</span> <span class="o">*</span><span class="nx">ccResolverWrapper</span><span class="p">)</span><span class="nf">ResolveNow</span><span class="p">(</span><span class="nx">o</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">ResolverNowOptions</span><span class="p">){</span>
+<span class="c1">//...
+</span><span class="c1">//触发解析器立即解析。
+</span><span class="c1"></span>	<span class="nx">ccr</span><span class="p">.</span><span class="nx">resolver</span><span class="p">.</span><span class="nf">ResolverNow</span><span class="p">(</span><span class="nx">o</span><span class="p">)</span>
+<span class="c1">//...
+</span><span class="c1"></span><span class="p">}</span>
+<span class="c1">//通过调用ClientConn 的updateResolverState 方法完成地址更新
+</span><span class="c1"></span><span class="kd">func</span><span class="p">(</span><span class="nx">ccr</span> <span class="o">*</span><span class="nx">ccResolverWrapper</span><span class="p">)</span><span class="nf">UpdateState</span><span class="p">(</span><span class="nx">s</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">State</span><span class="p">){</span>
+	<span class="nx">ccr</span><span class="p">.</span><span class="nf">poll</span><span class="p">(</span><span class="nx">ccr</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">updateResolverState</span><span class="p">(</span><span class="nx">ccr</span><span class="p">.</span><span class="nx">curState</span><span class="p">,</span><span class="kc">nil</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div><h1 id="总结">总结<a href="#总结" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>1.resolve.Address 对象是resolver解析服务最小单元地址信息。</p>
+<p>2.resolve.State 对象是client和resolver通信的对象，resolver通过client.UpdateState方法更新地址信息，client 通过resolver.ResolveNow触发服务发现。</p>
+<p>3.resolver 和client 为关联关系。</p>
+<p>4.grpc的client通过 ccResolverWrapper 胶水对象聚合了client的服务发现逻辑。</p>
+		</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://jerryzhou343.github.io/">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://jerryzhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://jerryzhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
