@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="网络通信代码阅读套路">
+<meta itemprop="description" content="涉及到网络通信的代码阅读套路">
+<meta itemprop="datePublished" content="2021-04-28T00:44:08&#43;08:00" />
+<meta itemprop="dateModified" content="2021-04-28T00:44:08&#43;08:00" />
+<meta itemprop="wordCount" content="1889">
+
+
+
+<meta itemprop="keywords" content="" /><meta property="og:title" content="网络通信代码阅读套路" />
+<meta property="og:description" content="涉及到网络通信的代码阅读套路" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://JerryZhou343.github.io/post/network_communicate_code/" />
+<meta property="article:published_time" content="2021-04-28T00:44:08+08:00" />
+<meta property="article:modified_time" content="2021-04-28T00:44:08+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="网络通信代码阅读套路"/>
+<meta name="twitter:description" content="涉及到网络通信的代码阅读套路"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>网络通信代码阅读套路</title>
+	<link rel="stylesheet" href="https://JerryZhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp faster">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://JerryZhou343.github.io/">Jerry&#39;s Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://JerryZhou343.github.io/post/">Posts</a>
+				<a href="https://JerryZhou343.github.io/about/">About</a>
+				<a href="https://JerryZhou343.github.io/links/">links</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://github.com/jerryzhou343" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://JerryZhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://JerryZhou343.github.io/about/">About</a></li>
+			<li><a href="https://JerryZhou343.github.io/links/">links</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner thin animated fadeIn faster">
+		<h1>网络通信代码阅读套路</h1>
+		<div class="content">
+			<p>涉及到网络通信的代码阅读套路</p>
+<h1 id="0x01-分层架构">0x01 分层架构<a href="#0x01-分层架构" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="11-架构定义">1.1 架构定义<a href="#11-架构定义" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>分层架构模式也叫做N层架构，分层架构模式中，每层都有特定的角色和职能。一般RPC 框架都是分层架构。例如GRPC，dubbo; RPC 框架可以分为transport 通信层，RPC方法路由层，业务service层。</p>
+<h2 id="12-上下层间的通信方式">1.2 上下层间的通信方式<a href="#12-上下层间的通信方式" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>分层架构中，上下层是需要通信的，一般上层和下层通信的时候，通过直接调用下层的方法即可。但是也有下层要主动需要和上层通信的情况，例如某个业务请求到了，或者某个事件发生了。下层和上层的通信主要有下面两种方式：</p>
+<h3 id="121-回调">1.2.1 回调<a href="#121-回调" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>上层可以通过想下层注册回调函数，类似于下层委托（函数指针）上层的方法处理请求。在下层事件发生或者网络包到达的时候调用上层的注册函数。</p>
+<h3 id="122-发布订阅模式">1.2.2 发布订阅模式<a href="#122-发布订阅模式" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>发布订阅模式可以基于观察者模式，消息队列的方式来实现；观察者模式可以立即调用订阅状态变化的对象方法，上下层有耦合。消息队列者可以解耦两者；上层者可以通过自己的实际的消息消费能力去处理消息，但是一般业务框架都需要立即响应请求，所以发布订阅模式RPC 框架中不业务请求中使用。</p>
+<h1 id="0x02-代码分层">0x02 代码分层<a href="#0x02-代码分层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h3 id="通信层">通信层<a href="#通信层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>通信层负责处理网络通信；责任为通过系统网络调用发起各种方式（TCP/HTTP/HTTPS）的网络包传输；如果用的TCP 则需要自己处理自定义的packet，需要校验包大小，是否收包完整；网络包一般分为head 和body， head会带一些token，方法路由信息，trace信息等公共使用的信息。如果使用的HTTP、HTTP2则有标准库来帮忙处理收包是否完整；TCP 自定义包协议格式推荐学习BaiduStd 协议格式。</p>
+<h3 id="路由层">路由层<a href="#路由层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>路由层需要通过网络层解包后从头部信息中拿到方法信息。例如GRPC 其通信包头中含有消息需要路由到的服务名称和方法名称；这一层的路由非常简单，不会像网络路由那样复杂，直接通过map hash查找即可；一般情况下在RPC服务起来的时候，向server注入service对象，可以显示的方法绑定或者通过反射自动绑定。推荐反射，方式注入service方法，这样简单舒心，使用protobuffer，更是舒服，有协议编译工具直接生成桩代码；在网络层通知路由层消息到达后，路由层再回调service层对应的业务方法；路由层一般会负责网络body包的decoding 和 encoding，压缩和解压缩，还会有一些方法拦截器在路由层调用service层方法前调用。</p>
+<h3 id="业务层">业务层<a href="#业务层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>业务层负责实现业务代码，响应客户端的请求。操作数据库数据等等；</p>
+<h1 id="0x03-grpc-代码分层">0x03 GRPC 代码分层<a href="#0x03-grpc-代码分层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h3 id="31-transport-层">3.1 transport 层<a href="#31-transport-层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code>GRPC transport通信层代码分为client端和server端；下面说说server端的代码：
+//${GRPC_PROJECT}/internal/transport/handler_server.go
+</code></pre>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go">   <span class="c1">//这就是transport对象
+</span><span class="c1"></span>   <span class="kd">type</span> <span class="nx">serverHandlerTransport</span> <span class="kd">struct</span> <span class="p">{</span>
+   <span class="c1">//....
+</span><span class="c1"></span>   <span class="p">}</span>
+   <span class="c1">//下面这个这个方法就是传输层回调上层-路由层的方法。func(*Stream) 就是回调的函数指针
+</span><span class="c1"></span>   <span class="kd">func</span> <span class="p">(</span><span class="nx">ht</span> <span class="o">*</span><span class="nx">serverHandlerTransport</span><span class="p">)</span> <span class="nf">HandleStreams</span><span class="p">(</span><span class="nx">startStream</span> 	<span class="kd">func</span><span class="p">(</span><span class="o">*</span><span class="nx">Stream</span><span class="p">),</span> <span class="nx">traceCtx</span> <span class="kd">func</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">{</span>
+   <span class="c1">// With this transport type there will be exactly 1 stream: this HTTP request.
+</span><span class="c1"></span>   <span class="p">}</span>
+   
+</code></pre></div><h3 id="32-router层">3.2 router层<a href="#32-router层" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<pre><code>向server 注入方法路由
+//${GRPC_PROJECT}/server.go
+</code></pre>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//服务描述有由protobuf通过service描述生成方法桩代码
+</span><span class="c1">//ServiceDesc信息就是来自桩代码 
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">register</span><span class="p">(</span><span class="nx">sd</span> <span class="o">*</span><span class="nx">ServiceDesc</span><span class="p">,</span> <span class="nx">ss</span> <span class="kd">interface</span><span class="p">{})</span> <span class="p">{</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="k">defer</span> <span class="nx">s</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nf">printf</span><span class="p">(</span><span class="s">&#34;RegisterService(%q)&#34;</span><span class="p">,</span> <span class="nx">sd</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nx">serve</span> <span class="p">{</span>
+		<span class="nx">logger</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;grpc: Server.RegisterService after Server.Serve for %q&#34;</span><span class="p">,</span> <span class="nx">sd</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="c1">//
+</span><span class="c1"></span>	<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">services</span><span class="p">[</span><span class="nx">sd</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="nx">logger</span><span class="p">.</span><span class="nf">Fatalf</span><span class="p">(</span><span class="s">&#34;grpc: Server.RegisterService found duplicate service registration for %q&#34;</span><span class="p">,</span> <span class="nx">sd</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="c1">//服务信息
+</span><span class="c1"></span>	<span class="nx">info</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">serviceInfo</span><span class="p">{</span>
+		<span class="nx">serviceImpl</span><span class="p">:</span> <span class="nx">ss</span><span class="p">,</span>
+		<span class="c1">//一元方法描述map
+</span><span class="c1"></span>		<span class="nx">methods</span><span class="p">:</span>     <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">MethodDesc</span><span class="p">),</span>
+		<span class="c1">//流式方法描述map
+</span><span class="c1"></span>		<span class="nx">streams</span><span class="p">:</span>     <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">*</span><span class="nx">StreamDesc</span><span class="p">),</span>
+		<span class="nx">mdata</span><span class="p">:</span>       <span class="nx">sd</span><span class="p">.</span><span class="nx">Metadata</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="c1">//填入一元方法描述
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">sd</span><span class="p">.</span><span class="nx">Methods</span> <span class="p">{</span>
+		<span class="nx">d</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sd</span><span class="p">.</span><span class="nx">Methods</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+		<span class="nx">info</span><span class="p">.</span><span class="nx">methods</span><span class="p">[</span><span class="nx">d</span><span class="p">.</span><span class="nx">MethodName</span><span class="p">]</span> <span class="p">=</span> <span class="nx">d</span>
+	<span class="p">}</span>
+	<span class="c1">//填入流式方法描述
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">sd</span><span class="p">.</span><span class="nx">Streams</span> <span class="p">{</span>
+		<span class="nx">d</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">sd</span><span class="p">.</span><span class="nx">Streams</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span>
+		<span class="nx">info</span><span class="p">.</span><span class="nx">streams</span><span class="p">[</span><span class="nx">d</span><span class="p">.</span><span class="nx">StreamName</span><span class="p">]</span> <span class="p">=</span> <span class="nx">d</span>
+	<span class="p">}</span>
+	<span class="nx">s</span><span class="p">.</span><span class="nx">services</span><span class="p">[</span><span class="nx">sd</span><span class="p">.</span><span class="nx">ServiceName</span><span class="p">]</span> <span class="p">=</span> <span class="nx">info</span>
+<span class="p">}</span>
+</code></pre></div><p>路由注入transport的回调方法：
+${GRPC_PROJECT}/server.go</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">serveStreams</span><span class="p">(</span><span class="nx">st</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">ServerTransport</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nx">st</span><span class="p">.</span><span class="nf">Close</span><span class="p">()</span>
+	<span class="kd">var</span> <span class="nx">wg</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">WaitGroup</span>
+
+	<span class="kd">var</span> <span class="nx">roundRobinCounter</span> <span class="kt">uint32</span>
+	<span class="c1">//st 为servertransport对象，stream 则为transport层给上层回调函数的传参代表一次请求
+</span><span class="c1"></span>	<span class="nx">st</span><span class="p">.</span><span class="nf">HandleStreams</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">stream</span> <span class="o">*</span><span class="nx">transport</span><span class="p">.</span><span class="nx">Stream</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">wg</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="c1">//如果设置了工作池，则消息通过chan传递出去；
+</span><span class="c1"></span>		<span class="k">if</span> <span class="nx">s</span><span class="p">.</span><span class="nx">opts</span><span class="p">.</span><span class="nx">numServerWorkers</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+			<span class="nx">data</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">serverWorkerData</span><span class="p">{</span><span class="nx">st</span><span class="p">:</span> <span class="nx">st</span><span class="p">,</span> <span class="nx">wg</span><span class="p">:</span> <span class="o">&amp;</span><span class="nx">wg</span><span class="p">,</span> <span class="nx">stream</span><span class="p">:</span> <span class="nx">stream</span><span class="p">}</span>
+			<span class="k">select</span> <span class="p">{</span>
+			<span class="k">case</span> <span class="nx">s</span><span class="p">.</span><span class="nx">serverWorkerChannels</span><span class="p">[</span><span class="nx">atomic</span><span class="p">.</span><span class="nf">AddUint32</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">roundRobinCounter</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="nx">s</span><span class="p">.</span><span class="nx">opts</span><span class="p">.</span><span class="nx">numServerWorkers</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="nx">data</span><span class="p">:</span>
+			<span class="k">default</span><span class="p">:</span>
+				<span class="c1">// If all stream workers are busy, fallback to the default code path.  
+</span><span class="c1"></span>				<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+					<span class="nx">s</span><span class="p">.</span><span class="nf">handleStream</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">traceInfo</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">stream</span><span class="p">))</span>
+					<span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+				<span class="p">}()</span>
+			<span class="p">}</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="c1">//默认情况下直接go出协程处理
+</span><span class="c1"></span>			<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+				<span class="k">defer</span> <span class="nx">wg</span><span class="p">.</span><span class="nf">Done</span><span class="p">()</span>
+				<span class="nx">s</span><span class="p">.</span><span class="nf">handleStream</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">s</span><span class="p">.</span><span class="nf">traceInfo</span><span class="p">(</span><span class="nx">st</span><span class="p">,</span> <span class="nx">stream</span><span class="p">))</span>
+			<span class="p">}()</span>
+		<span class="p">}</span>
+	<span class="p">},</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">method</span> <span class="kt">string</span><span class="p">)</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">!</span><span class="nx">EnableTracing</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">ctx</span>
+		<span class="p">}</span>
+		<span class="nx">tr</span> <span class="o">:=</span> <span class="nx">trace</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;grpc.Recv.&#34;</span><span class="o">+</span><span class="nf">methodFamily</span><span class="p">(</span><span class="nx">method</span><span class="p">),</span> <span class="nx">method</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nx">trace</span><span class="p">.</span><span class="nf">NewContext</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">tr</span><span class="p">)</span>
+	<span class="p">})</span>
+	<span class="nx">wg</span><span class="p">.</span><span class="nf">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div><p>路由查找对应的service方法：
+//${GRPC_PROJECT}/server.go</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Server</span><span class="p">)</span> <span class="nf">handleStream</span><span class="p">(</span><span class="nx">t</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">ServerTransport</span><span class="p">,</span> <span class="nx">stream</span> <span class="o">*</span><span class="nx">transport</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">trInfo</span> <span class="o">*</span><span class="nx">traceInfo</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">//.... 省略
+</span><span class="c1"></span>	<span class="nx">service</span> <span class="o">:=</span> <span class="nx">sm</span><span class="p">[:</span><span class="nx">pos</span><span class="p">]</span>
+	<span class="nx">method</span> <span class="o">:=</span> <span class="nx">sm</span><span class="p">[</span><span class="nx">pos</span><span class="o">+</span><span class="mi">1</span><span class="p">:]</span>
+
+	<span class="nx">srv</span><span class="p">,</span> <span class="nx">knownService</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">services</span><span class="p">[</span><span class="nx">service</span><span class="p">]</span>
+	<span class="k">if</span> <span class="nx">knownService</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">md</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">srv</span><span class="p">.</span><span class="nx">methods</span><span class="p">[</span><span class="nx">method</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+			<span class="c1">//一元请求消息
+</span><span class="c1"></span>			<span class="c1">//1. 解压缩
+</span><span class="c1"></span>			<span class="c1">//2. decode
+</span><span class="c1"></span>			<span class="c1">//3. 通过下面的语句调用service层注册的service方法。
+</span><span class="c1"></span>			<span class="c1">//reply, appErr := md.Handler(info.serviceImpl, ctx, df, s.opts.unaryInt)
+</span><span class="c1"></span>			<span class="nx">s</span><span class="p">.</span><span class="nf">processUnaryRPC</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">srv</span><span class="p">,</span> <span class="nx">md</span><span class="p">,</span> <span class="nx">trInfo</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">sd</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">srv</span><span class="p">.</span><span class="nx">streams</span><span class="p">[</span><span class="nx">method</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+		<span class="c1">//流式消息
+</span><span class="c1"></span>			<span class="nx">s</span><span class="p">.</span><span class="nf">processStreamingRPC</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="nx">stream</span><span class="p">,</span> <span class="nx">srv</span><span class="p">,</span> <span class="nx">sd</span><span class="p">,</span> <span class="nx">trInfo</span><span class="p">)</span>
+			<span class="k">return</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="c1">//....省略
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h1 id="0x04-总结">0x04 总结<a href="#0x04-总结" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>1.通过概念描述介绍和对GRPC 代码的拆解，我们可以看到涉及到服务通信的代码如何通过分层思路去阅读。</p>
+<p>2.每个层负责的职责不一样，通过回调解耦了上下层；所以可以做多通信层，单路由或者多路由和单service层的代码。例如：nsqd 提供HTTP和TCP 两种通信方式，但是其service层是公用的。</p>
+		</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://JerryZhou343.github.io/">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://JerryZhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://JerryZhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
