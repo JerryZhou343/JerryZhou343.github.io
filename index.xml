@@ -40,6 +40,15 @@
     </item>
     
     <item>
+      <title>GRPC-go 客户端组件介绍-balancer</title>
+      <link>https://JerryZhou343.github.io/post/grpc_client_balancer/</link>
+      <pubDate>Wed, 13 Jan 2021 11:36:12 +0800</pubDate>
+      
+      <guid>https://JerryZhou343.github.io/post/grpc_client_balancer/</guid>
+      <description>&lt;p&gt;GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>GRPC-go 客户端组件介绍-resolver</title>
       <link>https://JerryZhou343.github.io/post/grpc_client_resolver/</link>
       <pubDate>Tue, 12 Jan 2021 11:36:12 +0800</pubDate>
@@ -85,21 +94,12 @@
     </item>
     
     <item>
-      <title>golang 依赖注入框架wire 和 di 体验对比</title>
+      <title>golang 依赖注入 wire 和 dig 体验对比</title>
       <link>https://JerryZhou343.github.io/post/di/</link>
       <pubDate>Sun, 29 Mar 2020 17:18:10 +0800</pubDate>
       
       <guid>https://JerryZhou343.github.io/post/di/</guid>
       <description>&lt;p&gt;在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Protocol hub</title>
-      <link>https://JerryZhou343.github.io/post/protocolhub/</link>
-      <pubDate>Sat, 28 Mar 2020 15:36:12 +0800</pubDate>
-      
-      <guid>https://JerryZhou343.github.io/post/protocolhub/</guid>
-      <description>&lt;p&gt;随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？&lt;/p&gt;</description>
     </item>
     
   </channel>

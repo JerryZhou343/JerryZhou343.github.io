@@ -7,7 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
-<meta itemprop="name" content="golang 依赖注入框架wire 和 di 体验对比">
+<meta itemprop="name" content="golang 依赖注入 wire 和 dig 体验对比">
 <meta itemprop="description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。">
 <meta itemprop="datePublished" content="2020-03-29T17:18:10&#43;08:00" />
 <meta itemprop="dateModified" content="2020-03-29T17:18:10&#43;08:00" />
@@ -15,14 +15,14 @@
 
 
 
-<meta itemprop="keywords" content="" /><meta property="og:title" content="golang 依赖注入框架wire 和 di 体验对比" />
+<meta itemprop="keywords" content="" /><meta property="og:title" content="golang 依赖注入 wire 和 dig 体验对比" />
 <meta property="og:description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://JerryZhou343.github.io/post/di/" />
 <meta property="article:published_time" content="2020-03-29T17:18:10+08:00" />
 <meta property="article:modified_time" content="2020-03-29T17:18:10+08:00" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="golang 依赖注入框架wire 和 di 体验对比"/>
+<meta name="twitter:title" content="golang 依赖注入 wire 和 dig 体验对比"/>
 <meta name="twitter:description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。"/>
 
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -32,7 +32,7 @@
 	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
 	<link rel="shortcut icon" href="/favicon.ico">
 
-	<title>golang 依赖注入框架wire 和 di 体验对比</title>
+	<title>golang 依赖注入 wire 和 dig 体验对比</title>
 	<link rel="stylesheet" href="https://JerryZhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
 	
 </head>
@@ -68,7 +68,7 @@
 
 
 	<main class="site-main section-inner thin animated fadeIn faster">
-		<h1>golang 依赖注入框架wire 和 di 体验对比</h1>
+		<h1>golang 依赖注入 wire 和 dig 体验对比</h1>
 		<div class="content">
 			<p>在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。</p>
 <h1 id="0x01-dig">0x01 dig<a href="#0x01-dig" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>

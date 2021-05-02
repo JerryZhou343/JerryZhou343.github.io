@@ -11,7 +11,7 @@
 <meta itemprop="description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。">
 <meta itemprop="datePublished" content="2021-01-12T11:36:12&#43;08:00" />
 <meta itemprop="dateModified" content="2021-01-12T11:36:12&#43;08:00" />
-<meta itemprop="wordCount" content="1122">
+<meta itemprop="wordCount" content="1117">
 
 
 
@@ -85,7 +85,7 @@
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">State</span> <span class="kd">struct</span><span class="p">{</span>
 	<span class="nx">Addresses</span> <span class="p">[]</span><span class="nx">Address</span>
 <span class="p">}</span>
-<span class="c1">//ClientConn 对象定义
+<span class="c1">//ClientConn 接口定义
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">ClientConn</span> <span class="kd">interface</span><span class="p">{</span>
 <span class="c1">//客户端地址更新接口
 </span><span class="c1"></span>	<span class="nf">UpdateState</span><span class="p">(</span><span class="nx">State</span><span class="p">)</span>
@@ -173,7 +173,7 @@ client 侧是如何实现Resolver.ClientConn方法的呢？通过阅读$projectP
 </code></pre></div><h1 id="总结">总结<a href="#总结" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>1.resolve.Address 对象是resolver解析服务最小单元地址信息。</p>
 <p>2.resolve.State 对象是client和resolver通信的对象，resolver通过client.UpdateState方法更新地址信息，client 通过resolver.ResolveNow触发服务发现。</p>
-<p>3.resolver 和client 为关联关系。</p>
+<p>3.resolver 和 ccResolverWrapper 为关联关系。</p>
 <p>4.grpc的client通过 ccResolverWrapper 胶水对象聚合了client的服务发现逻辑。</p>
 		</div>
 	</main>

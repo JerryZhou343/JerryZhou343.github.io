@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Tue, 12 Jan 2021 11:36:12 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 13 Jan 2021 11:36:12 +0800</lastBuildDate>
     
 	<atom:link href="https://JerryZhou343.github.io/tags/go/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GRPC-go 客户端组件介绍-balancer</title>
+      <link>https://JerryZhou343.github.io/post/grpc_client_balancer/</link>
+      <pubDate>Wed, 13 Jan 2021 11:36:12 +0800</pubDate>
+      
+      <guid>https://JerryZhou343.github.io/post/grpc_client_balancer/</guid>
+      <description>&lt;p&gt;GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>GRPC-go 客户端组件介绍-resolver</title>

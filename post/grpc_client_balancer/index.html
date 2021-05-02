@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="GRPC-go 客户端组件介绍-balancer">
+<meta itemprop="description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；">
+<meta itemprop="datePublished" content="2021-01-13T11:36:12&#43;08:00" />
+<meta itemprop="dateModified" content="2021-01-13T11:36:12&#43;08:00" />
+<meta itemprop="wordCount" content="2975">
+
+
+
+<meta itemprop="keywords" content="go," /><meta property="og:title" content="GRPC-go 客户端组件介绍-balancer" />
+<meta property="og:description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://JerryZhou343.github.io/post/grpc_client_balancer/" />
+<meta property="article:published_time" content="2021-01-13T11:36:12+08:00" />
+<meta property="article:modified_time" content="2021-01-13T11:36:12+08:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GRPC-go 客户端组件介绍-balancer"/>
+<meta name="twitter:description" content="GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>GRPC-go 客户端组件介绍-balancer</title>
+	<link rel="stylesheet" href="https://JerryZhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp faster">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://JerryZhou343.github.io/">Jerry&#39;s Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://JerryZhou343.github.io/post/">Posts</a>
+				<a href="https://JerryZhou343.github.io/about/">About</a>
+				<a href="https://JerryZhou343.github.io/links/">links</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://github.com/jerryzhou343" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://JerryZhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://JerryZhou343.github.io/about/">About</a></li>
+			<li><a href="https://JerryZhou343.github.io/links/">links</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner thin animated fadeIn faster">
+		<h1>GRPC-go 客户端组件介绍-balancer</h1>
+		<div class="content">
+			<p>GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；</p>
+<h1 id="0x01-balancer">0x01 balancer<a href="#0x01-balancer" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>整体的类图如下：</p>
+<p><img src="/post/img/grpc/balancer_class.svg" alt=""></p>
+<h3 id="11-clientconn">1.1 ClientConn<a href="#11-clientconn" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>6大编程原则中有一条为接口隔离原则。而GRPC client 在resolver 和balancer 中分开定义了两个ClientConn  接口；在隔离情况下，分别从resolver的视角和balancer的视角去认知了ClientConn;
+balancer 和resolver 并不直接交互，而是两个组件通过client来协调通信。
+下面是balancer视角下ClientConn 接口的定义，下面的方法是balancer 需要ClientConn 提供的能力</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//${GRPC_PROJECT}/balancer/balancer.go
+</span><span class="c1">//State 对象是 balancer 和 ClienConn  交互通信的数据对象
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">State</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">ConnectivityState</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">State</span>
+	<span class="nx">Picker</span> <span class="nx">Picker</span>
+<span class="p">}</span>
+
+<span class="c1">//balancer 视角下的clientConn 接口，需要ClientConn提供下面接口的能力来支持balancer工作
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ClientConn</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="c1">//balancer在获得新的地址解析结果后调用ClientConn增加新的链接
+</span><span class="c1"></span>	<span class="nf">NewSubConn</span><span class="p">([]</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span><span class="p">,</span> <span class="nx">NewSubConnOptions</span><span class="p">)</span> <span class="p">(</span><span class="nx">SubConn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+	<span class="c1">//balancer调用Client 移除已经失效的链接
+</span><span class="c1"></span>	<span class="nf">RemoveSubConn</span><span class="p">(</span><span class="nx">SubConn</span><span class="p">)</span>
+	<span class="c1">//balancer 调用ClientConn更新新的picker对象
+</span><span class="c1"></span>	<span class="nf">UpdateState</span><span class="p">(</span><span class="nx">State</span><span class="p">)</span>
+	<span class="c1">//balancer 告诉ClientConn重新解析地址
+</span><span class="c1"></span>	<span class="nf">ResolveNow</span><span class="p">(</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">ResolveNowOptions</span><span class="p">)</span>
+	<span class="c1">//目标客户端名称（该接口已经弃用）
+</span><span class="c1"></span>	<span class="nf">Target</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">//${GRPC_PROJECT}/balancer_conn_wrappers.go
+</span><span class="c1">//ccBalancerWrapper 实现上面的ClientConn 接口来，并和具体的balancer关联，
+</span><span class="c1">//ccBalancerWrapper 聚合了ClientConn 和balancer
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ccBalancerWrapper</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">cc</span>         <span class="o">*</span><span class="nx">ClientConn</span>
+	<span class="nx">balancerMu</span> <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span> <span class="c1">// synchronizes calls to the balancer
+</span><span class="c1"></span>	<span class="c1">//关联的balancer
+</span><span class="c1"></span>	<span class="nx">balancer</span>   <span class="nx">balancer</span><span class="p">.</span><span class="nx">Balancer</span>
+	<span class="c1">//scBuffer 用于ClientConn 在通信过程中感知链接发生变化的时候通知
+</span><span class="c1"></span>	<span class="c1">//balancer更新链接状态
+</span><span class="c1"></span>	<span class="nx">scBuffer</span>   <span class="o">*</span><span class="nx">buffer</span><span class="p">.</span><span class="nx">Unbounded</span>
+	<span class="nx">done</span>       <span class="o">*</span><span class="nx">grpcsync</span><span class="p">.</span><span class="nx">Event</span>
+
+	<span class="nx">mu</span>       <span class="nx">sync</span><span class="p">.</span><span class="nx">Mutex</span>
+	<span class="nx">subConns</span> <span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">acBalancerWrapper</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="12-balancer">1.2 balancer<a href="#12-balancer" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>下面是balancer的接口定义，ClientConn需要balancer提供下面接口的能力来支持ClientConn 进行负载</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//${GRPC_PROJECT}/balancer/balancer.go
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Balancer</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="c1">//client 调用，更新链接的状态，如果返回ErrBadResolverState
+</span><span class="c1"></span>	<span class="c1">//client 会立即调用ResolveNow 重新解析地址
+</span><span class="c1"></span>	<span class="nf">UpdateClientConnState</span><span class="p">(</span><span class="nx">ClientConnState</span><span class="p">)</span> <span class="kt">error</span>
+	<span class="c1">//ClientConn 告诉balancer解析地址发生错误
+</span><span class="c1"></span>	<span class="nf">ResolverError</span><span class="p">(</span><span class="kt">error</span><span class="p">)</span>
+	<span class="c1">//上面两个接口是地址解析相关的，下面是单个网络链接相关接口。
+</span><span class="c1"></span>	<span class="c1">//ClientConn 某个链接状态
+</span><span class="c1"></span>	<span class="nf">UpdateSubConnState</span><span class="p">(</span><span class="nx">SubConn</span><span class="p">,</span> <span class="nx">SubConnState</span><span class="p">)</span>
+	<span class="c1">//关闭连接
+</span><span class="c1"></span>	<span class="nf">Close</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="c1">//${GRPC_PROJECT}/balancer/base/balancer.go
+</span><span class="c1">//下面是基础balancer的定义
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">baseBalancer</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">//关联的rpc 客户端
+</span><span class="c1"></span>	<span class="nx">cc</span>            <span class="nx">balancer</span><span class="p">.</span><span class="nx">ClientConn</span>
+	<span class="c1">//选择器的构建对象
+</span><span class="c1"></span>	<span class="nx">pickerBuilder</span> <span class="nx">PickerBuilder</span>
+
+	<span class="nx">csEvltr</span> <span class="o">*</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">ConnectivityStateEvaluator</span>
+	<span class="nx">state</span>   <span class="nx">connectivity</span><span class="p">.</span><span class="nx">State</span>
+	<span class="c1">//当前解析地址和对应的链接map
+</span><span class="c1"></span>	<span class="nx">subConns</span> <span class="kd">map</span><span class="p">[</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span><span class="p">]</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">SubConn</span>
+	<span class="c1">//负载的链接和其状态map
+</span><span class="c1"></span>	<span class="nx">scStates</span> <span class="kd">map</span><span class="p">[</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">SubConn</span><span class="p">]</span><span class="nx">connectivity</span><span class="p">.</span><span class="nx">State</span>
+	<span class="c1">//当前的选择器
+</span><span class="c1"></span>	<span class="nx">picker</span>   <span class="nx">balancer</span><span class="p">.</span><span class="nx">Picker</span>
+	<span class="nx">config</span>   <span class="nx">Config</span>
+
+	<span class="nx">resolverErr</span> <span class="kt">error</span> <span class="c1">// the last error reported by the resolver; cleared on successful resolution
+</span><span class="c1"></span>	<span class="nx">connErr</span>     <span class="kt">error</span> <span class="c1">// the last connection error; cleared upon leaving TransientFailure
+</span><span class="c1"></span><span class="p">}</span>
+
+
+
+<span class="c1">//根据当前的链接情况，生成一个负载选择器
+</span><span class="c1">//调用regeneratePicker的函数通过balancer中定义的ClientConn 接口实现对象（balancerWrapper)传递负载选中器到ClientConn 对象中，再包装成pickerWrapper 对象
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">baseBalancer</span><span class="p">)</span> <span class="nf">regeneratePicker</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="nx">b</span><span class="p">.</span><span class="nx">state</span> <span class="o">==</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">TransientFailure</span> <span class="p">{</span>
+		<span class="nx">b</span><span class="p">.</span><span class="nx">picker</span> <span class="p">=</span> <span class="nf">NewErrPicker</span><span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nf">mergeErrors</span><span class="p">())</span>
+		<span class="k">return</span>
+	<span class="p">}</span>
+	<span class="nx">readySCs</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">SubConn</span><span class="p">]</span><span class="nx">SubConnInfo</span><span class="p">)</span>
+
+	<span class="c1">// Filter out all ready SCs from full subConn map.
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">addr</span><span class="p">,</span> <span class="nx">sc</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">b</span><span class="p">.</span><span class="nx">subConns</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">st</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">scStates</span><span class="p">[</span><span class="nx">sc</span><span class="p">];</span> <span class="nx">ok</span> <span class="o">&amp;&amp;</span> <span class="nx">st</span> <span class="o">==</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">Ready</span> <span class="p">{</span>
+			<span class="nx">readySCs</span><span class="p">[</span><span class="nx">sc</span><span class="p">]</span> <span class="p">=</span> <span class="nx">SubConnInfo</span><span class="p">{</span><span class="nx">Address</span><span class="p">:</span> <span class="nx">addr</span><span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="nx">b</span><span class="p">.</span><span class="nx">picker</span> <span class="p">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">pickerBuilder</span><span class="p">.</span><span class="nf">Build</span><span class="p">(</span><span class="nx">PickerBuildInfo</span><span class="p">{</span><span class="nx">ReadySCs</span><span class="p">:</span> <span class="nx">readySCs</span><span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="13-picker">1.3 picker<a href="#13-picker" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//${GRPC_PROEJCT}/balancer/balancer.go
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Picker</span> <span class="kd">interface</span> <span class="p">{</span>
+	<span class="c1">//不同的负载算法实现Pick方法，返回负载选择结果
+</span><span class="c1"></span>	<span class="nf">Pick</span><span class="p">(</span><span class="nx">info</span> <span class="nx">PickInfo</span><span class="p">)</span> <span class="p">(</span><span class="nx">PickResult</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">//下面是轮询负载器的实现
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">rrPicker</span><span class="p">)</span> <span class="nf">Pick</span><span class="p">(</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">PickInfo</span><span class="p">)</span> <span class="p">(</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">PickResult</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="nx">sc</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">subConns</span><span class="p">[</span><span class="nx">p</span><span class="p">.</span><span class="nx">next</span><span class="p">]</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">next</span> <span class="p">=</span> <span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">subConns</span><span class="p">)</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="k">return</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">PickResult</span><span class="p">{</span><span class="nx">SubConn</span><span class="p">:</span> <span class="nx">sc</span><span class="p">},</span> <span class="kc">nil</span>
+<span class="p">}</span>
+
+</code></pre></div><h1 id="0x02-串连clientresolverbalancer">0x02 串连client，resolver，balancer<a href="#0x02-串连clientresolverbalancer" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h3 id="41-client">4.1 Client<a href="#41-client" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>${GRPC_PROJECT}/clientconn.go</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//省略了部分代码，只列出关键对象
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">ClientConn</span> <span class="kd">struct</span> <span class="p">{</span>
+ <span class="c1">//链接状态管理器
+</span><span class="c1"></span>	<span class="nx">csMgr</span>        <span class="o">*</span><span class="nx">connectivityStateManager</span>
+	<span class="c1">//链接选择器
+</span><span class="c1"></span>	<span class="nx">blockingpicker</span>    <span class="o">*</span><span class="nx">pickerWrapper</span>
+	<span class="c1">//地址解析器
+</span><span class="c1"></span>	<span class="nx">resolverWrapper</span> <span class="o">*</span><span class="nx">ccResolverWrapper</span>
+	<span class="c1">//当前链接集合
+</span><span class="c1"></span>	<span class="nx">conns</span>           <span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">addrConn</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}</span>
+	<span class="c1">//负载均衡生成器
+</span><span class="c1"></span>	<span class="nx">balancerWrapper</span> <span class="o">*</span><span class="nx">ccBalancerWrapper</span>
+<span class="p">}</span>
+<span class="c1">//下面的结构体描述了实实在在的一条网络连接
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">addrConn</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="c1">//关联的具体客户端
+</span><span class="c1"></span>	<span class="nx">cc</span>     <span class="o">*</span><span class="nx">ClientConn</span>
+	<span class="nx">生成的balancer</span><span class="p">.</span><span class="nx">SubConn</span> <span class="nx">对象</span>
+	<span class="nx">acbw</span>   <span class="nx">balancer</span><span class="p">.</span><span class="nx">SubConn</span>
+	<span class="c1">//关联的传输层对象
+</span><span class="c1"></span>	<span class="nx">transport</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">ClientTransport</span> <span class="c1">// The current transport.
+</span><span class="c1"></span>	<span class="c1">//当前链接的地址
+</span><span class="c1"></span>	<span class="nx">curAddr</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span>   <span class="c1">// The current address.
+</span><span class="c1"></span>	<span class="c1">//所有解析到的地址
+</span><span class="c1"></span>	<span class="nx">addrs</span>   <span class="p">[]</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span> <span class="c1">// All addresses that the resolver resolved 
+</span><span class="c1"></span>	<span class="c1">//链接的状态
+</span><span class="c1"></span>	<span class="nx">state</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">State</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="21-clientconn-的构造">2.1 ClientConn 的构造<a href="#21-clientconn-的构造" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">DialContext</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">target</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">opts</span> <span class="o">...</span><span class="nx">DialOption</span><span class="p">)</span> <span class="p">(</span><span class="nx">conn</span> <span class="o">*</span><span class="nx">ClientConn</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">cc</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">ClientConn</span><span class="p">{</span>
+		<span class="nx">target</span><span class="p">:</span>            <span class="nx">target</span><span class="p">,</span>
+		<span class="nx">csMgr</span><span class="p">:</span>             <span class="o">&amp;</span><span class="nx">connectivityStateManager</span><span class="p">{},</span>
+		<span class="nx">conns</span><span class="p">:</span>             <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="o">*</span><span class="nx">addrConn</span><span class="p">]</span><span class="kd">struct</span><span class="p">{}),</span>
+		<span class="nx">dopts</span><span class="p">:</span>             <span class="nf">defaultDialOptions</span><span class="p">(),</span>
+		<span class="nx">blockingpicker</span><span class="p">:</span>    <span class="nf">newPickerWrapper</span><span class="p">(),</span> <span class="c1">//链接选择器pickerWrapper
+</span><span class="c1"></span>		<span class="nx">czData</span><span class="p">:</span>            <span class="nb">new</span><span class="p">(</span><span class="nx">channelzData</span><span class="p">),</span>
+		<span class="nx">firstResolveEvent</span><span class="p">:</span> <span class="nx">grpcsync</span><span class="p">.</span><span class="nf">NewEvent</span><span class="p">(),</span> <span class="c1">//首次解析地址事件
+</span><span class="c1"></span>	<span class="p">}</span>
+	
+	<span class="c1">// Determine the resolver to use.
+</span><span class="c1"></span>	<span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span> <span class="p">=</span> <span class="nx">grpcutil</span><span class="p">.</span><span class="nf">ParseTarget</span><span class="p">(</span><span class="nx">cc</span><span class="p">.</span><span class="nx">target</span><span class="p">,</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">dopts</span><span class="p">.</span><span class="nx">copts</span><span class="p">.</span><span class="nx">Dialer</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span>
+	<span class="c1">//获得解析器构造类对象,找不到配置的，就使用默认的resolver构造器
+</span><span class="c1"></span>	<span class="nx">resolverBuilder</span> <span class="o">:=</span> <span class="nx">cc</span><span class="p">.</span><span class="nf">getResolver</span><span class="p">(</span><span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span><span class="p">.</span><span class="nx">Scheme</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">resolverBuilder</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span> <span class="p">=</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">Target</span><span class="p">{</span>
+			<span class="nx">Scheme</span><span class="p">:</span>   <span class="nx">resolver</span><span class="p">.</span><span class="nf">GetDefaultScheme</span><span class="p">(),</span>
+			<span class="nx">Endpoint</span><span class="p">:</span> <span class="nx">target</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="nx">resolverBuilder</span> <span class="p">=</span> <span class="nx">cc</span><span class="p">.</span><span class="nf">getResolver</span><span class="p">(</span><span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span><span class="p">.</span><span class="nx">Scheme</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">resolverBuilder</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;could not get resolver for default scheme: %q&#34;</span><span class="p">,</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span><span class="p">.</span><span class="nx">Scheme</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="c1">//填充balancer构造的参数信息
+</span><span class="c1"></span>	<span class="nx">cc</span><span class="p">.</span><span class="nx">balancerBuildOpts</span> <span class="p">=</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">BuildOptions</span><span class="p">{</span>
+		<span class="nx">DialCreds</span><span class="p">:</span>        <span class="nx">credsClone</span><span class="p">,</span>
+		<span class="nx">CredsBundle</span><span class="p">:</span>      <span class="nx">cc</span><span class="p">.</span><span class="nx">dopts</span><span class="p">.</span><span class="nx">copts</span><span class="p">.</span><span class="nx">CredsBundle</span><span class="p">,</span>
+		<span class="nx">Dialer</span><span class="p">:</span>           <span class="nx">cc</span><span class="p">.</span><span class="nx">dopts</span><span class="p">.</span><span class="nx">copts</span><span class="p">.</span><span class="nx">Dialer</span><span class="p">,</span>
+		<span class="nx">ChannelzParentID</span><span class="p">:</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">channelzID</span><span class="p">,</span>
+		<span class="nx">Target</span><span class="p">:</span>           <span class="nx">cc</span><span class="p">.</span><span class="nx">parsedTarget</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="c1">// Build the resolver.
+</span><span class="c1"></span>	<span class="nx">rWrapper</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">newCCResolverWrapper</span><span class="p">(</span><span class="nx">cc</span><span class="p">,</span> <span class="nx">resolverBuilder</span><span class="p">)</span> 
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;failed to build resolver: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+	<span class="p">}</span>
+</code></pre></div><h3 id="22-balancer-的构造和-clientresolverbalancer三者间的协作">2.2 balancer 的构造和 client，resolver，balancer三者间的协作<a href="#22-balancer-的构造和-clientresolverbalancer三者间的协作" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>接上一篇讲resolver的时候，resolver在起来后会立即去解析地址，在解析到地址信息后会通过ccResolverWrapper对象的UpdateState(s resolver.State)方法想ClientConn传递地址信息。ccResolverWrapper 正是通过ClientConn 下面的方法更新地址信息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">cc</span> <span class="o">*</span><span class="nx">ClientConn</span><span class="p">)</span> <span class="nf">updateResolverState</span><span class="p">(</span><span class="nx">s</span> <span class="nx">resolver</span><span class="p">.</span><span class="nx">State</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+<span class="c1">//当发生地址解析错误的时候ClientConn 会告知balancer地址解析出错了。
+</span><span class="c1"></span><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">cc</span><span class="p">.</span><span class="nf">maybeApplyDefaultServiceConfig</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">balancerWrapper</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">cc</span><span class="p">.</span><span class="nx">balancerWrapper</span><span class="p">.</span><span class="nf">resolverError</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+		<span class="p">}</span>
+		<span class="nx">cc</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+		<span class="k">return</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">ErrBadResolverState</span>
+	<span class="p">}</span>
+<span class="c1">//简化部分代码，如果cc.balancerWrapper 为空，则会调用下的方法创建ccBalancerWrapper 对象。
+</span><span class="c1">//func (cc *ClientConn) applyServiceConfigAndBalancer(sc *ServiceConfig, addrs []resolver.Address){} 
+</span><span class="c1"></span>
+<span class="nx">bw</span> <span class="o">:=</span> <span class="nx">cc</span><span class="p">.</span><span class="nx">balancerWrapper</span>
+<span class="nx">cc</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+<span class="c1">//下面的句子则是最终会调用到balancer的UpdateClientConnState(ClientConnState) error 方法告诉balancer 解析到新的地址了
+</span><span class="c1"></span><span class="nx">uccsErr</span> <span class="o">:=</span> <span class="nx">bw</span><span class="p">.</span><span class="nf">updateClientConnState</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">ClientConnState</span><span class="p">{</span><span class="nx">ResolverState</span><span class="p">:</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">BalancerConfig</span><span class="p">:</span> <span class="nx">balCfg</span><span class="p">})</span>
+	<span class="k">if</span> <span class="nx">ret</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="nx">ret</span> <span class="p">=</span> <span class="nx">uccsErr</span> <span class="c1">// prefer ErrBadResolver state since any other error is
+</span><span class="c1"></span>		<span class="c1">// currently meaningless to the caller.
+</span><span class="c1"></span>	<span class="p">}</span>
+</code></pre></div><h3 id="23-balancersubconn-对象构建">2.3 balancer.SubConn 对象构建<a href="#23-balancersubconn-对象构建" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>通过上面的小节，我们串联了地址的解析到balancer更新新的地址信息，下面就来看看如何生成一个网络通信连接</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//${GRPC_PROJECT}/balancer/base/balancer.go
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">baseBalancer</span><span class="p">)</span> <span class="nf">UpdateClientConnState</span><span class="p">(</span><span class="nx">s</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">ClientConnState</span><span class="p">)</span> <span class="kt">error</span><span class="p">{</span>
+	<span class="c1">//省略...
+</span><span class="c1"></span>	<span class="nx">sc</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">NewSubConn</span><span class="p">([]</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span><span class="p">{</span><span class="nx">a</span><span class="p">},</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">NewSubConnOptions</span><span class="p">{</span><span class="nx">HealthCheckEnabled</span><span class="p">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">HealthCheck</span><span class="p">})</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="nx">logger</span><span class="p">.</span><span class="nf">Warningf</span><span class="p">(</span><span class="s">&#34;base.baseBalancer: failed to create new SubConn: %v&#34;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+				<span class="k">continue</span>
+			<span class="p">}</span>
+			<span class="nx">b</span><span class="p">.</span><span class="nx">subConns</span><span class="p">[</span><span class="nx">a</span><span class="p">]</span> <span class="p">=</span> <span class="nx">sc</span>
+			<span class="nx">b</span><span class="p">.</span><span class="nx">scStates</span><span class="p">[</span><span class="nx">sc</span><span class="p">]</span> <span class="p">=</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">Idle</span>
+			<span class="nx">sc</span><span class="p">.</span><span class="nf">Connect</span><span class="p">()</span> <span class="c1">//如果改地址没有subConn 对象，则创建一个,并建立连接
+</span><span class="c1"></span><span class="p">}</span>
+<span class="c1">//省略...
+</span></code></pre></div><p>从上面的代码我们可以看到balancer 通过ClientConn 创建了连接对象。并且调用链接对象的Connect方法发起网络链接。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">ccb</span> <span class="o">*</span><span class="nx">ccBalancerWrapper</span><span class="p">)</span> <span class="nf">NewSubConn</span><span class="p">(</span><span class="nx">addrs</span> <span class="p">[]</span><span class="nx">resolver</span><span class="p">.</span><span class="nx">Address</span><span class="p">,</span> <span class="nx">opts</span> <span class="nx">balancer</span><span class="p">.</span><span class="nx">NewSubConnOptions</span><span class="p">)</span> <span class="p">(</span><span class="nx">balancer</span><span class="p">.</span><span class="nx">SubConn</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">//省略... 创建新的链接对象
+</span><span class="c1"></span>	<span class="nx">ac</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ccb</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">newAddrConn</span><span class="p">(</span><span class="nx">addrs</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">acbw</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">acBalancerWrapper</span><span class="p">{</span><span class="nx">ac</span><span class="p">:</span> <span class="nx">ac</span><span class="p">}</span>
+	<span class="nx">acbw</span><span class="p">.</span><span class="nx">ac</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Lock</span><span class="p">()</span>
+	<span class="nx">ac</span><span class="p">.</span><span class="nx">acbw</span> <span class="p">=</span> <span class="nx">acbw</span>
+	<span class="nx">acbw</span><span class="p">.</span><span class="nx">ac</span><span class="p">.</span><span class="nx">mu</span><span class="p">.</span><span class="nf">Unlock</span><span class="p">()</span>
+	<span class="nx">ccb</span><span class="p">.</span><span class="nx">subConns</span><span class="p">[</span><span class="nx">acbw</span><span class="p">]</span> <span class="p">=</span> <span class="kd">struct</span><span class="p">{}{}</span>
+	<span class="k">return</span> <span class="nx">acbw</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="c1">//最终调用到ClientConn 结构体的newAddrconn 方法，创建addrConn 对象。
+</span><span class="c1">//func (cc *ClientConn) newAddrConn(addrs []resolver.Address, opts balancer.NewSubConnOptions) (*addrConn, error){}
+</span><span class="c1">//addrConn 会去管理链接，包括建立链接，状态管理
+</span></code></pre></div><h3 id="24-链接状态的更新">2.4 链接状态的更新<a href="#24-链接状态的更新" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>上面小节提到了AddrConn 会管理链接的状态，下面看看状态是如何传递到balancer的。
+//${GRPC_PROJEC}/clientconn.go</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Note: this requires a lock on ac.mu.
+</span><span class="c1">//addrConn的connecting/ready/shutdown/TransientFailure 状态都会通过下面的方法
+</span><span class="c1">//调用ClientConn的方法，最后传递到balancer对象。
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">ac</span> <span class="o">*</span><span class="nx">addrConn</span><span class="p">)</span> <span class="nf">updateConnectivityState</span><span class="p">(</span><span class="nx">s</span> <span class="nx">connectivity</span><span class="p">.</span><span class="nx">State</span><span class="p">,</span> <span class="nx">lastErr</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">//省略...
+</span><span class="c1"></span>	<span class="nx">ac</span><span class="p">.</span><span class="nx">cc</span><span class="p">.</span><span class="nf">handleSubConnStateChange</span><span class="p">(</span><span class="nx">ac</span><span class="p">.</span><span class="nx">acbw</span><span class="p">,</span> <span class="nx">s</span><span class="p">,</span> <span class="nx">lastErr</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h1 id="0x03-总结">0x03 总结<a href="#0x03-总结" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<ol>
+<li>ClientConn 对象并不直接和resolver 和 balancer 直接关联，而是通过对应的warpper 包装，warpper 聚合了ClientConn 和 balancer，并实现对应的resolver 视角下的ClientConn接口。</li>
+<li>resolver 解析到地址后将地址信息通过 ClientConn 将地址信息传递给balancer 对象，balancer对象根据 地址信息移除或增加新的链接</li>
+<li>addrConn 会自己管理链接状态，并将状态传递给balancer。</li>
+<li>picker 就不具体讲了，pickerWrapper 包了一个blockingCh ,阻塞选择器，只有在有链接的情况下才去pick</li>
+</ol>
+		</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2021 <a href="https://JerryZhou343.github.io/">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://JerryZhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://JerryZhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>
