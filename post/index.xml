@@ -22,6 +22,15 @@
     </item>
     
     <item>
+      <title>Golang sync map</title>
+      <link>https://JerryZhou343.github.io/post/golang_sync_map/</link>
+      <pubDate>Tue, 30 Mar 2021 00:56:28 +0800</pubDate>
+      
+      <guid>https://JerryZhou343.github.io/post/golang_sync_map/</guid>
+      <description>&lt;p&gt;sync.Map 是go语言标准库实现的并发安全的map；&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Golang chan</title>
       <link>https://JerryZhou343.github.io/post/golang_chan_component/</link>
       <pubDate>Sun, 28 Mar 2021 00:51:29 +0800</pubDate>
@@ -91,15 +100,6 @@
       
       <guid>https://JerryZhou343.github.io/post/di/</guid>
       <description>&lt;p&gt;在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Protocol hub</title>
-      <link>https://JerryZhou343.github.io/post/protocolhub/</link>
-      <pubDate>Sat, 28 Mar 2020 15:36:12 +0800</pubDate>
-      
-      <guid>https://JerryZhou343.github.io/post/protocolhub/</guid>
-      <description>&lt;p&gt;随着RPC服务在微服务中使用，大量服务接口需要进行管理，便于不同服务进行对接。那接口应该如何管理呢？&lt;/p&gt;</description>
     </item>
     
   </channel>
