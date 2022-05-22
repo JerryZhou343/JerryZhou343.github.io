@@ -8,19 +8,16 @@
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="containerd 源码导读-基础篇">
-<meta itemprop="description" content="Containerd 源码基础结构分享关键的服务基础类">
-<meta itemprop="datePublished" content="2020-07-16T23:25:27&#43;08:00" />
-<meta itemprop="dateModified" content="2020-07-16T23:25:27&#43;08:00" />
+<meta itemprop="description" content="Containerd 源码基础结构分享关键的服务基础类"><meta itemprop="datePublished" content="2020-07-16T23:25:27+08:00" />
+<meta itemprop="dateModified" content="2020-07-16T23:25:27+08:00" />
 <meta itemprop="wordCount" content="1768">
-
-
-
 <meta itemprop="keywords" content="" /><meta property="og:title" content="containerd 源码导读-基础篇" />
 <meta property="og:description" content="Containerd 源码基础结构分享关键的服务基础类" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://JerryZhou343.github.io/post/containerd_guide_base/" />
+<meta property="og:url" content="https://jerryzhou343.github.io/post/containerd_guide_base/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2020-07-16T23:25:27+08:00" />
 <meta property="article:modified_time" content="2020-07-16T23:25:27+08:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="containerd 源码导读-基础篇"/>
 <meta name="twitter:description" content="Containerd 源码基础结构分享关键的服务基础类"/>
@@ -33,23 +30,23 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 
 	<title>containerd 源码导读-基础篇</title>
-	<link rel="stylesheet" href="https://JerryZhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://jerryzhou343.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
 	
 </head>
 
 <body id="page">
 	
-	<header id="site-header" class="animated slideInUp faster">
+	<header id="site-header" class="animated slideInUp">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://JerryZhou343.github.io/">Jerry&#39;s Blog</a>
+					<a href="https://jerryzhou343.github.io">Jerry&#39;s Blog</a>
 				</div>
 				<nav class="site-nav hide-in-mobile">
 					
-				<a href="https://JerryZhou343.github.io/post/">Posts</a>
-				<a href="https://JerryZhou343.github.io/about/">About</a>
-				<a href="https://JerryZhou343.github.io/links/">links</a>
+				<a href="https://jerryzhou343.github.io/post/">Posts</a>
+				<a href="https://jerryzhou343.github.io/about/">About</a>
+				<a href="https://jerryzhou343.github.io/links/">links</a>
 
 				</nav>
 			</div>
@@ -60,9 +57,9 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://JerryZhou343.github.io/post/">Posts</a></li>
-			<li><a href="https://JerryZhou343.github.io/about/">About</a></li>
-			<li><a href="https://JerryZhou343.github.io/links/">links</a></li>
+			<li><a href="https://jerryzhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://jerryzhou343.github.io/about/">About</a></li>
+			<li><a href="https://jerryzhou343.github.io/links/">links</a></li>
 		</ul>
 	</div>
 
@@ -74,305 +71,305 @@
 <h2 id="关键类">关键类<a href="#关键类" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
 <h3 id="server">server<a href="#server" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>file: containerd/services/server/server.go</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Server is the containerd main daemon
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Server</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">grpcServer</span>  <span class="o">*</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">Server</span>   
-	<span class="nx">ttrpcServer</span> <span class="o">*</span><span class="nx">ttrpc</span><span class="p">.</span><span class="nx">Server</span>
-	<span class="nx">tcpServer</span>   <span class="o">*</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">Server</span>
-	<span class="nx">events</span>      <span class="o">*</span><span class="nx">exchange</span><span class="p">.</span><span class="nx">Exchange</span> <span class="c1">//事件总线，有抽离成单独库，可以应用自己的代码中
-</span><span class="c1"></span>	<span class="nx">config</span>      <span class="o">*</span><span class="nx">srvconfig</span><span class="p">.</span><span class="nx">Config</span> <span class="c1">//containerd 服务配置
-</span><span class="c1"></span>	<span class="nx">plugins</span>     <span class="p">[]</span><span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Plugin</span> <span class="c1">//service 插件,服务插件话，方便服务扩展，值得参考借鉴
-</span><span class="c1"></span><span class="p">}</span>
-
-<span class="c1">//server 对象构造函数关键流程
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">config</span> <span class="o">*</span><span class="nx">srvconfig</span><span class="p">.</span><span class="nx">Config</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Server</span><span class="p">,</span> <span class="kt">error</span><span class="p">){</span>
-<span class="c1">//apply sets config settings on the server process
-</span><span class="c1"></span><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">apply</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-
-<span class="c1">//装载服务插件
-</span><span class="c1">//在该子函数中注册了content 和 bolt 服务插件
-</span><span class="c1"></span><span class="nx">plugins</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">LoadPlugins</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="c1">//加载diff工具
-</span><span class="c1"></span><span class="k">for</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">config</span><span class="p">.</span><span class="nx">StreamProcessors</span> <span class="p">{</span>
-<span class="nx">diff</span><span class="p">.</span><span class="nf">RegisterProcessor</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nf">BinaryHandler</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Returns</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Accepts</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Path</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Args</span><span class="p">))</span>
-<span class="p">}</span>
-<span class="c1">//配置grpc的handler 拦截器
-</span><span class="c1"></span><span class="nx">serverOpts</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">ServerOption</span><span class="p">{</span>
-<span class="nx">grpc</span><span class="p">.</span><span class="nf">UnaryInterceptor</span><span class="p">(</span><span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">UnaryServerInterceptor</span><span class="p">),</span>
-<span class="nx">grpc</span><span class="p">.</span><span class="nf">StreamInterceptor</span><span class="p">(</span><span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">StreamServerInterceptor</span><span class="p">),</span>
-<span class="p">}</span>
-
-<span class="c1">//创建server 用于IO通信
-</span><span class="c1"></span><span class="nx">ttrpcServer</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">newTTRPCServer</span><span class="p">()</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="nx">grpcServer</span> <span class="p">=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">(</span><span class="nx">serverOpts</span><span class="o">...</span><span class="p">)</span>
-<span class="nx">tcpServer</span>  <span class="p">=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">(</span><span class="nx">tcpServerOpts</span><span class="o">...</span><span class="p">)</span>
-<span class="c1">//创建三个分别需要注册到对应server的service数组
-</span><span class="c1"></span><span class="nx">grpcServices</span>  <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Service</span>
-<span class="nx">tcpServices</span>   <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TCPService</span>
-<span class="nx">ttrpcServices</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TTRPCService</span>
-<span class="c1">//创建server对象
-</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Server</span><span class="p">{</span>
-<span class="nx">grpcServer</span><span class="p">:</span>  <span class="nx">grpcServer</span><span class="p">,</span>
-<span class="nx">tcpServer</span><span class="p">:</span>   <span class="nx">tcpServer</span><span class="p">,</span>
-<span class="nx">ttrpcServer</span><span class="p">:</span> <span class="nx">ttrpcServer</span><span class="p">,</span>
-<span class="nx">events</span><span class="p">:</span>      <span class="nx">exchange</span><span class="p">.</span><span class="nf">NewExchange</span><span class="p">(),</span>
-<span class="nx">config</span><span class="p">:</span>      <span class="nx">config</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="c1">//初始化插件
-</span><span class="c1"></span><span class="nx">initContext</span> <span class="o">:=</span> <span class="nx">plugin</span><span class="p">.</span><span class="nf">NewContext</span><span class="p">(</span>
-<span class="nx">ctx</span><span class="p">,</span>
-<span class="nx">p</span><span class="p">,</span>
-<span class="nx">initialized</span><span class="p">,</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">Root</span><span class="p">,</span>
-<span class="nx">config</span><span class="p">.</span><span class="nx">State</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nx">initContext</span><span class="p">.</span><span class="nx">Events</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">events</span> <span class="c1">//事件总线，用于插件间事件通信
-</span><span class="c1"></span><span class="nx">initContext</span><span class="p">.</span><span class="nx">Address</span> <span class="p">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">GRPC</span><span class="p">.</span><span class="nx">Address</span> <span class="c1">//grpc接口通信
-</span><span class="c1"></span><span class="nx">initContext</span><span class="p">.</span><span class="nx">TTRPCAddress</span> <span class="p">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">TTRPC</span><span class="p">.</span><span class="nx">Address</span><span class="c1">//ttrpc 接口通信
-</span><span class="c1"></span><span class="nx">result</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">Init</span><span class="p">(</span><span class="nx">initContext</span><span class="p">)</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">initialized</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Wrapf</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s">&#34;could not add plugin result to plugin set&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="nx">instance</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">result</span><span class="p">.</span><span class="nf">Instance</span><span class="p">()</span>
-<span class="c1">//根据service插件实现的接口，将service对象实例放到不同数组中
-</span><span class="c1">// check for grpc services that should be registered with the server
-</span><span class="c1"></span><span class="k">if</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Service</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
-<span class="nx">grpcServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">grpcServices</span><span class="p">,</span> <span class="nx">src</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="k">if</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TTRPCService</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
-<span class="nx">ttrpcServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ttrpcServices</span><span class="p">,</span> <span class="nx">src</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="k">if</span> <span class="nx">service</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TCPService</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
-<span class="nx">tcpServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">tcpServices</span><span class="p">,</span> <span class="nx">service</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="c1">//向server 注册服务（service）
-</span><span class="c1">// register services after all plugins have been initialized
-</span><span class="c1"></span><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">grpcServices</span> <span class="p">{</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">grpcServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="p">}</span>
-<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ttrpcServices</span> <span class="p">{</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">RegisterTTRPC</span><span class="p">(</span><span class="nx">ttrpcServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="p">}</span>
-<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">tcpServices</span> <span class="p">{</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">RegisterTCP</span><span class="p">(</span><span class="nx">tcpServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-<span class="p">}</span>
-<span class="c1">//对象构造完毕，返回containerd daemond server
-</span><span class="c1"></span><span class="k">return</span> <span class="nx">server</span>
-<span class="p">}</span>
-</code></pre></div><h3 id="插件相关类">插件相关类<a href="#插件相关类" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Server is the containerd main daemon
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Server</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">grpcServer</span>  <span class="o">*</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">Server</span>   
+</span></span><span class="line"><span class="cl">	<span class="nx">ttrpcServer</span> <span class="o">*</span><span class="nx">ttrpc</span><span class="p">.</span><span class="nx">Server</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">tcpServer</span>   <span class="o">*</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">Server</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">events</span>      <span class="o">*</span><span class="nx">exchange</span><span class="p">.</span><span class="nx">Exchange</span> <span class="c1">//事件总线，有抽离成单独库，可以应用自己的代码中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">config</span>      <span class="o">*</span><span class="nx">srvconfig</span><span class="p">.</span><span class="nx">Config</span> <span class="c1">//containerd 服务配置
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">plugins</span>     <span class="p">[]</span><span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Plugin</span> <span class="c1">//service 插件,服务插件话，方便服务扩展，值得参考借鉴
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//server 对象构造函数关键流程
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">New</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">config</span> <span class="o">*</span><span class="nx">srvconfig</span><span class="p">.</span><span class="nx">Config</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Server</span><span class="p">,</span> <span class="kt">error</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//apply sets config settings on the server process
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">apply</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//装载服务插件
+</span></span></span><span class="line"><span class="cl"><span class="c1">//在该子函数中注册了content 和 bolt 服务插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">plugins</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">LoadPlugins</span><span class="p">(</span><span class="nx">ctx</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//加载diff工具
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">config</span><span class="p">.</span><span class="nx">StreamProcessors</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">diff</span><span class="p">.</span><span class="nf">RegisterProcessor</span><span class="p">(</span><span class="nx">diff</span><span class="p">.</span><span class="nf">BinaryHandler</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Returns</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Accepts</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Path</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Args</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//配置grpc的handler 拦截器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">serverOpts</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">grpc</span><span class="p">.</span><span class="nx">ServerOption</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grpc</span><span class="p">.</span><span class="nf">UnaryInterceptor</span><span class="p">(</span><span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">UnaryServerInterceptor</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grpc</span><span class="p">.</span><span class="nf">StreamInterceptor</span><span class="p">(</span><span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">StreamServerInterceptor</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//创建server 用于IO通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ttrpcServer</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">newTTRPCServer</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grpcServer</span> <span class="p">=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">(</span><span class="nx">serverOpts</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">tcpServer</span>  <span class="p">=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nf">NewServer</span><span class="p">(</span><span class="nx">tcpServerOpts</span><span class="o">...</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//创建三个分别需要注册到对应server的service数组
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">grpcServices</span>  <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Service</span>
+</span></span><span class="line"><span class="cl"><span class="nx">tcpServices</span>   <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TCPService</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ttrpcServices</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TTRPCService</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//创建server对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="o">&amp;</span><span class="nx">Server</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grpcServer</span><span class="p">:</span>  <span class="nx">grpcServer</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">tcpServer</span><span class="p">:</span>   <span class="nx">tcpServer</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ttrpcServer</span><span class="p">:</span> <span class="nx">ttrpcServer</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">events</span><span class="p">:</span>      <span class="nx">exchange</span><span class="p">.</span><span class="nf">NewExchange</span><span class="p">(),</span>
+</span></span><span class="line"><span class="cl"><span class="nx">config</span><span class="p">:</span>      <span class="nx">config</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//初始化插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">initContext</span> <span class="o">:=</span> <span class="nx">plugin</span><span class="p">.</span><span class="nf">NewContext</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ctx</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">p</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">initialized</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">config</span><span class="p">.</span><span class="nx">Root</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">config</span><span class="p">.</span><span class="nx">State</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">initContext</span><span class="p">.</span><span class="nx">Events</span> <span class="p">=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">events</span> <span class="c1">//事件总线，用于插件间事件通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">initContext</span><span class="p">.</span><span class="nx">Address</span> <span class="p">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">GRPC</span><span class="p">.</span><span class="nx">Address</span> <span class="c1">//grpc接口通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">initContext</span><span class="p">.</span><span class="nx">TTRPCAddress</span> <span class="p">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">TTRPC</span><span class="p">.</span><span class="nx">Address</span><span class="c1">//ttrpc 接口通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">result</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">Init</span><span class="p">(</span><span class="nx">initContext</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">initialized</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">Wrapf</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="s">&#34;could not add plugin result to plugin set&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">instance</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">result</span><span class="p">.</span><span class="nf">Instance</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//根据service插件实现的接口，将service对象实例放到不同数组中
+</span></span></span><span class="line"><span class="cl"><span class="c1">// check for grpc services that should be registered with the server
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">if</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Service</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">grpcServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">grpcServices</span><span class="p">,</span> <span class="nx">src</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">src</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TTRPCService</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ttrpcServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ttrpcServices</span><span class="p">,</span> <span class="nx">src</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">service</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">instance</span><span class="p">.(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">TCPService</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">tcpServices</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">tcpServices</span><span class="p">,</span> <span class="nx">service</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//向server 注册服务（service）
+</span></span></span><span class="line"><span class="cl"><span class="c1">// register services after all plugins have been initialized
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">grpcServices</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="nx">grpcServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ttrpcServices</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">RegisterTTRPC</span><span class="p">(</span><span class="nx">ttrpcServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">service</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">tcpServices</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">service</span><span class="p">.</span><span class="nf">RegisterTCP</span><span class="p">(</span><span class="nx">tcpServer</span><span class="p">);</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//对象构造完毕，返回containerd daemond server
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="k">return</span> <span class="nx">server</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="插件相关类">插件相关类<a href="#插件相关类" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>file:containerd/plugin/plugin.go</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//全局默认的创建信息登记对象，通过func Register(r *Registration){}函数收录到登记对象中
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">register</span> <span class="p">=</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
-<span class="nx">r</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Registration</span>
-<span class="p">}{}</span>
-
-<span class="c1">//插件登记信息
-</span><span class="c1">// Registration contains information for registering a plugin
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Registration</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="c1">// Type of the plugin
-</span><span class="c1"></span><span class="nx">Type</span> <span class="nx">Type</span> <span class="c1">//插件类型
-</span><span class="c1">// ID of the plugin
-</span><span class="c1"></span><span class="nx">ID</span> <span class="kt">string</span> <span class="c1">//插件ID
-</span><span class="c1">// Config specific to the plugin
-</span><span class="c1"></span><span class="nx">Config</span> <span class="kd">interface</span><span class="p">{}</span>
-<span class="c1">// Requires is a list of plugins that the registered plugin requires to be available
-</span><span class="c1"></span><span class="nx">Requires</span> <span class="p">[]</span><span class="nx">Type</span> <span class="c1">//插件依赖链
-</span><span class="c1"></span>
-<span class="c1">// InitFn is called when initializing a plugin. The registration and
-</span><span class="c1">// context are passed in. The init function may modify the registration to
-</span><span class="c1">// add exports, capabilities and platform support declarations.
-</span><span class="c1"></span><span class="nx">InitFn</span> <span class="kd">func</span><span class="p">(</span><span class="o">*</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">//插件初始函数，返回关联到该插件对象的实例对象，需要使用插件化对象的外部构造函数
-</span><span class="c1">// Disable the plugin from loading
-</span><span class="c1"></span><span class="nx">Disable</span> <span class="kt">bool</span> 
-<span class="p">}</span>
-</code></pre></div><p>插件初始上下文类以及插件类
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//全局默认的创建信息登记对象，通过func Register(r *Registration){}函数收录到登记对象中
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">var</span> <span class="nx">register</span> <span class="p">=</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">sync</span><span class="p">.</span><span class="nx">RWMutex</span>
+</span></span><span class="line"><span class="cl"><span class="nx">r</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Registration</span>
+</span></span><span class="line"><span class="cl"><span class="p">}{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//插件登记信息
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Registration contains information for registering a plugin
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Registration</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Type of the plugin
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Type</span> <span class="nx">Type</span> <span class="c1">//插件类型
+</span></span></span><span class="line"><span class="cl"><span class="c1">// ID of the plugin
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">ID</span> <span class="kt">string</span> <span class="c1">//插件ID
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Config specific to the plugin
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Config</span> <span class="kd">interface</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// Requires is a list of plugins that the registered plugin requires to be available
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Requires</span> <span class="p">[]</span><span class="nx">Type</span> <span class="c1">//插件依赖链
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="c1">// InitFn is called when initializing a plugin. The registration and
+</span></span></span><span class="line"><span class="cl"><span class="c1">// context are passed in. The init function may modify the registration to
+</span></span></span><span class="line"><span class="cl"><span class="c1">// add exports, capabilities and platform support declarations.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">InitFn</span> <span class="kd">func</span><span class="p">(</span><span class="o">*</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="c1">//插件初始函数，返回关联到该插件对象的实例对象，需要使用插件化对象的外部构造函数
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Disable the plugin from loading
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Disable</span> <span class="kt">bool</span> 
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>插件初始上下文类以及插件类
 file:containerd/plugin/context.go</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// InitContext is used for plugin inititalization
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">InitContext</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="nx">Context</span>      <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span>
-<span class="nx">Root</span>         <span class="kt">string</span>
-<span class="nx">State</span>        <span class="kt">string</span>
-<span class="nx">Config</span>       <span class="kd">interface</span><span class="p">{}</span>
-<span class="nx">Address</span>      <span class="kt">string</span>
-<span class="nx">TTRPCAddress</span> <span class="kt">string</span>
-<span class="nx">Events</span>       <span class="o">*</span><span class="nx">exchange</span><span class="p">.</span><span class="nx">Exchange</span>
-<span class="nx">Meta</span> <span class="o">*</span><span class="nx">Meta</span> <span class="c1">// plugins can fill in metadata at init.
-</span><span class="c1"></span><span class="nx">plugins</span> <span class="o">*</span><span class="nx">Set</span>
-<span class="p">}</span>
-<span class="c1">//
-</span><span class="c1">// Plugin represents an initialized plugin, used with an init context.
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Plugin</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="nx">Registration</span> <span class="o">*</span><span class="nx">Registration</span> <span class="c1">// registration, as initialized
-</span><span class="c1"></span><span class="nx">Config</span>       <span class="kd">interface</span><span class="p">{}</span>   <span class="c1">// config, as initialized
-</span><span class="c1"></span><span class="nx">Meta</span>         <span class="o">*</span><span class="nx">Meta</span>
-<span class="nx">instance</span> <span class="kd">interface</span><span class="p">{}</span> <span class="c1">//插件化服务的实例对象
-</span><span class="c1"></span><span class="nx">err</span>      <span class="kt">error</span> <span class="c1">// will be set if there was an error initializing the plugin
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></div><p>插件的注入通过目录containerd/cmd/containerd/各个文件利用go 包加载调用init函数的特性，向插件系统注册插件例如：</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//导入包
-</span><span class="c1"></span><span class="kn">import</span> <span class="p">(</span>
-<span class="nx">_</span> <span class="s">&#34;github.com/containerd/containerd/diff/walking/plugin&#34;</span>
-<span class="p">)</span>
-<span class="c1">//通过init 函数注册插件
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
-<span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
-<span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">DiffPlugin</span><span class="p">,</span>
-<span class="nx">ID</span><span class="p">:</span>   <span class="s">&#34;walking&#34;</span><span class="p">,</span>
-<span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
-<span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">,</span>
-<span class="p">},</span>
-<span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-<span class="nx">md</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">)</span>
-<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-<span class="p">}</span>
-
-<span class="nx">ic</span><span class="p">.</span><span class="nx">Meta</span><span class="p">.</span><span class="nx">Platforms</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ic</span><span class="p">.</span><span class="nx">Meta</span><span class="p">.</span><span class="nx">Platforms</span><span class="p">,</span> <span class="nx">platforms</span><span class="p">.</span><span class="nf">DefaultSpec</span><span class="p">())</span>
-<span class="nx">cs</span> <span class="o">:=</span> <span class="nx">md</span><span class="p">.(</span><span class="o">*</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">DB</span><span class="p">).</span><span class="nf">ContentStore</span><span class="p">()</span>
-
-<span class="k">return</span> <span class="nx">diffPlugin</span><span class="p">{</span>
-<span class="nx">Comparer</span><span class="p">:</span> <span class="nx">walking</span><span class="p">.</span><span class="nf">NewWalkingDiff</span><span class="p">(</span><span class="nx">cs</span><span class="p">),</span>
-<span class="nx">Applier</span><span class="p">:</span>  <span class="nx">apply</span><span class="p">.</span><span class="nf">NewFileSystemApplier</span><span class="p">(</span><span class="nx">cs</span><span class="p">),</span>
-<span class="p">},</span> <span class="kc">nil</span>
-<span class="p">},</span>
-<span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div><p>在目录containerd/containerd/services下可见，各个服务通过插件化组织。服务通过通信层插件，和服务层插件区分开,下面两个分类，区分开了插件的层次，通信层插件绑定本地服务</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// ServicePlugin implements a internal service
-</span><span class="c1"></span>	<span class="nx">ServicePlugin</span> <span class="nx">Type</span> <span class="p">=</span> <span class="s">&#34;io.containerd.service.v1&#34;</span> <span class="c1">//服务插件
-</span><span class="c1">// GRPCPlugin implements a grpc service
-</span><span class="c1"></span>	<span class="nx">GRPCPlugin</span> <span class="nx">Type</span> <span class="p">=</span> <span class="s">&#34;io.containerd.grpc.v1&#34;</span> <span class="c1">//通信插件
-</span><span class="c1">//例如image服务	
-</span><span class="c1">//通信层插件 file:containerd/services/images/service.go
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
-		<span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">GRPCPlugin</span><span class="p">,</span> <span class="c1">//grpc 通信插件
-</span><span class="c1"></span>		<span class="nx">ID</span><span class="p">:</span>   <span class="s">&#34;images&#34;</span><span class="p">,</span>
-		<span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
-			<span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">,</span> <span class="c1">//依赖service插件
-</span><span class="c1"></span>		<span class="p">},</span>
-		<span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">plugins</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">GetByType</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-			<span class="p">}</span>
-			<span class="nx">p</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">plugins</span><span class="p">[</span><span class="nx">services</span><span class="p">.</span><span class="nx">ImagesService</span><span class="p">]</span>
-			<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;images service not found&#34;</span><span class="p">)</span>
-			<span class="p">}</span>
-			<span class="nx">i</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">Instance</span><span class="p">()</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-			<span class="p">}</span>
-			<span class="k">return</span> <span class="o">&amp;</span><span class="nx">service</span><span class="p">{</span><span class="nx">local</span><span class="p">:</span> <span class="nx">i</span><span class="p">.(</span><span class="nx">imagesapi</span><span class="p">.</span><span class="nx">ImagesClient</span><span class="p">)},</span> <span class="kc">nil</span>
-		<span class="p">},</span>
-	<span class="p">})</span>
-<span class="p">}</span>
-
-<span class="c1">//通信层插件，和服务插件通信
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">service</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">local</span> <span class="nx">imagesapi</span><span class="p">.</span><span class="nx">ImagesClient</span>
-<span class="p">}</span>
-<span class="c1">//服务插件 file:containerd/services/images/local.go
-</span><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
-		<span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">,</span>
-		<span class="nx">ID</span><span class="p">:</span>   <span class="nx">services</span><span class="p">.</span><span class="nx">ImagesService</span><span class="p">,</span>
-		<span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
-			<span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">,</span>
-			<span class="nx">plugin</span><span class="p">.</span><span class="nx">GCPlugin</span><span class="p">,</span>
-		<span class="p">},</span>
-		<span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">m</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-			<span class="p">}</span>
-			<span class="nx">g</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">GCPlugin</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-			<span class="p">}</span>
-
-			<span class="k">return</span> <span class="o">&amp;</span><span class="nx">local</span><span class="p">{</span>
-				<span class="nx">store</span><span class="p">:</span>     <span class="nx">metadata</span><span class="p">.</span><span class="nf">NewImageStore</span><span class="p">(</span><span class="nx">m</span><span class="p">.(</span><span class="o">*</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">DB</span><span class="p">)),</span>
-				<span class="nx">publisher</span><span class="p">:</span> <span class="nx">ic</span><span class="p">.</span><span class="nx">Events</span><span class="p">,</span>
-				<span class="nx">gc</span><span class="p">:</span>        <span class="nx">g</span><span class="p">.(</span><span class="nx">gcScheduler</span><span class="p">),</span>
-			<span class="p">},</span> <span class="kc">nil</span>
-		<span class="p">},</span>
-	<span class="p">})</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">gcScheduler</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">ScheduleAndWait</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="nx">gc</span><span class="p">.</span><span class="nx">Stats</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="c1">//service 类，service类在应用层依赖 store 存储类，gc类，和事件总线类
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">local</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">store</span>     <span class="nx">images</span><span class="p">.</span><span class="nx">Store</span>
-	<span class="nx">gc</span>        <span class="nx">gcScheduler</span>
-	<span class="nx">publisher</span> <span class="nx">events</span><span class="p">.</span><span class="nx">Publisher</span>
-<span class="p">}</span>
-</code></pre></div><h3 id="事件总线-exchange">事件总线 Exchange<a href="#事件总线-exchange" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// InitContext is used for plugin inititalization
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">InitContext</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Context</span>      <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Root</span>         <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">State</span>        <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Config</span>       <span class="kd">interface</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Address</span>      <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">TTRPCAddress</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Events</span>       <span class="o">*</span><span class="nx">exchange</span><span class="p">.</span><span class="nx">Exchange</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Meta</span> <span class="o">*</span><span class="nx">Meta</span> <span class="c1">// plugins can fill in metadata at init.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">plugins</span> <span class="o">*</span><span class="nx">Set</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Plugin represents an initialized plugin, used with an init context.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Plugin</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Registration</span> <span class="o">*</span><span class="nx">Registration</span> <span class="c1">// registration, as initialized
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Config</span>       <span class="kd">interface</span><span class="p">{}</span>   <span class="c1">// config, as initialized
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Meta</span>         <span class="o">*</span><span class="nx">Meta</span>
+</span></span><span class="line"><span class="cl"><span class="nx">instance</span> <span class="kd">interface</span><span class="p">{}</span> <span class="c1">//插件化服务的实例对象
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">err</span>      <span class="kt">error</span> <span class="c1">// will be set if there was an error initializing the plugin
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>插件的注入通过目录containerd/cmd/containerd/各个文件利用go 包加载调用init函数的特性，向插件系统注册插件例如：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//导入包
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl"><span class="nx">_</span> <span class="s">&#34;github.com/containerd/containerd/diff/walking/plugin&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//通过init 函数注册插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">DiffPlugin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">ID</span><span class="p">:</span>   <span class="s">&#34;walking&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">md</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">ic</span><span class="p">.</span><span class="nx">Meta</span><span class="p">.</span><span class="nx">Platforms</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ic</span><span class="p">.</span><span class="nx">Meta</span><span class="p">.</span><span class="nx">Platforms</span><span class="p">,</span> <span class="nx">platforms</span><span class="p">.</span><span class="nf">DefaultSpec</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl"><span class="nx">cs</span> <span class="o">:=</span> <span class="nx">md</span><span class="p">.(</span><span class="o">*</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">DB</span><span class="p">).</span><span class="nf">ContentStore</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">return</span> <span class="nx">diffPlugin</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Comparer</span><span class="p">:</span> <span class="nx">walking</span><span class="p">.</span><span class="nf">NewWalkingDiff</span><span class="p">(</span><span class="nx">cs</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Applier</span><span class="p">:</span>  <span class="nx">apply</span><span class="p">.</span><span class="nf">NewFileSystemApplier</span><span class="p">(</span><span class="nx">cs</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>在目录containerd/containerd/services下可见，各个服务通过插件化组织。服务通过通信层插件，和服务层插件区分开,下面两个分类，区分开了插件的层次，通信层插件绑定本地服务</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// ServicePlugin implements a internal service
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">ServicePlugin</span> <span class="nx">Type</span> <span class="p">=</span> <span class="s">&#34;io.containerd.service.v1&#34;</span> <span class="c1">//服务插件
+</span></span></span><span class="line"><span class="cl"><span class="c1">// GRPCPlugin implements a grpc service
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">GRPCPlugin</span> <span class="nx">Type</span> <span class="p">=</span> <span class="s">&#34;io.containerd.grpc.v1&#34;</span> <span class="c1">//通信插件
+</span></span></span><span class="line"><span class="cl"><span class="c1">//例如image服务	
+</span></span></span><span class="line"><span class="cl"><span class="c1">//通信层插件 file:containerd/services/images/service.go
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">GRPCPlugin</span><span class="p">,</span> <span class="c1">//grpc 通信插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="nx">ID</span><span class="p">:</span>   <span class="s">&#34;images&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">,</span> <span class="c1">//依赖service插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">plugins</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">GetByType</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">p</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">plugins</span><span class="p">[</span><span class="nx">services</span><span class="p">.</span><span class="nx">ImagesService</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">!</span><span class="nx">ok</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">errors</span><span class="p">.</span><span class="nf">New</span><span class="p">(</span><span class="s">&#34;images service not found&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">i</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nf">Instance</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="o">&amp;</span><span class="nx">service</span><span class="p">{</span><span class="nx">local</span><span class="p">:</span> <span class="nx">i</span><span class="p">.(</span><span class="nx">imagesapi</span><span class="p">.</span><span class="nx">ImagesClient</span><span class="p">)},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//通信层插件，和服务插件通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">service</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">local</span> <span class="nx">imagesapi</span><span class="p">.</span><span class="nx">ImagesClient</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//服务插件 file:containerd/services/images/local.go
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">plugin</span><span class="p">.</span><span class="nf">Register</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Registration</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Type</span><span class="p">:</span> <span class="nx">plugin</span><span class="p">.</span><span class="nx">ServicePlugin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ID</span><span class="p">:</span>   <span class="nx">services</span><span class="p">.</span><span class="nx">ImagesService</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">Requires</span><span class="p">:</span> <span class="p">[]</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Type</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">plugin</span><span class="p">.</span><span class="nx">GCPlugin</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">InitFn</span><span class="p">:</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ic</span> <span class="o">*</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">InitContext</span><span class="p">)</span> <span class="p">(</span><span class="kd">interface</span><span class="p">{},</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">m</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">MetadataPlugin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">g</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">ic</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">GCPlugin</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="k">return</span> <span class="o">&amp;</span><span class="nx">local</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">store</span><span class="p">:</span>     <span class="nx">metadata</span><span class="p">.</span><span class="nf">NewImageStore</span><span class="p">(</span><span class="nx">m</span><span class="p">.(</span><span class="o">*</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">DB</span><span class="p">)),</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">publisher</span><span class="p">:</span> <span class="nx">ic</span><span class="p">.</span><span class="nx">Events</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">				<span class="nx">gc</span><span class="p">:</span>        <span class="nx">g</span><span class="p">.(</span><span class="nx">gcScheduler</span><span class="p">),</span>
+</span></span><span class="line"><span class="cl">			<span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">gcScheduler</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">ScheduleAndWait</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="p">(</span><span class="nx">gc</span><span class="p">.</span><span class="nx">Stats</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//service 类，service类在应用层依赖 store 存储类，gc类，和事件总线类
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">local</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">store</span>     <span class="nx">images</span><span class="p">.</span><span class="nx">Store</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">gc</span>        <span class="nx">gcScheduler</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">publisher</span> <span class="nx">events</span><span class="p">.</span><span class="nx">Publisher</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="事件总线-exchange">事件总线 Exchange<a href="#事件总线-exchange" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
 <p>file: containerd/events/exchange/exchange.go</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Exchange broadcasts events
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Exchange</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="nx">broadcaster</span> <span class="o">*</span><span class="nx">goevents</span><span class="p">.</span><span class="nx">Broadcaster</span> <span class="c1">//广播器
-</span><span class="c1"></span><span class="p">}</span>
-<span class="c1">//Exchange 类实现了下面三个接口，用于事件的转发，订阅，和发布
-</span><span class="c1">// Publisher posts the event.
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Publisher</span> <span class="kd">interface</span> <span class="p">{</span>
-<span class="nf">Publish</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">topic</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">event</span> <span class="nx">Event</span><span class="p">)</span> <span class="kt">error</span>
-<span class="p">}</span>
-
-<span class="c1">// Forwarder forwards an event to the underlying event bus
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Forwarder</span> <span class="kd">interface</span> <span class="p">{</span>
-<span class="nf">Forward</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">envelope</span> <span class="o">*</span><span class="nx">Envelope</span><span class="p">)</span> <span class="kt">error</span>
-<span class="p">}</span>
-
-<span class="c1">// Subscriber allows callers to subscribe to events
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Subscriber</span> <span class="kd">interface</span> <span class="p">{</span>
-<span class="nf">Subscribe</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">filters</span> <span class="o">...</span><span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">ch</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">Envelope</span><span class="p">,</span> <span class="nx">errs</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>file:containerd/events/events.go</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//信封对象，用于对事件消息的封装
-</span><span class="c1">// Envelope provides the packaging for an event.
-</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Envelope</span> <span class="kd">struct</span> <span class="p">{</span>
-<span class="nx">Timestamp</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span> <span class="c1">//事件投递时间戳
-</span><span class="c1"></span><span class="nx">Namespace</span> <span class="kt">string</span> <span class="c1">//命名空间
-</span><span class="c1"></span><span class="nx">Topic</span>     <span class="kt">string</span> <span class="c1">//事件topic
-</span><span class="c1"></span><span class="nx">Event</span>     <span class="o">*</span><span class="nx">types</span><span class="p">.</span><span class="nx">Any</span> <span class="c1">//事件内容
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></div><p>以上是containerd 代码结构组织方式，以及几个关键类；结合实际代码阅读，理解containerd的代码组织结构，为后面继续深入阅读containerd的应用层代码打下基础，同时可以学习到代码结构插件化带来的扩展性，具有实际的参考意义。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Exchange broadcasts events
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Exchange</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">broadcaster</span> <span class="o">*</span><span class="nx">goevents</span><span class="p">.</span><span class="nx">Broadcaster</span> <span class="c1">//广播器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//Exchange 类实现了下面三个接口，用于事件的转发，订阅，和发布
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Publisher posts the event.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Publisher</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Publish</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">topic</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">event</span> <span class="nx">Event</span><span class="p">)</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Forwarder forwards an event to the underlying event bus
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Forwarder</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Forward</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">envelope</span> <span class="o">*</span><span class="nx">Envelope</span><span class="p">)</span> <span class="kt">error</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// Subscriber allows callers to subscribe to events
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Subscriber</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nf">Subscribe</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">,</span> <span class="nx">filters</span> <span class="o">...</span><span class="kt">string</span><span class="p">)</span> <span class="p">(</span><span class="nx">ch</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="o">*</span><span class="nx">Envelope</span><span class="p">,</span> <span class="nx">errs</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>file:containerd/events/events.go</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//信封对象，用于对事件消息的封装
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Envelope provides the packaging for an event.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Envelope</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Timestamp</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span> <span class="c1">//事件投递时间戳
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Namespace</span> <span class="kt">string</span> <span class="c1">//命名空间
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Topic</span>     <span class="kt">string</span> <span class="c1">//事件topic
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">Event</span>     <span class="o">*</span><span class="nx">types</span><span class="p">.</span><span class="nx">Any</span> <span class="c1">//事件内容
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>以上是containerd 代码结构组织方式，以及几个关键类；结合实际代码阅读，理解containerd的代码组织结构，为后面继续深入阅读containerd的应用层代码打下基础，同时可以学习到代码结构插件化带来的扩展性，具有实际的参考意义。</p>
 <h1 id="参考">参考<a href="#参考" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p><a href="https://github.com/containerd/containerd">containerd</a></p>
 		</div>
 	</main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2021 <a href="https://JerryZhou343.github.io/">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>&copy; 2022 <a href="https://jerryzhou343.github.io">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
 		<p>
-			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://JerryZhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://jerryzhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
 		</p>
 	</footer>
 
 
 
-	<script src="https://JerryZhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	<script src="https://jerryzhou343.github.io/js/bundle.min.5a42c67b729ee2fa1059251688235399704707e04edb4e28c42c6f6dfa49d1d9.js" integrity="sha256-WkLGe3Ke4voQWSUWiCNTmXBHB+BO204oxCxvbfpJ0dk=" crossorigin="anonymous"></script>
 	
 
 </body>

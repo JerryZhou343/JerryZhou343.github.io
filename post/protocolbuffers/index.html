@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="theme-color" content="#494f5c">
+	<meta name="msapplication-TileColor" content="#494f5c">
+<meta itemprop="name" content="protocol buffers">
+<meta itemprop="description" content="0x00 前言 数据的模型 数据模型是一组由符号，文本组成的集合，用以准确表达信息景观，达到有效交流、沟通的目的。 在计算机中通常用使用名字、类型以及其他"><meta itemprop="datePublished" content="2022-05-20T16:24:54+08:00" />
+<meta itemprop="dateModified" content="2022-05-20T16:24:54+08:00" />
+<meta itemprop="wordCount" content="5375">
+<meta itemprop="keywords" content="" /><meta property="og:title" content="protocol buffers" />
+<meta property="og:description" content="0x00 前言 数据的模型 数据模型是一组由符号，文本组成的集合，用以准确表达信息景观，达到有效交流、沟通的目的。 在计算机中通常用使用名字、类型以及其他" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://jerryzhou343.github.io/post/protocolbuffers/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2022-05-20T16:24:54+08:00" />
+<meta property="article:modified_time" content="2022-05-20T16:24:54+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="protocol buffers"/>
+<meta name="twitter:description" content="0x00 前言 数据的模型 数据模型是一组由符号，文本组成的集合，用以准确表达信息景观，达到有效交流、沟通的目的。 在计算机中通常用使用名字、类型以及其他"/>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="manifest" href="/site.webmanifest">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+	<title>protocol buffers</title>
+	<link rel="stylesheet" href="https://jerryzhou343.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
+	
+</head>
+
+<body id="page">
+	
+	<header id="site-header" class="animated slideInUp">
+		<div class="hdr-wrapper section-inner">
+			<div class="hdr-left">
+				<div class="site-branding">
+					<a href="https://jerryzhou343.github.io">Jerry&#39;s Blog</a>
+				</div>
+				<nav class="site-nav hide-in-mobile">
+					
+				<a href="https://jerryzhou343.github.io/post/">Posts</a>
+				<a href="https://jerryzhou343.github.io/about/">About</a>
+				<a href="https://jerryzhou343.github.io/links/">links</a>
+
+				</nav>
+			</div>
+			<div class="hdr-right hdr-icons">
+				<span class="hdr-social hide-in-mobile"><a href="https://github.com/jerryzhou343" target="_blank" rel="noopener me" title="Github"><svg xmlns="http://www.w3.org/2000/svg" class="feather" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a></span><button id="menu-btn" class="hdr-btn" title="Menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+			</div>
+		</div>
+	</header>
+	<div id="mobile-menu" class="animated fast">
+		<ul>
+			<li><a href="https://jerryzhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://jerryzhou343.github.io/about/">About</a></li>
+			<li><a href="https://jerryzhou343.github.io/links/">links</a></li>
+		</ul>
+	</div>
+
+
+	<main class="site-main section-inner thin animated fadeIn faster">
+		<h1>protocol buffers</h1>
+		<div class="content">
+			<h1 id="0x00-前言">0x00 前言<a href="#0x00-前言" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="数据的模型">数据的模型<a href="#数据的模型" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>数据模型是一组由符号，文本组成的集合，用以准确表达信息景观，达到有效交流、沟通的目的。
+在计算机中通常用使用名字、类型以及其他约束，来定义一系列属性（Property）
+例如下面我们对一个人的基本信息建模，并用 go 语言表达：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//模型特性：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Name</span> <span class="kt">string</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">Age</span> <span class="kt">int</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewUser</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span><span class="nx">age</span> <span class="kt">int</span><span class="p">){}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//模型的实例：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">user1</span> <span class="o">:=</span> <span class="nf">NewUser</span><span class="p">(</span><span class="sc">&#39;a&#39;</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">user2</span> <span class="o">:=</span> <span class="nf">NewUser</span><span class="p">(</span><span class="sc">&#39;b&#39;</span><span class="p">,</span><span class="mi">11</span><span class="p">)</span>
+</span></span></code></pre></div><p>上面 user1，user2 对象实例在计算中有两种主要两种形态的存在</p>
+<ol>
+<li>计算机内存中，数据对象的使用场景主要为 CPU 使用，为计算服务，所以对象在内存中会涉及到指针引用。</li>
+<li>在计算机网络，或者是磁盘存储中，数据模型会序列化为特定的字节来传输，字段会有嵌套、组合关系。</li>
+</ol>
+<h1 id="0x01-protocol-buffer">0x01 protocol buffer<a href="#0x01-protocol-buffer" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="诞生背景">诞生背景<a href="#诞生背景" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在上一段中，我们表述了数据模型，以及数据模型在计算机体系中，在内存为计算而优化的形态和为持久化，为传输而存在形态。计算节点之间为了交换数据，所以我们就会存在数据模型在两种形态间的转换。在计算场景中，不同的语言或者说数据模型在不同的 runtime 下其模型存在形态也可能不一样,所以数据模型表示的对象就有了在不同计算节点交换的需求和
+在不同 runtime 下数据对象交换的需求。google 技术体系庞大，有不同的语言所构建的业务计算节点，为了方便这些节点交换数据对象，Google 便创造了一个和具体编程语言，平台无关的中间语言来描述数据模型，编码数据对象；这便是 protocol buffers 诞生的背景。</p>
+<p>在提及 protocol buffers 的时候，不仅需要熟悉其作为 IDL 语言本身的特性，还可以更多的去了解 protocol buffers 的原理和基础工具链，以及基于基础工具链，我们如何去丰富和扩展工具链,以及当前围绕 protocol buffers 诞生的生态。为简化名词，我们下文称 protocol buffers 为 PB。</p>
+<h2 id="原理">原理<a href="#原理" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="序列化编码">序列化编码<a href="#序列化编码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>PB 目前是序列化后字节流最小的序列化方式，其<a href="https://developers.google.com/protocol-buffers/docs/encoding">文档</a> 中解释了其序列化的数据编码方式；</p>
+<h4 id="base-128-varints">Base 128 Varints<a href="#base-128-varints" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>变长编码方式，该方式主要用于整数的编码方式，优点数字越小编码后其占用的字节数就越少,对于大数，该编码方式并不能压缩需要的字节数，我们在日常中使用的大多是小数的情况，所以 PB 能有效的压缩整体数据对象占用的字节数；
+Base 128 中,每个字节只用 7 位，最高位标识是否还有后续字节。所以
+Base 128 命名来源：2 的 7 次方即 128。具体的编码和解码详见<a href="https://developers.google.com/protocol-buffers/docs/encoding">文档</a> Base 128 小节；</p>
+<h4 id="zigzag-编码">zigZag 编码<a href="#zigzag-编码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>zigZag 用于映射有符号到无符号的绝对值，然后用变长编码来编码字段。</p>
+<h4 id="值编码表单">值编码表单：<a href="#值编码表单" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<table>
+<thead>
+<tr>
+<th>wire type</th>
+<th>meaning</th>
+<th>编码对象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Varint</td>
+<td>int32, int64, uint32, uint64, sint32, sint64, bool, enum</td>
+</tr>
+<tr>
+<td>1</td>
+<td>64-bit</td>
+<td>fixed64, sfixed64, double</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Length-delimited</td>
+<td>string, bytes, embedded messages, packed repeated fields</td>
+</tr>
+<tr>
+<td>5</td>
+<td>32 bit</td>
+<td>fixed32, sfixed32, float</td>
+</tr>
+</tbody>
+</table>
+<h4 id="字段编码">字段编码<a href="#字段编码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>在数据模型实例编码中，字段名称并不会序列化到字节流中；例如:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="line"><span class="cl"><span class="kd">message</span> <span class="nc">User</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>    <span class="kt">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>    <span class="kt">int64</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span></code></pre></div><p>在对象实例中序列化中，字段名 name,age 并不会序列化到字节流中；PB 在字节流中会记录字段的位置（name 的位置是 1，age 的位置是 2），并会记录该字段的数据类型；编码过程：首先会对字段的位置数字和字段类型合并然后使用变长编码(field_number &laquo;3 | wire_type) 放在字段信息字节流首。
+下面复用官方文档中的示例来解释下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">//字节流如下：
+</span></span><span class="line"><span class="cl"><span class="m">08</span> <span class="m">96</span> <span class="m">01</span>
+</span></span><span class="line"><span class="cl">//1. 先拆解位置和字段类型
+</span></span><span class="line"><span class="cl"><span class="nv">08</span>  <span class="o">=</span> <span class="m">000</span> <span class="m">1000</span>
+</span></span><span class="line"><span class="cl">//类型
+</span></span><span class="line"><span class="cl"><span class="m">000</span> <span class="m">1000</span> &gt;&gt;3  结果为0 所以类型为int类型
+</span></span><span class="line"><span class="cl">//字段位置
+</span></span><span class="line"><span class="cl"><span class="m">000</span> <span class="m">1000</span> &gt;&gt;3 结果为1 ，所以该字段field_number <span class="o">=</span> <span class="m">1</span>
+</span></span><span class="line"><span class="cl">//2. 存储的内容
+</span></span><span class="line"><span class="cl"><span class="m">96</span> <span class="nv">01</span> <span class="o">=</span> <span class="m">1001</span> <span class="m">0110</span>  <span class="m">0000</span> <span class="m">0001</span>
+</span></span><span class="line"><span class="cl">       → <span class="m">000</span> <span class="m">0001</span>  ++  <span class="m">001</span> <span class="m">0110</span> <span class="o">(</span>去掉最高位，翻转字节<span class="o">)</span>
+</span></span><span class="line"><span class="cl">       → <span class="m">10010110</span>
+</span></span><span class="line"><span class="cl">       → <span class="m">128</span> + <span class="m">16</span> + <span class="m">4</span> + <span class="nv">2</span> <span class="o">=</span> <span class="m">150</span>
+</span></span></code></pre></div><p>tips:</p>
+<p>下面是<a href="https://github.com/golang/protobuf">go 语言仓库</a>中代码显示的 field number 的取值范围</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//encoding/protowire/wire.go
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Number represents the field number.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">type</span> <span class="nx">Number</span> <span class="kt">int32</span>
+</span></span><span class="line"><span class="cl"><span class="kd">const</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">MinValidNumber</span>      <span class="nx">Number</span> <span class="p">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">FirstReservedNumber</span> <span class="nx">Number</span> <span class="p">=</span> <span class="mi">19000</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">LastReservedNumber</span>  <span class="nx">Number</span> <span class="p">=</span> <span class="mi">19999</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">MaxValidNumber</span>      <span class="nx">Number</span> <span class="p">=</span> <span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">29</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><h4 id="数据模型及数据对象兼容向前向后兼容性">数据模型及数据对象兼容向前向后兼容性<a href="#数据模型及数据对象兼容向前向后兼容性" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>随着业务的迭代，数据模型会不断的变化。例如属性字段的增减；那么服务在使用数据模型对象的时候会有如下情况:</p>
+<p>说明：s-&gt;server,s1 -&gt;server v1； d-&gt;data， d1-&gt;data v1；我们假设 d2 相对于 d1 增加了字段。</p>
+<ol>
+<li>(s1,d1) 服务和数据模型匹配</li>
+<li>(s2,d1) 新服务读旧数据模型，服务向前兼容</li>
+<li>(s2,d2) 新服务和新数据模型匹配</li>
+<li>(s1,d2) 旧服务读新数据模型，服务向后兼容</li>
+</ol>
+<p>那么作为 IDL 语言的 PB 通过序列化的时候对字段打上 field_number 和类型的 tag(filed_number,field_type) 的方式来做到向前向后兼容；</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="line"><span class="cl"><span class="kd">message</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>    <span class="kt">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>    <span class="kt">int64</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span></code></pre></div><p>上面的实例中，name 的位置 tag 是 (1,string)，age 的位置 tag 是 (2,int64)；在序列化的过程中，PB 序列化库会将 tag 信息序列化到字节流中字段信息的首位，在反序列化的时候，如果字节流中没有对应的字段，但是待填充的对象需要该字段，PB 的序列化库会自动填入默认的值。这样保证对象的特性（属性）不变，从而做到兼容。在前文中(s2,d1) 由于 d1 中没有相应的字段，s2 反序列化的时候会将对象中的新属性填入默认值；对于(s1,d2)的情况，s1 的反序列化的时候，只会拿去自己需要的字段的值。PB 虽然提供了向前向后兼容的机制，但是还是需要我们在开发的时候遵守这个机制，不能在迭代的过程中变更相应属性字段的位置（field_number)和字段的类型，否者向前向后兼容就会失败。</p>
+<h2 id="自我描述">自我描述<a href="#自我描述" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>PB 做为 IDL 语言，可以做到自我描述。在<a href="https://github.com/protocolbuffers/protobuf/tree/main/src/google/protobuf">目录</a>中的 descriptor.proto 文件描述了 PB 语言本身的组成结构和类型定义，因为 PB 不支持逻辑运算表达式所以 PB 不能做到自举，其自我模型描述信息简要如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="line"><span class="cl"><span class="c1">// 用于描述单个.proto 文件的信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">message</span> <span class="nc">FileDescriptorProto</span> <span class="p">{}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">// 描述单个消息信息即message本身(反射时使用)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">message</span> <span class="nc">DescriptorProto</span> <span class="p">{}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">//描述消息中字段的信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">message</span> <span class="nc">FieldDescriptorProto</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>    <span class="kd">enum</span> <span class="n">Type</span><span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>        <span class="n">TYPE_DOUBLE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>        <span class="c1">//....
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">TYPE_SINT64</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>  <span class="c1">// Uses ZigZag encoding.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">//描述枚举类型信息
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">message</span> <span class="nc">EnumDescriptorProto</span> <span class="p">{}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">//描述服务信息，即service xxx{};
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">message</span> <span class="nc">ServiceDescriptorProto</span><span class="p">{}</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="c1">//还有些option选项信息和具体定义大家可以到仓库中去看文件内容，有具体的注释
+</span></span></span></code></pre></div><p>从上述中我们可以看到其定义基本涵盖了 PB 在作为 IDL 语言时提供的基本的类型和结构关系；通过其自身描述了自身的类型和结构关系，这在后面我们通过其描述信息来开发工具插件铺好了基础。</p>
+<h2 id="pb-编译器源代码">PB 编译器源代码<a href="#pb-编译器源代码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>在提到编译原理的时候，大家可能会想到著名的开源项目 LLVM; 其编译器分为前端、优化器、后端。clang 就是编译的前端；前端主要做词法分析和语法分析然后输出中间代码；中间代码再经优化器和后端生成目标代码；而在 PB 中，其用自身描述了中间模型，中间模型再经由生成器转换成目标代码中的模型。</p>
+<h3 id="编译器前端">编译器前端<a href="#编译器前端" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>在 PB 实现中其前端工具为 protoc 由 C++写成,下面简要介绍重要的目录和文件。</p>
+<p>编译器<a href="https://github.com/protocolbuffers/protobuf/tree/main/src/google/protobuf/compiler">源码目录</a>,在该目录下 c++ 源码文件为编译器的前端实现文件:</p>
+<ol>
+<li>
+<p><a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/compiler/main.cc">main.cc</a> 为编译器应用入口。</p>
+</li>
+<li>
+<p><a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/compiler/parser.h">parser.h</a> 和 <a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/compiler/parser.cc">parser.cc</a> 两个文件实现了 parser 组件，其功能将.proto 文件转换为 protocol 语言对象（自描述）本身；</p>
+</li>
+<li>
+<p><a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/io/tokenizer.h">tokenizer.h</a>和<a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/io/tokenizer.cc">tokenizer.cc</a> 为语法分析器</p>
+</li>
+</ol>
+<p><a href="https://github.com/protocolbuffers/protobuf/blob/e5e8378a62ddf3b01267e87009b0c242f145ca57/src/google/protobuf/compiler/importer.cc#L140">关键代码片段</a>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">//函数的功能为获得对应文件的 protocol描述
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kt">bool</span> <span class="n">SourceTreeDescriptorDatabase</span><span class="o">::</span><span class="n">FindFileByName</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">filename</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                  <span class="n">FileDescriptorProto</span><span class="o">*</span> <span class="n">output</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">io</span><span class="o">::</span><span class="n">ZeroCopyInputStream</span><span class="o">&gt;</span> <span class="n">input</span><span class="p">(</span><span class="n">source_tree_</span><span class="o">-&gt;</span><span class="n">Open</span><span class="p">(</span><span class="n">filename</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="n">input</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">fallback_database_</span> <span class="o">!=</span> <span class="k">nullptr</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fallback_database_</span><span class="o">-&gt;</span><span class="n">FindFileByName</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">output</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">error_collector_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">error_collector_</span><span class="o">-&gt;</span><span class="n">AddError</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                 <span class="n">source_tree_</span><span class="o">-&gt;</span><span class="n">GetLastErrorMessage</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// Set up the tokenizer and parser.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">SingleFileErrorCollector</span> <span class="nf">file_error_collector</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">error_collector_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//构造语法分析器
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">io</span><span class="o">::</span><span class="n">Tokenizer</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="o">&amp;</span><span class="n">file_error_collector</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="n">Parser</span> <span class="n">parser</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="n">error_collector_</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span><span class="p">.</span><span class="n">RecordErrorsTo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">file_error_collector</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="n">using_validation_error_collector_</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span><span class="p">.</span><span class="n">RecordSourceLocationsTo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">source_locations_</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// Parse it. 转换
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">output</span><span class="o">-&gt;</span><span class="n">set_name</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//返回文件描述对象（中间模型）
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">return</span> <span class="n">parser</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tokenizer</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">file_error_collector</span><span class="p">.</span><span class="n">had_errors</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="编译器后端">编译器后端<a href="#编译器后端" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>在<a href="https://github.com/protocolbuffers/protobuf/tree/main/src/google/protobuf/compiler">源码目录</a>下，不同的子分别为生成不同目标语言的后端代码目录,目录名即为对应的目标语言。</p>
+<ol>
+<li>cpp</li>
+<li>csharp</li>
+<li>java</li>
+<li>objectivec</li>
+<li>php</li>
+<li>Python</li>
+<li>ruby</li>
+</ol>
+<p>PB 的编译器前后端是通过定义插件模型进行通信。插件模型定义在<a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/compiler/plugin.proto">plugin.proto</a>中，其定义了插件的输入和输出,后端的代码生成器只要满足插件的输入和输出即可。当前有两种插件通信方式，一种是内嵌在编译器中的插件，函数调用即可通信；还有一种是通过 IPC 的通信，选用的标准 IO 接口。</p>
+<h4 id="函数调用通信">函数调用通信：<a href="#函数调用通信" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li><a href="https://github.com/protocolbuffers/protobuf/blob/bbcc459aa0c2d5796725f5cb66718acda1ee38f8/src/google/protobuf/compiler/main.cc#L49">插件注册</a></li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="c1">//内嵌插件
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">cpp</span><span class="o">::</span><span class="n">CppGenerator</span> <span class="n">cpp_generator</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">cli</span><span class="p">.</span><span class="n">RegisterGenerator</span><span class="p">(</span><span class="s">&#34;--cpp_out&#34;</span><span class="p">,</span> <span class="s">&#34;--cpp_opt&#34;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">cpp_generator</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="s">&#34;Generate C++ header and source.&#34;</span><span class="p">);</span>
+</span></span></code></pre></div><ol start="2">
+<li>目标代码生成</li>
+</ol>
+<p><a href="(https://github.com/protocolbuffers/protobuf/blob/bbcc459aa0c2d5796725f5cb66718acda1ee38f8/src/google/protobuf/compiler/command_line_interface.cc#L1056)">后端插件选择</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">  <span class="c1">// Generate output.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="n">mode_</span> <span class="o">==</span> <span class="n">MODE_COMPILE</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">output_directives_</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">output_location</span> <span class="o">=</span> <span class="n">output_directives_</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">output_location</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">HasSuffixString</span><span class="p">(</span><span class="n">output_location</span><span class="p">,</span> <span class="s">&#34;.zip&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">          <span class="o">!</span><span class="n">HasSuffixString</span><span class="p">(</span><span class="n">output_location</span><span class="p">,</span> <span class="s">&#34;.jar&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">          <span class="o">!</span><span class="n">HasSuffixString</span><span class="p">(</span><span class="n">output_location</span><span class="p">,</span> <span class="s">&#34;.srcjar&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">AddTrailingSlash</span><span class="p">(</span><span class="o">&amp;</span><span class="n">output_location</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">auto</span><span class="o">&amp;</span> <span class="n">generator</span> <span class="o">=</span> <span class="n">output_directories</span><span class="p">[</span><span class="n">output_location</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">generator</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// First time we&#39;ve seen this output location.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">generator</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="k">new</span> <span class="n">GeneratorContextImpl</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GenerateOutput</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">,</span> <span class="n">output_directives_</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                          <span class="n">generator</span><span class="p">.</span><span class="n">get</span><span class="p">()))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span></code></pre></div><p><a href="https://github.com/protocolbuffers/protobuf/blob/bbcc459aa0c2d5796725f5cb66718acda1ee38f8/src/google/protobuf/compiler/command_line_interface.cc#L2134:28">插件调用</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">   <span class="c1">// Regular generator.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">parameter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">generator_parameters_</span><span class="p">[</span><span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parameters</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">parameters</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#34;,&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="n">parameters</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">generator_parameters_</span><span class="p">[</span><span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">EnforceProto3OptionalSupport</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="n">output_directive</span><span class="p">.</span><span class="n">generator</span><span class="o">-&gt;</span><span class="n">GetSupportedFeatures</span><span class="p">(),</span> <span class="n">parsed_files</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">output_directive</span><span class="p">.</span><span class="n">generator</span><span class="o">-&gt;</span><span class="n">GenerateAll</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                                                 <span class="n">generator_context</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// Generator returned an error.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><h4 id="ipc-通信">IPC 通信<a href="#ipc-通信" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>在上面的插件选择代码片段中，如果选择不是内嵌的代码生成器，则会调起插件子进程。</p>
+<ol>
+<li>调起入口</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"> <span class="c1">// This is a plugin.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">GOOGLE_CHECK</span><span class="p">(</span><span class="n">HasPrefixString</span><span class="p">(</span><span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#34;--&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+</span></span><span class="line"><span class="cl">          <span class="n">HasSuffixString</span><span class="p">(</span><span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&#34;_out&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="o">&lt;&lt;</span> <span class="s">&#34;Bad name for plugin generator: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">plugin_name</span> <span class="o">=</span> <span class="n">PluginName</span><span class="p">(</span><span class="n">plugin_prefix_</span><span class="p">,</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">parameter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">plugin_parameters_</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">parameters</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">parameters</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#34;,&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="n">parameters</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">plugin_parameters_</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GeneratePluginOutput</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                              <span class="n">generator_context</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">error</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="n">output_directive</span><span class="p">.</span><span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">&#34;: &#34;</span> <span class="o">&lt;&lt;</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><ol start="2">
+<li><a href="https://github.com/protocolbuffers/protobuf/blob/bbcc459aa0c2d5796725f5cb66718acda1ee38f8/src/google/protobuf/compiler/command_line_interface.cc#L2257:28">通信过程精简</a></li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl"><span class="kt">bool</span> <span class="n">CommandLineInterface</span><span class="o">::</span><span class="n">GeneratePluginOutput</span><span class="p">(</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FileDescriptor</span><span class="o">*&gt;&amp;</span> <span class="n">parsed_files</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">plugin_name</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">parameter</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GeneratorContext</span><span class="o">*</span> <span class="n">generator_context</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">error</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//插件proto中定义的 输入
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">CodeGeneratorRequest</span> <span class="n">request</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//插件proto中定义的输出
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">CodeGeneratorResponse</span> <span class="n">response</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//传递给插件子进程的参数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">processed_parameter</span> <span class="o">=</span> <span class="n">parameter</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//填充proto 中间模型对象到request中，传递给子进程使用。
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FileDescriptor</span><span class="o">*&gt;</span> <span class="n">already_seen</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">parsed_files</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">request</span><span class="p">.</span><span class="n">add_file_to_generate</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GetTransitiveDependencies</span><span class="p">(</span><span class="n">parsed_files</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                              <span class="nb">true</span><span class="p">,</span>  <span class="c1">// Include json_name for plugins.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                              <span class="nb">true</span><span class="p">,</span>  <span class="c1">// Include source code info.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>                              <span class="o">&amp;</span><span class="n">already_seen</span><span class="p">,</span> <span class="n">request</span><span class="p">.</span><span class="n">mutable_proto_file</span><span class="p">());</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//调起自进程
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="n">plugins_</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">subprocess</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="n">plugins_</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">],</span> <span class="n">Subprocess</span><span class="o">::</span><span class="n">EXACT_NAME</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">subprocess</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="n">Subprocess</span><span class="o">::</span><span class="n">SEARCH_PATH</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"> <span class="c1">// 进程间通信
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">communicate_error</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">subprocess</span><span class="p">.</span><span class="n">Communicate</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">response</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">communicate_error</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="n">strings</span><span class="o">::</span><span class="n">Substitute</span><span class="p">(</span><span class="s">&#34;$0: $1&#34;</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">,</span> <span class="n">communicate_error</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="常用模型描述">常用模型描述<a href="#常用模型描述" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>常见模型类型的 <a href="https://github.com/protocolbuffers/protobuf/tree/main/src/google/protobuf">protocol 描述文件</a>:</p>
+<ol>
+<li>descriptor.proto protocol 语言模型描述</li>
+<li>duration.proto 时长描述</li>
+<li>empty.proto 空对象</li>
+<li>field_mask.proto 字段掩码，用于在接口中描述对象部分字段更新；</li>
+<li>timestamp.proto 时间戳描述</li>
+</ol>
+<h3 id="多语言运行时库">多语言运行时库<a href="#多语言运行时库" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>在仓库根目录下有相关语言的运行时代码,例如：<a href="https://github.com/protocolbuffers/protobuf/tree/main/java">java</a>
+、<a href="https://github.com/protocolbuffers/protobuf/tree/main/python">python</a>如果我们需要在对应语言中使用 PB 我们需要安装对应的语言 lib。在 GitHub 仓库中，我们也可以在 release 页下载目标语言的精简源码包。</p>
+<p>运行时库的主要功能是桥接目标语言，使目标语言能够使用到 PB 对象序列化和反序列化能力；在反序列化的时候，PB 的官方实现方式大多基于反射（运行时类型识别）例如在 Python 运行时库中 <a href="https://github.com/protocolbuffers/protobuf/blob/main/python/google/protobuf/symbol_database.py">symbol_database.py</a> 用于记录类型符号表。下面用 GO 举例，展示关键代码片段（代码线索）从而大致了解 go 官方库的序列化和反序列化的过程:</p>
+<ol>
+<li><a href="https://github.com/protocolbuffers/protobuf-go/blob/master/encoding/protowire/wire.go">字段编解码和解码</a></li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//decode：
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">ConsumeField</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="nx">Number</span><span class="p">,</span> <span class="nx">Type</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//拿字段标签
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">num</span><span class="p">,</span> <span class="nx">typ</span><span class="p">,</span> <span class="nx">n</span> <span class="o">:=</span> <span class="nf">ConsumeTag</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">n</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">n</span> <span class="c1">// forward error code
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//字段值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">m</span> <span class="o">:=</span> <span class="nf">ConsumeFieldValue</span><span class="p">(</span><span class="nx">num</span><span class="p">,</span> <span class="nx">typ</span><span class="p">,</span> <span class="nx">b</span><span class="p">[</span><span class="nx">n</span><span class="p">:])</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">m</span> <span class="p">&lt;</span> <span class="mi">0</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">m</span> <span class="c1">// forward error code
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">num</span><span class="p">,</span> <span class="nx">typ</span><span class="p">,</span> <span class="nx">n</span> <span class="o">+</span> <span class="nx">m</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// AppendTag encodes num and typ as a varint-encoded tag and appends it to b.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">AppendTag</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">num</span> <span class="nx">Number</span><span class="p">,</span> <span class="nx">typ</span> <span class="nx">Type</span><span class="p">)</span> <span class="p">[]</span><span class="kt">byte</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nf">AppendVarint</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nf">EncodeTag</span><span class="p">(</span><span class="nx">num</span><span class="p">,</span> <span class="nx">typ</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><ol start="2">
+<li>反射类型系统</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-protobuf" data-lang="protobuf"><span class="line"><span class="cl"><span class="kd">message</span> <span class="nc">User</span> <span class="p">{</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="kt">string</span> <span class="n">name</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span>  <span class="kt">int64</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="p">}</span><span class="err">
+</span></span></span></code></pre></div><p>生成的 go 语言代码中的反射相关的信息</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">protoreflect</span> <span class="s">&#34;google.golang.org/protobuf/reflect/protoreflect&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">protoimpl</span> <span class="s">&#34;google.golang.org/protobuf/runtime/protoimpl&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">reflect</span> <span class="s">&#34;reflect&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">sync</span> <span class="s">&#34;sync&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">state</span>         <span class="nx">protoimpl</span><span class="p">.</span><span class="nx">MessageState</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">sizeCache</span>     <span class="nx">protoimpl</span><span class="p">.</span><span class="nx">SizeCache</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">unknownFields</span> <span class="nx">protoimpl</span><span class="p">.</span><span class="nx">UnknownFields</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">Name</span> <span class="kt">string</span> <span class="s">`protobuf:&#34;bytes,1,opt,name=name,proto3&#34; json:&#34;name,omitempty&#34;`</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Age</span>  <span class="kt">int64</span>  <span class="s">`protobuf:&#34;varint,2,opt,name=age,proto3&#34; json:&#34;age,omitempty&#34;`</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//反射方法代码片段，限于篇幅，这里没有放出和赘述file_resources_proto_msgTypes 的生成过程
+</span></span></span><span class="line"><span class="cl"><span class="c1">//大家可以以此为线索去阅读官方基于反射的类型系统，下面这个方法是反射系统中使用的关键方法，在
+</span></span></span><span class="line"><span class="cl"><span class="c1">//Marshal 和 Unmarshal的时候会使用到
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">x</span> <span class="o">*</span><span class="nx">User</span><span class="p">)</span> <span class="nf">ProtoReflect</span><span class="p">()</span> <span class="nx">protoreflect</span><span class="p">.</span><span class="nx">Message</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">mi</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">file_resources_proto_msgTypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">protoimpl</span><span class="p">.</span><span class="nx">UnsafeEnabled</span> <span class="o">&amp;&amp;</span> <span class="nx">x</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">ms</span> <span class="o">:=</span> <span class="nx">protoimpl</span><span class="p">.</span><span class="nx">X</span><span class="p">.</span><span class="nf">MessageStateOf</span><span class="p">(</span><span class="nx">protoimpl</span><span class="p">.</span><span class="nf">Pointer</span><span class="p">(</span><span class="nx">x</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="nx">ms</span><span class="p">.</span><span class="nf">LoadMessageInfo</span><span class="p">()</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nx">ms</span><span class="p">.</span><span class="nf">StoreMessageInfo</span><span class="p">(</span><span class="nx">mi</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="nx">ms</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">mi</span><span class="p">.</span><span class="nf">MessageOf</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><ol start="3">
+<li>字段序列化</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//path:proto\encode.go
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Marshal returns the wire-format encoding of m.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Marshal</span><span class="p">(</span><span class="nx">m</span> <span class="nx">Message</span><span class="p">)</span> <span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">// Treat nil message interface as an empty message; nothing to output.
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="k">if</span> <span class="nx">m</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">//代码生成器，在生成代码的时候会生成ProtoReflect 代码
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>	<span class="nx">out</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">MarshalOptions</span><span class="p">{}.</span><span class="nf">marshal</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nf">ProtoReflect</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">out</span><span class="p">.</span><span class="nx">Buf</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">err</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">out</span><span class="p">.</span><span class="nx">Buf</span> <span class="p">=</span> <span class="nf">emptyBytesForMessage</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">out</span><span class="p">.</span><span class="nx">Buf</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="c1">//path: proto\decode.go
+</span></span></span><span class="line"><span class="cl"><span class="c1">// Unmarshal parses the wire-format message in b and places the result in m.
+</span></span></span><span class="line"><span class="cl"><span class="c1">// The provided message must be mutable (e.g., a non-nil pointer to a message).
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">func</span> <span class="nf">Unmarshal</span><span class="p">(</span><span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">m</span> <span class="nx">Message</span><span class="p">)</span> <span class="kt">error</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">UnmarshalOptions</span><span class="p">{</span><span class="nx">RecursionLimit</span><span class="p">:</span> <span class="nx">protowire</span><span class="p">.</span><span class="nx">DefaultRecursionLimit</span><span class="p">}.</span><span class="nf">unmarshal</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">m</span><span class="p">.</span><span class="nf">ProtoReflect</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>GO 语言的 runtime 除了官方基于反射做的 lib，还有第三方叫出名的<a href="https://github.com/gogo/protobuf">gogo</a>库。
+gogo 兼容官方的 go lib，提供官方库调用的 Descriptor 方法，但是新版本 go 官方库已开始弃用该方法。
+gogo 库的实现不基于反射来做，而是直接在对象身上实现 Marshal 和 Unmarshal 方法，从而避免调用反射带来的开销。</p>
+<p>gogo 库： 对象已经知道具体要如何序列化和反序列化。</p>
+<p>go 官方库：需要类型系统探测目标类型信息，统一的序列化和反序列化。</p>
+<p>如果使用 gogo 库，那么一定要用代码生成器生成的 marshal 和 unmarshal 方法，序列化和反序列化效率才高。如果使用了 go 官方库的 marshal 和 unmarshal 函数方法来调用 gogo 的代码生成器代码，那么建议直接用官方库。</p>
+<p>tips:</p>
+<p>c++本身的运行时库和常见模型类型在同一个目录下。</p>
+<h1 id="0x02-protocol-buffer-生态">0x02 protocol buffer 生态<a href="#0x02-protocol-buffer-生态" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<p>从前文内容中，我们可以知道，PB 除了压缩效率高，向前向后兼容，数据模型能自描述，多语言支持等优点；基于 PB 的编译器分为前端统一的转换成中间模型，后端可以自定义代码生成器的优点，这个扩展特性使其生态中多个了更多的可能性。</p>
+<h2 id="接口场景">接口场景<a href="#接口场景" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="rpc">rpc<a href="#rpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>当前市面上比较流行的接口风格有 rpc 和 restful; PB 的接口描述能力能够支撑两种风格的接口；基于 PB 的开放的插件接口，开源社区挺多 RPC 框架采用和支持的都是 PB 的来做接口描述语言；基于 PB 还可以很方便的开发私有的 RPC 框架桩代码工具。</p>
+<h4 id="grpchttpsgithubcomgrpc"><a href="https://github.com/grpc">GRPC</a><a href="#grpchttpsgithubcomgrpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>依托 PB 的多语言扩展特性和 HTTP/2 协议， GRPC 在各个语言中都有相应实现。接口共用 PB 的描述
+不仅方便了计算机本身的对象交换而且也方便了开发人员阅读接口。当前 GRPC 在语言实现种类上相较其他 rpc 框架多挺多。例如有：
+grpc-go,grpc-java,grpc-web,grpc-node,grpc(c++,python,ruby)</p>
+<h4 id="srpchttpsgithubcomsogousrpc"><a href="https://github.com/sogou/srpc">srpc</a><a href="#srpchttpsgithubcomsogousrpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<p>sogou 的企业级 RPC 框架，采用 C++编写，当前支持 PB 和 thrift 作为其接口描述语言。</p>
+<h4 id="基于-grpc-协议的开源-rpc-框架">基于 GRPC 协议的开源 RPC 框架<a href="#基于-grpc-协议的开源-rpc-框架" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h4>
+<ol>
+<li>go-Kratos</li>
+<li>go-zero</li>
+</ol>
+<h3 id="restful">restful<a href="#restful" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>基于<a href="https://github.com/protocolbuffers/protobuf/blob/main/src/google/protobuf/api.proto">api.proto</a> 对接口模型的描述能力，GRPC 能够扩展到 HTTP 接口。从而支持 restful 风格的接口。比较出名的项目是：<a href="https://github.com/grpc-ecosystem/grpc-gateway">grpc-gateway</a>，基于 PB 生成反向代理服务，实现 RESTful HTTP API into gRPC.</p>
+<h2 id="接口调试工具">接口调试工具<a href="#接口调试工具" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>由于接口需要调试，基于 GRPC 生态的开放性，社区也做了很多的接口调试工具，下面挑两个介绍下，更多可以查看<a href="https://github.com/grpc-ecosystem/awesome-grpc">仓库</a>，里面有更多更丰富的内容。</p>
+<h3 id="bloomrpchttpsgithubcombloomrpcbloomrpc"><a href="https://github.com/bloomrpc/bloomrpc">bloomrpc</a><a href="#bloomrpchttpsgithubcombloomrpcbloomrpc" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>类似 postman UI 的接口调试工具，支持多页签，支持元数据等特性。基于 electron,grpc-web,protobufjs,reactjs 打造。有独立安装包，比较推荐使用。</p>
+<h3 id="grpcuihttpsgithubcomfullstorydevgrpcui"><a href="https://github.com/fullstorydev/grpcui">grpcui</a><a href="#grpcuihttpsgithubcomfullstorydevgrpcui" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>类似 http 请求工具的 curl 工具,也提供 webui</p>
+<h2 id="web-生态">web 生态<a href="#web-生态" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<h3 id="protobufjshttpsgithubcomprotobufjsprotobufjs"><a href="https://github.com/protobufjs/protobuf.js">protobuf.js</a><a href="#protobufjshttpsgithubcomprotobufjsprotobufjs" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h3>
+<p>protobuf.js 通过 js 实现了 PB 编译器的前端和后端；如其仓库介绍的那样能够和 proto 文件一起使用。上面的 bloomrpc 也使用到了 protobuf.js 来解析 proto 文件。</p>
+<h2 id="其它插件">其它插件<a href="#其它插件" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ol>
+<li><a href="https://github.com/stepancheg/rust-protobuf">rust</a> 语言插件</li>
+<li><a href="https://github.com/envoyproxy/protoc-gen-validate">envoy validate</a> 插件，用于校验请求参数。</li>
+<li><a href="https://github.com/go-kratos/kratos/tree/main/cmd/protoc-gen-go-errors">go-kratos error</a> 插件，通过枚举值，自动生成错误对象。</li>
+</ol>
+<h1 id="0x03-各类型编码">0x03 各类型编码<a href="#0x03-各类型编码" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<h2 id="jsonhttpswwwjsonorgjson-enhtml"><a href="https://www.json.org/json-en.html">JSON</a><a href="#jsonhttpswwwjsonorgjson-enhtml" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>JSON(JavaScript Object Notation) 是一个轻量的数据交换格式，非常易于人读写。JSON 是一个键值对集合。<a href="swagger.io">swagger</a>使用 JSON 来描述 restful 接口。</p>
+<h2 id="xmlhttpsdevelopermozillaorgen-usdocswebxmlxml_introduction"><a href="https://developer.mozilla.org/en-US/docs/Web/XML/XML_introduction">xml</a><a href="#xmlhttpsdevelopermozillaorgen-usdocswebxmlxml_introduction" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>XML (Extensible Markup Language) 是和 HTML 类似的标签语言。没有预定的 tag，取而代之的是自定义的 tag。在 <a href="https://www.soapui.org/docs/soap-and-wsdl/working-with-wsdls/">WSDL</a> 中使用来描述 web 服务的接口信息。</p>
+<h2 id="flatbuffershttpsgithubcomgoogleflatbuffers"><a href="https://github.com/google/flatbuffers">flatbuffers</a><a href="#flatbuffershttpsgithubcomgoogleflatbuffers" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>跨平台，强类型，可以直接访问序列化的数据，而不需要转换和解包。提供 IDL 能力,IDL 文件后缀名为 .fbs</p>
+<h2 id="msgpackhttpsmsgpackorg"><a href="https://msgpack.org/">msgpack</a><a href="#msgpackhttpsmsgpackorg" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>高效的二进制序列化协议。支持多语言，快，小。不提供 IDL 能力。</p>
+<h2 id="facebook-thrifthttpsgithubcomfacebookfbthrift-apache-thrifthttpsthriftapacheorg"><a href="https://github.com/facebook/fbthrift">facebook thrift</a>/ <a href="https://thrift.apache.org/">apache thrift</a><a href="#facebook-thrifthttpsgithubcomfacebookfbthrift-apache-thrifthttpsthriftapacheorg" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<p>和 PB 类似，有 IDL 支持，多语言支持；但是压缩效率没有 PB 高。</p>
+<h2 id="如何选择">如何选择？<a href="#如何选择" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h2>
+<ol>
+<li>序列化后字节流的长度，出于节约带宽的目的。</li>
+<li>序列化，反序列化的效率(时间，空间的消耗)</li>
+<li>扩展性，是否提供 IDL 能力,二次开发的能力。</li>
+</ol>
+<h1 id="0x04-参考">0x04 参考<a href="#0x04-参考" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
+<ol>
+<li><a href="https://developers.google.cn/protocol-buffers/docs/overview">google protocol buffer</a></li>
+<li><a href="https://github.com/protocolbuffers/protobuf">protocol buffer 实现代码仓库</a></li>
+<li><a href="github.com/protocolbuffers/protobuf-go">官方 go 语言实现仓库</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/26223459">Clang 和 LLVM 的关系及整体架构</a></li>
+<li>《数据密集型应用》</li>
+</ol>
+
+		</div>
+	</main>
+
+	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
+		<p>&copy; 2022 <a href="https://jerryzhou343.github.io">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://jerryzhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+		</p>
+	</footer>
+
+
+
+	<script src="https://jerryzhou343.github.io/js/bundle.min.5a42c67b729ee2fa1059251688235399704707e04edb4e28c42c6f6dfa49d1d9.js" integrity="sha256-WkLGe3Ke4voQWSUWiCNTmXBHB+BO204oxCxvbfpJ0dk=" crossorigin="anonymous"></script>
+	
+
+</body>
+
+</html>

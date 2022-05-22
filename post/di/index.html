@@ -8,19 +8,16 @@
 	<meta name="theme-color" content="#494f5c">
 	<meta name="msapplication-TileColor" content="#494f5c">
 <meta itemprop="name" content="golang 依赖注入 wire 和 dig 体验对比">
-<meta itemprop="description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。">
-<meta itemprop="datePublished" content="2020-03-29T17:18:10&#43;08:00" />
-<meta itemprop="dateModified" content="2020-03-29T17:18:10&#43;08:00" />
+<meta itemprop="description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。"><meta itemprop="datePublished" content="2020-03-29T17:18:10+08:00" />
+<meta itemprop="dateModified" content="2020-03-29T17:18:10+08:00" />
 <meta itemprop="wordCount" content="1111">
-
-
-
 <meta itemprop="keywords" content="" /><meta property="og:title" content="golang 依赖注入 wire 和 dig 体验对比" />
 <meta property="og:description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://JerryZhou343.github.io/post/di/" />
+<meta property="og:url" content="https://jerryzhou343.github.io/post/di/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2020-03-29T17:18:10+08:00" />
 <meta property="article:modified_time" content="2020-03-29T17:18:10+08:00" />
+
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="golang 依赖注入 wire 和 dig 体验对比"/>
 <meta name="twitter:description" content="在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。"/>
@@ -33,23 +30,23 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 
 	<title>golang 依赖注入 wire 和 dig 体验对比</title>
-	<link rel="stylesheet" href="https://JerryZhou343.github.io/css/style.min.657bcb7af31123e4156b1a3d2ff60a636717e54ead74f882136b5114cf72b55e.css" integrity="sha256-ZXvLevMRI+QVaxo9L/YKY2cX5U6tdPiCE2tRFM9ytV4=" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://jerryzhou343.github.io/css/style.min.eac77496566fd7d5768fd650ddb0b2b181ca6a2d7c5fdd6fe6b8ba4bf47e566f.css" integrity="sha256-6sd0llZv19V2j9ZQ3bCysYHKai18X91v5ri6S/R+Vm8=" crossorigin="anonymous">
 	
 </head>
 
 <body id="page">
 	
-	<header id="site-header" class="animated slideInUp faster">
+	<header id="site-header" class="animated slideInUp">
 		<div class="hdr-wrapper section-inner">
 			<div class="hdr-left">
 				<div class="site-branding">
-					<a href="https://JerryZhou343.github.io/">Jerry&#39;s Blog</a>
+					<a href="https://jerryzhou343.github.io">Jerry&#39;s Blog</a>
 				</div>
 				<nav class="site-nav hide-in-mobile">
 					
-				<a href="https://JerryZhou343.github.io/post/">Posts</a>
-				<a href="https://JerryZhou343.github.io/about/">About</a>
-				<a href="https://JerryZhou343.github.io/links/">links</a>
+				<a href="https://jerryzhou343.github.io/post/">Posts</a>
+				<a href="https://jerryzhou343.github.io/about/">About</a>
+				<a href="https://jerryzhou343.github.io/links/">links</a>
 
 				</nav>
 			</div>
@@ -60,9 +57,9 @@
 	</header>
 	<div id="mobile-menu" class="animated fast">
 		<ul>
-			<li><a href="https://JerryZhou343.github.io/post/">Posts</a></li>
-			<li><a href="https://JerryZhou343.github.io/about/">About</a></li>
-			<li><a href="https://JerryZhou343.github.io/links/">links</a></li>
+			<li><a href="https://jerryzhou343.github.io/post/">Posts</a></li>
+			<li><a href="https://jerryzhou343.github.io/about/">About</a></li>
+			<li><a href="https://jerryzhou343.github.io/links/">links</a></li>
 		</ul>
 	</div>
 
@@ -73,126 +70,126 @@
 			<p>在Go编程中，往往会存在大量的全局变量，有时候会被吐槽全局变量满天飞，如何解决，依赖注入库值得拥有；使用了Uber di 库和 Google wire 库后，谈下使用感受。</p>
 <h1 id="0x01-dig">0x01 dig<a href="#0x01-dig" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>uber 推出的依赖注入库，采用反射，在运行时计算依赖关系，构造依赖对象。在使用依赖注入库时，我们需要将我们的构造函数注入到contain中，下面是使用示例：</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
-
-<span class="kn">import</span> <span class="p">(</span>
-	<span class="s">&#34;fmt&#34;</span>
-	<span class="s">&#34;go.uber.org/dig&#34;</span>
-<span class="p">)</span>
-
-<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">ID</span> <span class="kt">int64</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">Repo</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">Get</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">repo</span> <span class="kd">struct</span><span class="p">{}</span>
-
-<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">repo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="nx">id</span><span class="p">},</span> <span class="kc">nil</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">NewRepo</span><span class="p">()</span> <span class="nx">Repo</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">repo</span><span class="p">{}</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">Service</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">r</span> <span class="nx">Repo</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Repo</span><span class="p">)</span> <span class="o">*</span><span class="nx">Service</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Service</span><span class="p">{</span><span class="nx">r</span><span class="p">:</span> <span class="nx">r</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">container</span> <span class="o">:=</span> <span class="nx">dig</span><span class="p">.</span><span class="nf">New</span><span class="p">()</span>
-
-	<span class="nx">container</span><span class="p">.</span><span class="nf">Provide</span><span class="p">(</span><span class="nx">NewRepo</span><span class="p">)</span>
-	<span class="nx">container</span><span class="p">.</span><span class="nf">Provide</span><span class="p">(</span><span class="nx">NewService</span><span class="p">)</span>
-
-	<span class="nx">container</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Service</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">u</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;user %+v err %+v&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-	<span class="p">})</span>
-
-<span class="p">}</span>
-</code></pre></div><p>上面的例子中涉及两种对象类型构造，一种是struct 指针，一种是 interface 类型。dig会自动做类型判定和绑定。在容器中的对象都是单例对象。dig还有对注入的对象进行分组特性，在使用时，根据自身需要使用。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;go.uber.org/dig&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ID</span> <span class="kt">int64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Repo</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Get</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">repo</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">repo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="nx">id</span><span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewRepo</span><span class="p">()</span> <span class="nx">Repo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">repo</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Service</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">r</span> <span class="nx">Repo</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Repo</span><span class="p">)</span> <span class="o">*</span><span class="nx">Service</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Service</span><span class="p">{</span><span class="nx">r</span><span class="p">:</span> <span class="nx">r</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">container</span> <span class="o">:=</span> <span class="nx">dig</span><span class="p">.</span><span class="nf">New</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">container</span><span class="p">.</span><span class="nf">Provide</span><span class="p">(</span><span class="nx">NewRepo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">container</span><span class="p">.</span><span class="nf">Provide</span><span class="p">(</span><span class="nx">NewService</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nx">container</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="kd">func</span><span class="p">(</span><span class="nx">s</span> <span class="o">*</span><span class="nx">Service</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">u</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">r</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;user %+v err %+v&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>上面的例子中涉及两种对象类型构造，一种是struct 指针，一种是 interface 类型。dig会自动做类型判定和绑定。在容器中的对象都是单例对象。dig还有对注入的对象进行分组特性，在使用时，根据自身需要使用。</p>
 <h1 id="0x02-wire">0x02 wire<a href="#0x02-wire" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>Google 推出的依赖注入库，在build前，需要时用wire 工具生成代码，wire使用了go build的tag选项，在编译时可以选择到正确的编译文件，但是有个小坑，容我慢慢道来</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//+build wireinject
-</span><span class="c1"></span>
-<span class="kn">package</span> <span class="nx">main</span>
-
-<span class="kn">import</span> <span class="p">(</span>
-	<span class="s">&#34;fmt&#34;</span>
-	<span class="s">&#34;log&#34;</span>
-<span class="p">)</span>
-
-<span class="kn">import</span> <span class="s">&#34;github.com/google/wire&#34;</span>
-
-<span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">ID</span> <span class="kt">int64</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">Repo</span> <span class="kd">interface</span> <span class="p">{</span>
-	<span class="nf">Get</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kd">type</span> <span class="nx">repo</span> <span class="kd">struct</span><span class="p">{}</span>
-
-<span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">repo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="nx">id</span><span class="p">},</span> <span class="kc">nil</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">NewRepo</span><span class="p">()</span> <span class="nx">Repo</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">repo</span><span class="p">{}</span>
-<span class="p">}</span>
-
-<span class="kd">var</span> <span class="p">(</span>
-	<span class="nx">Set</span> <span class="p">=</span> <span class="nx">wire</span><span class="p">.</span><span class="nf">NewSet</span><span class="p">(</span>
-		<span class="nx">NewRepo</span><span class="p">,</span>
-	<span class="p">)</span>
-<span class="p">)</span>
-
-<span class="kd">type</span> <span class="nx">Service</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">R</span> <span class="nx">Repo</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Repo</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Service</span><span class="p">{</span><span class="nx">R</span><span class="p">:</span> <span class="nx">r</span><span class="p">},</span> <span class="kc">nil</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">InitApp</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nb">panic</span><span class="p">(</span><span class="nx">wire</span><span class="p">.</span><span class="nf">Build</span><span class="p">(</span><span class="nx">Set</span><span class="p">,</span> <span class="nx">NewService</span><span class="p">))</span>
-<span class="p">}</span>
-
-<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">InitApp</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
-		<span class="k">return</span>
-	<span class="p">}</span>
-	<span class="nx">u</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">R</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%+v,+%v&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>wire 要求在编译前通过执行 wire gen 指令，手动生成依赖关系的函数；下面这段是wire 对依赖计算后的代码：</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// Injectors from main.go:
-</span><span class="c1"></span>
-<span class="kd">func</span> <span class="nf">InitApp</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">mainRepo</span> <span class="o">:=</span> <span class="nf">NewRepo</span><span class="p">()</span>
-	<span class="nx">service</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">mainRepo</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="nx">service</span><span class="p">,</span> <span class="kc">nil</span>
-<span class="p">}</span>
-</code></pre></div><p>wire 重新生成了InitApp 函数，在编译时选取wire生成的文件。严格意义上说，wire不算是库，算是依赖计算工具，解放我们的双手，帮助我们计算依赖关系和生成相应代码；不方便的点是wire 的bind方式绑定struct和interface ， IDE 不能帮助提示到哪个接口哪个函数没有实现；下面是上面图带陷阱说明示例：</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">//+build wireinject
-</span><span class="c1"></span>
-<span class="kn">package</span> <span class="nx">main</span>
-</code></pre></div><p>上面这段代码，如果build tag 和 package 之间没有空格，build tag识别不了，编译就会报重复声明，wire上也已经有<a href="https://github.com/google/wire/issues/117">issue</a>提到此问题。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//+build wireinject
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;fmt&#34;</span>
+</span></span><span class="line"><span class="cl">	<span class="s">&#34;log&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="s">&#34;github.com/google/wire&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">ID</span> <span class="kt">int64</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Repo</span> <span class="kd">interface</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nf">Get</span><span class="p">(</span><span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">repo</span> <span class="kd">struct</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="p">(</span><span class="nx">r</span> <span class="o">*</span><span class="nx">repo</span><span class="p">)</span> <span class="nf">Get</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int64</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">User</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">User</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="nx">id</span><span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewRepo</span><span class="p">()</span> <span class="nx">Repo</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">repo</span><span class="p">{}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">var</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">Set</span> <span class="p">=</span> <span class="nx">wire</span><span class="p">.</span><span class="nf">NewSet</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">NewRepo</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">type</span> <span class="nx">Service</span> <span class="kd">struct</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">R</span> <span class="nx">Repo</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">r</span> <span class="nx">Repo</span><span class="p">)</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Service</span><span class="p">{</span><span class="nx">R</span><span class="p">:</span> <span class="nx">r</span><span class="p">},</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">InitApp</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nb">panic</span><span class="p">(</span><span class="nx">wire</span><span class="p">.</span><span class="nf">Build</span><span class="p">(</span><span class="nx">Set</span><span class="p">,</span> <span class="nx">NewService</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">s</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">InitApp</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nx">log</span><span class="p">.</span><span class="nf">Fatal</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">u</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">s</span><span class="p">.</span><span class="nx">R</span><span class="p">.</span><span class="nf">Get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%+v,+%v&#34;</span><span class="p">,</span> <span class="nx">u</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>wire 要求在编译前通过执行 wire gen 指令，手动生成依赖关系的函数；下面这段是wire 对依赖计算后的代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// Injectors from main.go:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">InitApp</span><span class="p">()</span> <span class="p">(</span><span class="o">*</span><span class="nx">Service</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">mainRepo</span> <span class="o">:=</span> <span class="nf">NewRepo</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">service</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">NewService</span><span class="p">(</span><span class="nx">mainRepo</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="k">return</span> <span class="nx">service</span><span class="p">,</span> <span class="kc">nil</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>wire 重新生成了InitApp 函数，在编译时选取wire生成的文件。严格意义上说，wire不算是库，算是依赖计算工具，解放我们的双手，帮助我们计算依赖关系和生成相应代码；不方便的点是wire 的bind方式绑定struct和interface ， IDE 不能帮助提示到哪个接口哪个函数没有实现；下面是上面图带陷阱说明示例：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">//+build wireinject
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl"><span class="kn">package</span> <span class="nx">main</span>
+</span></span></code></pre></div><p>上面这段代码，如果build tag 和 package 之间没有空格，build tag识别不了，编译就会报重复声明，wire上也已经有<a href="https://github.com/google/wire/issues/117">issue</a>提到此问题。</p>
 <h1 id="0x03-小结">0x03 小结<a href="#0x03-小结" class="anchor" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7h3a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3m-6 0H6a5 5 0 0 1-5-5 5 5 0 0 1 5-5h3"></path><line x1="8" y1="12" x2="16" y2="12"></line></svg></a></h1>
 <p>上面简单介绍了wire 和 dig 两者之间的特点：</p>
 <ol>
@@ -208,15 +205,15 @@
 	</main>
 
 	<footer id="site-footer" class="section-inner thin animated fadeIn faster">
-		<p>&copy; 2021 <a href="https://JerryZhou343.github.io/">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
+		<p>&copy; 2022 <a href="https://jerryzhou343.github.io">JerryZhou</a> &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a></p>
 		<p>
-			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://JerryZhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
+			Made with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> &#183; Theme <a href="https://github.com/Track3/hermit" target="_blank" rel="noopener">Hermit</a> &#183; <a href="https://jerryzhou343.github.io/posts/index.xml" target="_blank" title="rss"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a>
 		</p>
 	</footer>
 
 
 
-	<script src="https://JerryZhou343.github.io/js/bundle.min.4a9a0ac3d2217822c7865b4161e6c2a71de1d70492264337755427898dd718f6.js" integrity="sha256-SpoKw9IheCLHhltBYebCpx3h1wSSJkM3dVQniY3XGPY=" crossorigin="anonymous"></script>
+	<script src="https://jerryzhou343.github.io/js/bundle.min.5a42c67b729ee2fa1059251688235399704707e04edb4e28c42c6f6dfa49d1d9.js" integrity="sha256-WkLGe3Ke4voQWSUWiCNTmXBHB+BO204oxCxvbfpJ0dk=" crossorigin="anonymous"></script>
 	
 
 </body>

@@ -2,104 +2,100 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Jerry&#39;s Blog</title>
-    <link>https://JerryZhou343.github.io/</link>
+    <link>https://jerryzhou343.github.io/</link>
     <description>Recent content on Jerry&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Wed, 09 Apr 2014 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://JerryZhou343.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 20 May 2022 16:24:54 +0800</lastBuildDate><atom:link href="https://jerryzhou343.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>links</title>
-      <link>https://JerryZhou343.github.io/links/</link>
+      <link>https://jerryzhou343.github.io/links/</link>
       <pubDate>Wed, 09 Apr 2014 00:00:00 +0000</pubDate>
       
-      <guid>https://JerryZhou343.github.io/links/</guid>
-      <description>技术站点 博客园 ThoughtWorks洞见 IBM Developer Freebuf infoq 友链 recall704</description>
+      <guid>https://jerryzhou343.github.io/links/</guid>
+      <description>技术站点 博客园 ThoughtWorks洞见 IBM Developer Freebuf infoq</description>
+    </item>
+    
+    <item>
+      <title>protocol buffers</title>
+      <link>https://jerryzhou343.github.io/post/protocolbuffers/</link>
+      <pubDate>Fri, 20 May 2022 16:24:54 +0800</pubDate>
+      
+      <guid>https://jerryzhou343.github.io/post/protocolbuffers/</guid>
+      <description>0x00 前言 数据的模型 数据模型是一组由符号，文本组成的集合，用以准确表达信息景观，达到有效交流、沟通的目的。 在计算机中通常用使用名字、类型以及其他</description>
     </item>
     
     <item>
       <title>网络通信服务代码阅读套路</title>
-      <link>https://JerryZhou343.github.io/post/network_communicate_code/</link>
+      <link>https://jerryzhou343.github.io/post/network_communicate_code/</link>
       <pubDate>Wed, 28 Apr 2021 00:44:08 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/network_communicate_code/</guid>
+      <guid>https://jerryzhou343.github.io/post/network_communicate_code/</guid>
       <description>&lt;p&gt;涉及到网络通信的代码阅读套路&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Golang sync map</title>
-      <link>https://JerryZhou343.github.io/post/golang_sync_map/</link>
+      <link>https://jerryzhou343.github.io/post/golang_sync_map/</link>
       <pubDate>Tue, 30 Mar 2021 00:56:28 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/golang_sync_map/</guid>
+      <guid>https://jerryzhou343.github.io/post/golang_sync_map/</guid>
       <description>&lt;p&gt;sync.Map 是go语言标准库实现的并发安全的map；&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Golang chan</title>
-      <link>https://JerryZhou343.github.io/post/golang_chan_component/</link>
+      <link>https://jerryzhou343.github.io/post/golang_chan_component/</link>
       <pubDate>Sun, 28 Mar 2021 00:51:29 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/golang_chan_component/</guid>
+      <guid>https://jerryzhou343.github.io/post/golang_chan_component/</guid>
       <description>&lt;p&gt;go 语言中重要的组件chan，可以简单的理解为一个带锁的消息队列。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>GRPC-go 客户端组件介绍-balancer</title>
-      <link>https://JerryZhou343.github.io/post/grpc_client_balancer/</link>
+      <link>https://jerryzhou343.github.io/post/grpc_client_balancer/</link>
       <pubDate>Wed, 13 Jan 2021 11:36:12 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/grpc_client_balancer/</guid>
+      <guid>https://jerryzhou343.github.io/post/grpc_client_balancer/</guid>
       <description>&lt;p&gt;GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；负载组件和客户端为相互关联关系。balancer的组成有两部分：baseBalancer 和picker；baseBalancer 管理保存当前可用是conn，baseBalancer根据当前可用链接生成picker，picker则实现了具体的负载算法；&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>GRPC-go 客户端组件介绍-resolver</title>
-      <link>https://JerryZhou343.github.io/post/grpc_client_resolver/</link>
+      <link>https://jerryzhou343.github.io/post/grpc_client_resolver/</link>
       <pubDate>Tue, 12 Jan 2021 11:36:12 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/grpc_client_resolver/</guid>
+      <guid>https://jerryzhou343.github.io/post/grpc_client_resolver/</guid>
       <description>&lt;p&gt;GRPC 客户端组件涉及服务发现组件，负载均衡组件，以及客户端本身；服务发现组件和客户端为相互关联关系。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>使用istio ingress gateway 代理grpc请求</title>
-      <link>https://JerryZhou343.github.io/post/istio-ingress-grpc/</link>
+      <link>https://jerryzhou343.github.io/post/istio-ingress-grpc/</link>
       <pubDate>Thu, 22 Oct 2020 17:18:10 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/istio-ingress-grpc/</guid>
+      <guid>https://jerryzhou343.github.io/post/istio-ingress-grpc/</guid>
       <description>&lt;p&gt;验证envoy 作为grpc的代理网关&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>containerd 源码导读-基础篇</title>
-      <link>https://JerryZhou343.github.io/post/containerd_guide_base/</link>
+      <link>https://jerryzhou343.github.io/post/containerd_guide_base/</link>
       <pubDate>Thu, 16 Jul 2020 23:25:27 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/containerd_guide_base/</guid>
+      <guid>https://jerryzhou343.github.io/post/containerd_guide_base/</guid>
       <description>&lt;p&gt;Containerd 源码基础结构分享关键的服务基础类&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Runc 源码导读</title>
-      <link>https://JerryZhou343.github.io/post/runc_guide/</link>
+      <link>https://jerryzhou343.github.io/post/runc_guide/</link>
       <pubDate>Wed, 08 Jul 2020 00:06:12 +0800</pubDate>
       
-      <guid>https://JerryZhou343.github.io/post/runc_guide/</guid>
+      <guid>https://jerryzhou343.github.io/post/runc_guide/</guid>
       <description>&lt;p&gt;runc 是OCI 的实现，是云原生系统的最底下的积木&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>GitInWork</title>
-      <link>https://JerryZhou343.github.io/post/gitinwork/</link>
-      <pubDate>Sun, 05 Jul 2020 15:21:11 +0800</pubDate>
-      
-      <guid>https://JerryZhou343.github.io/post/gitinwork/</guid>
-      <description>&lt;p&gt;介绍下工作中常用的git 命令&lt;/p&gt;</description>
     </item>
     
   </channel>
